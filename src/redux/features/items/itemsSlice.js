@@ -63,8 +63,7 @@ const itemsSlice = createSlice({
       state.isLoading = false;
       state.shopItems = action.payload;
     },
-    [getShopItems.rejected]: (state, action) => {
-      //console.log(action);
+    [getShopItems.rejected]: (state) => {
       state.isLoading = false;
     },
   },
