@@ -14,6 +14,10 @@ export const addItem = (item) => {
   });
 };
 
+export const getItems = () => {
+  return axios.get(`${API_URL}/`);
+};
+
 export const getAllItems = () => {
   return axios.get(`${API_URL}/items`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
