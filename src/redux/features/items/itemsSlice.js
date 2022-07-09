@@ -1,10 +1,13 @@
 // jshint esversion:9
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getItems } from '../../../api';
 
 const initialState = {
   shopItems: [],
+  cartItems: [],
+  cartAmount: 0,
+  cartTotal: 0,
   isLoading: true,
 };
 
@@ -27,7 +30,13 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
 const itemsSlice = createSlice({
   name: 'items',
   initialState,
+
   reducers: {
+    addToCart: (state, { payload }) => {
+      const itemToAdd = current(state).shopItems.filter((item) => item._id === payload.id);
+      state.cartItems.push(itemToAdd);
+      //console.log('state.cartItems =>', current(state));
+    },
     clearCart: (state) => {
       state.cartItems = [];
     },
@@ -69,5 +78,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, removeItem, increase, decrease, calculateTotals } = itemsSlice.actions;
+export const { addToCart } = itemsSlice.actions;
 export default itemsSlice.reducer;
