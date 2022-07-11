@@ -33,17 +33,25 @@ const itemsSlice = createSlice({
 
   reducers: {
     addToCart: (state, { payload }) => {
-      const itemToAdd = current(state).shopItems.filter((item) => item._id === payload.id);
+      //had to use current because it was returning [PROXY] and was unable to access the state
+      const itemToAdd = current(state).shopItems.find((item) => item._id === payload.id);
       state.cartItems.push(itemToAdd);
-      //console.log('state.cartItems =>', current(state));
+      state.cartAmount++;
+      state.cartTotal += itemToAdd.price;
+
+      console.log('item to add  =>', itemToAdd);
     },
     clearCart: (state) => {
       state.cartItems = [];
+      state.cartAmount = 0;
+      state.cartTotal = 0;
+      console.log('state.cartItems =>', current(state));
     },
-    removeItem: (state, action) => {
-      const itemId = action.payload;
-      state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+    removeFromCart: (state, { payload }) => {
+      state.cartItems = state.cartItems.filter((item) => item.id !== payload.id);
+      console.log('state.cartItems after removed item', state.cartItems);
     },
+
     increase: (state, action) => {
       const cartItem = state.cartItems.find((item) => item.id === action.payload);
       cartItem.amount = cartItem.amount + 1;
@@ -78,5 +86,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { addToCart } = itemsSlice.actions;
+export const { clearCart, addToCart } = itemsSlice.actions;
 export default itemsSlice.reducer;

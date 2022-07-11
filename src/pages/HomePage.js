@@ -4,9 +4,11 @@ import { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShopItems } from '../redux/features/items/itemsSlice';
 import { ShopItem } from '../components/ShopItem';
+import { Link } from 'react-router-dom';
 
 export const HomePage = () => {
-  const { shopItems, isLoading } = useSelector((store) => store.items);
+  const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
+  console.log('cartTotal in Home: ', cartTotal);
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
 
@@ -22,6 +24,9 @@ export const HomePage = () => {
         shopItems.map((item) => {
           return <ShopItem key={item._id} {...item} />;
         })}
+      <button>
+        <Link to='/cart'>Ver Carrinho {cartTotal}€</Link>
+      </button>
     </div>
   );
 };
