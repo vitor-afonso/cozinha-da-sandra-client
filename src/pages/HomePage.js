@@ -8,12 +8,11 @@ import { Link } from 'react-router-dom';
 
 export const HomePage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
-  console.log('cartTotal in Home: ', cartTotal);
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getShopItems('example of optional data'));
+    dispatch(getShopItems());
   }, []);
 
   return (

@@ -30,35 +30,42 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
 const itemsSlice = createSlice({
   name: 'items',
   initialState,
-
   reducers: {
     addToCart: (state, { payload }) => {
-      //had to use current because it was returning [PROXY] and was unable to access the state
-      const itemToAdd = current(state).shopItems.find((item) => item._id === payload.id);
+      const itemToAdd = state.shopItems.find((item) => item._id === payload.id);
+
       state.cartItems.push(itemToAdd);
       state.cartAmount++;
       state.cartTotal += itemToAdd.price;
 
-      console.log('item to add  =>', itemToAdd);
+      //we have to use current to be able to see the current state or it returns [PROXY]
+      //console.log('item to add  =>', current(cartItems));
     },
     clearCart: (state) => {
       state.cartItems = [];
       state.cartAmount = 0;
       state.cartTotal = 0;
-      console.log('state.cartItems =>', current(state));
-    },
-    removeFromCart: (state, { payload }) => {
-      state.cartItems = state.cartItems.filter((item) => item.id !== payload.id);
-      console.log('state.cartItems after removed item', state.cartItems);
+      //console.log('state.cartItems =>', current(state));
     },
 
-    increase: (state, action) => {
-      const cartItem = state.cartItems.find((item) => item.id === action.payload);
-      cartItem.amount = cartItem.amount + 1;
+    removeFromCart: (state, { payload }) => {
+      if (state.cartAmount === 0) {
+        return;
+      }
+      const itemToRemove = state.shopItems.find((item) => item._id === payload.id);
+      state.cartItems = state.cartItems.filter((item) => item._id !== payload.id);
+      state.cartAmount--;
+      state.cartTotal -= itemToRemove.price;
+      console.log('state.cartItems after removed item', current(state));
     },
-    decrease: (state, { payload }) => {
+
+    increaseItemAmount: (state, { payload }) => {
+      const cartItem = state.cartItems.find((item) => item._id === payload._id);
+      cartItem.amount += 1;
+    },
+    decreaseItemAmount: (state, { payload }) => {
       const cartItem = state.cartItems.find((item) => item.id === payload.id);
-      cartItem.amount = cartItem.amount - 1;
+      cartItem.amount -= 1;
     },
     calculateTotals: (state) => {
       let amount = 0;
@@ -67,8 +74,8 @@ const itemsSlice = createSlice({
         amount += item.amount;
         total += item.amount * item.price;
       });
-      state.amount = amount;
-      state.total = total;
+      state.cartAmount = amount;
+      state.cartTotal = total;
     },
   },
   extraReducers: {
@@ -86,5 +93,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount } = itemsSlice.actions;
 export default itemsSlice.reducer;

@@ -6,6 +6,6 @@ import itemsReducer from './features/items/itemsSlice';
 export const store = configureStore({
   reducer: {
     items: itemsReducer,
-    /* order: orderReducer, */
+    /* order: ordersReducer, */
   },
 });
