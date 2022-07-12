@@ -17,6 +17,8 @@ import { ItemDetailsPage } from './pages/ItemDetailsPage';
 import { AboutPage } from './pages/AboutPage';
 import { CartPage } from './pages/CartPage';
 import { AppHeader } from './components/AppHeader';
+import { ForgotPage } from './pages/ForgotPage';
+import { ResetPage } from './pages/ResetPage';
 
 function App() {
   return (
@@ -31,6 +33,7 @@ function App() {
         <Route path='/salgados' element={<SalgadosPage />} />
         <Route path='/users' element={<UsersPage />} />
         <Route path='/orders' element={<OrdersPage />} />
+        <Route path='/orders/edit/:orderId' element={<OrdersPage />} />
         <Route path='/items/add' element={<NewItemPage />} />
         <Route path='/items/:itemId' element={<ItemDetailsPage />} />
         <Route path='/items/edit/:itemId' element={<EditItemPage />} />
@@ -38,6 +41,8 @@ function App() {
         <Route path='/profile/edit/:userId' element={<EditProfilePage />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/about' element={<AboutPage />} />
+        <Route path='/forgot' element={<ForgotPage />} />
+        <Route path='/reset' element={<ResetPage />} />
       </Routes>
     </div>
   );

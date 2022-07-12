@@ -42,10 +42,15 @@ export const LoginPage = () => {
           <h2>Login</h2>
           <p>
             Novo na Cozinha da Sandra?
-            <Link to='/signup'>Registra-te</Link>
+            <Link to='/signup'> Registra-te </Link>
+            <br />
+            <small>
+              <Link to='/forgot'>Esqueceste a password?</Link>
+            </small>
           </p>
         </div>
       </div>
+
       <form onSubmit={handleLoginSubmit}>
         <div>
           <label htmlFor='email'>Email address</label>

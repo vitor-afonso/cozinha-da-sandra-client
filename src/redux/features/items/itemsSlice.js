@@ -32,16 +32,23 @@ const itemsSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, { payload }) => {
-      const itemToAdd = state.shopItems.find((item) => item._id === payload.id);
+      const ShopItem = state.shopItems.find((item) => item._id === payload.id);
+      const itemId = state.shopItems.map((item) => {
+        if (item._id === payload.id) {
+          return item._id;
+        }
+      });
 
-      state.cartItems.push(itemToAdd);
+      state.cartItems.push(itemId[0]);
       state.cartAmount++;
-      state.cartTotal += itemToAdd.price;
+      state.cartTotal += ShopItem.price;
 
-      //we have to use current to be able to see the current state or it returns [PROXY]
-      //console.log('item to add  =>', current(cartItems));
+      //we have to use current if want to see the current state or it returns [PROXY]
+      console.log('current cart items  =>', current(state).cartItems);
     },
+
     clearCart: (state) => {
+      state.shopItems.forEach((item) => (item.amount = 1));
       state.cartItems = [];
       state.cartAmount = 0;
       state.cartTotal = 0;
@@ -49,25 +56,33 @@ const itemsSlice = createSlice({
     },
 
     removeFromCart: (state, { payload }) => {
-      if (state.cartAmount === 0) {
-        return;
-      }
       const itemToRemove = state.shopItems.find((item) => item._id === payload.id);
-      state.cartItems = state.cartItems.filter((item) => item._id !== payload.id);
-      state.cartAmount--;
-      state.cartTotal -= itemToRemove.price;
+
+      if (itemToRemove) {
+        state.cartItems = state.cartItems.filter((item) => item !== payload.id);
+
+        state.cartAmount -= itemToRemove.amount;
+        state.cartTotal -= itemToRemove.price * itemToRemove.amount;
+        itemToRemove.amount = 1;
+      }
       console.log('state.cartItems after removed item', current(state));
     },
 
     increaseItemAmount: (state, { payload }) => {
-      const cartItem = state.cartItems.find((item) => item._id === payload._id);
-      cartItem.amount += 1;
+      const shopItem = state.shopItems.find((item) => item._id === payload.id);
+
+      shopItem.amount++;
+      state.cartAmount++;
+      state.cartTotal += shopItem.price;
     },
     decreaseItemAmount: (state, { payload }) => {
-      const cartItem = state.cartItems.find((item) => item.id === payload.id);
-      cartItem.amount -= 1;
+      const ShopItem = state.shopItems.find((item) => item._id === payload.id);
+
+      ShopItem.amount--;
+      state.cartAmount--;
+      state.cartTotal -= ShopItem.price;
     },
-    calculateTotals: (state) => {
+    /* calculateTotals: (state) => {
       let amount = 0;
       let total = 0;
       state.cartItems.forEach((item) => {
@@ -76,7 +91,7 @@ const itemsSlice = createSlice({
       });
       state.cartAmount = amount;
       state.cartTotal = total;
-    },
+    }, */
   },
   extraReducers: {
     [getShopItems.pending]: (state) => {
@@ -93,5 +108,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount } = itemsSlice.actions;
 export default itemsSlice.reducer;
