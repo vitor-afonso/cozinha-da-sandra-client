@@ -4,7 +4,41 @@ import axios from 'axios';
 
 const API_URL = `${process.env.REACT_APP_PROJECT_API}/api`;
 
+/************************* HomePage ****************************/
+
+export const getActiveItems = () => {
+  return axios.get(`${API_URL}/`);
+};
+
 /************************* USERS *****************************/
+
+export const getAllUsers = () => {
+  return axios.get(`${API_URL}/users`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const getOneUser = (userId) => {
+  return axios.get(`${API_URL}/users/${userId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const updateUser = (updatedUser, userId) => {
+  return axios.put(`${API_URL}/users/edit/${userId}`, updatedUser, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const deleteUser = (userId) => {
+  return axios.put(
+    `${API_URL}/users/delete/${userId}`,
+    { deleted: true },
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    }
+  );
+};
 
 /************************* ITEMS *****************************/
 
@@ -14,18 +48,14 @@ export const addItem = (item) => {
   });
 };
 
-export const getItems = () => {
-  return axios.get(`${API_URL}/`);
-};
-
 export const getAllItems = () => {
   return axios.get(`${API_URL}/items`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
 };
 
-export const getOneItem = (id) => {
-  return axios.get(`${API_URL}/items/${id}`, {
+export const getOneItem = (itemId) => {
+  return axios.get(`${API_URL}/items/${itemId}`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
 };
@@ -36,13 +66,51 @@ export const updateItem = (updatedItem, itemId) => {
   });
 };
 
-export const deleteItem = (id) => {
-  return axios.delete(`${API_URL}/items/delete/${id}`, {
+export const deleteItem = (itemId) => {
+  return axios.put(
+    `${API_URL}/items/delete/${itemId}`,
+    { deleted: true },
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    }
+  );
+};
+
+/************************* ORDERS *****************************/
+
+export const createOrder = (order) => {
+  return axios.post(`${API_URL}/orders`, order, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
 };
 
-/************************* ORDERS *****************************/
+export const getAllOrders = () => {
+  return axios.get(`${API_URL}/orders`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const getOneOrder = (id) => {
+  return axios.get(`${API_URL}/orders/${id}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const updateOrder = (updatedOrder, orderId) => {
+  return axios.put(`${API_URL}/orders/edit/${orderId}`, updatedOrder, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const deleteOrder = (orderId) => {
+  return axios.put(
+    `${API_URL}/orders/delete/${orderId}`,
+    { deleted: true },
+    {
+      headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+    }
+  );
+};
 
 /************************* UPLOAD IMAGE *****************************/
 

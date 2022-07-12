@@ -1,7 +1,7 @@
 // jshint esversion:9
 
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
-import { getItems } from '../../../api';
+import { getActiveItems } from '../../../api';
 
 const initialState = {
   shopItems: [],
@@ -18,7 +18,7 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
-    const res = await getItems();
+    const res = await getActiveItems();
     return res.data; // we return a promise that is being handled by extraReducers in itemsSlice
   } catch (error) {
     //return thunkAPI.rejectWithValue(error.response); // this would be handled by extraReducers getShopItems.rejected in itemsSlice
@@ -32,16 +32,11 @@ const itemsSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, { payload }) => {
-      const ShopItem = state.shopItems.find((item) => item._id === payload.id);
-      const itemId = state.shopItems.map((item) => {
-        if (item._id === payload.id) {
-          return item._id;
-        }
-      });
+      const shopItem = state.shopItems.find((item) => item._id === payload.id);
 
-      state.cartItems.push(itemId[0]);
+      state.cartItems.push(shopItem._id);
       state.cartAmount++;
-      state.cartTotal += ShopItem.price;
+      state.cartTotal += shopItem.price;
 
       //we have to use current if want to see the current state or it returns [PROXY]
       console.log('current cart items  =>', current(state).cartItems);

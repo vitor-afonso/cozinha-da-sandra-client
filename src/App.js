@@ -19,8 +19,15 @@ import { CartPage } from './pages/CartPage';
 import { AppHeader } from './components/AppHeader';
 import { ForgotPage } from './pages/ForgotPage';
 import { ResetPage } from './pages/ResetPage';
+import { useEffect } from 'react';
+import { getShopItems } from './redux/features/items/itemsSlice';
+import { useDispatch } from 'react-redux';
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getShopItems());
+  }, []);
   return (
     <div className='App'>
       <AppHeader />

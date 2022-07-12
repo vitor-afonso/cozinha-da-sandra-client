@@ -1,18 +1,16 @@
 // jshint esversion:9
 import { AuthContext } from '../context/auth.context';
 import { useEffect, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getShopItems } from '../redux/features/items/itemsSlice';
+import { useSelector } from 'react-redux';
 import { ShopItem } from '../components/ShopItem';
 import { Link } from 'react-router-dom';
 
 export const HomePage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getShopItems());
+    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -23,9 +21,13 @@ export const HomePage = () => {
         shopItems.map((item) => {
           return <ShopItem key={item._id} {...item} />;
         })}
-      <button>
-        <Link to='/cart'>Ver Carrinho {cartTotal}€</Link>
-      </button>
+      {isLoading && <p>Loading...</p>}
+
+      {isLoggedIn && (
+        <button>
+          <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>
+        </button>
+      )}
     </div>
   );
 };
