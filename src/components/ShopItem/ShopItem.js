@@ -3,8 +3,8 @@
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context';
-import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart, clearCart } from '../redux/features/items/itemsSlice';
+import { AuthContext } from '../../context/auth.context';
+import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart, clearCart } from '../../redux/features/items/itemsSlice';
 
 export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -20,8 +20,8 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
-      <div className={`ShopItem`} style={{ border: '1px solid black', width: '300px', margin: '20px auto', padding: '20px' }}>
+    <div className={`ShopItem`} style={{ width: '100%' }}>
+      <div style={{ border: '1px solid black', width: '300px', margin: '20px auto', padding: '20px' }}>
         <div>
           <Link to={`/items/${_id}`}>
             <img src={imageUrl} alt={name} />

@@ -1,8 +1,8 @@
 // jshint esversion:9
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from '../../context/auth.context';
 import { useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { ShopItem } from '../components/ShopItem';
+import { ShopItem } from '../../components/ShopItem/ShopItem';
 import { Link } from 'react-router-dom';
 
 export const HomePage = () => {

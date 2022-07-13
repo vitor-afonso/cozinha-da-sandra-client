@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../api';
-import { ShopItem } from '../components/ShopItem';
+import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
 import { clearCart } from '../redux/features/items/itemsSlice';
 
