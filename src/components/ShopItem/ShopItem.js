@@ -2,7 +2,7 @@
 
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart, clearCart } from '../../redux/features/items/itemsSlice';
 
@@ -10,6 +10,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
   const { isLoggedIn } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
+  const location = useLocation();
 
   const handleDecrease = () => {
     if (amount === 1) {
@@ -20,7 +21,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
   };
 
   return (
-    <div className={`ShopItem`} style={{ width: '100%' }}>
+    <div className={`ShopItem`} style={{ width: '100%' }} data-testid={`shop-item-${_id}`}>
       <div style={{ border: '1px solid black', width: '300px', margin: '20px auto', padding: '20px' }}>
         <div>
           <Link to={`/items/${_id}`}>
@@ -35,9 +36,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
           <p>{price}€</p>
         </div>
 
-        {!isLoggedIn && (
+        {!isLoggedIn && location.pathname === '/' && (
           <div>
-            <Link to='/login'>
+            <Link to='/login' data-testid='go-to-login'>
               <span>Adicionar ao carrinho</span>
             </Link>
           </div>

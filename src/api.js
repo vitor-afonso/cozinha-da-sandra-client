@@ -6,7 +6,7 @@ const API_URL = `${process.env.REACT_APP_PROJECT_API}/api`;
 
 /************************* HomePage ****************************/
 
-export const getActiveItems = () => {
+export const getAllActiveItems = () => {
   return axios.get(`${API_URL}/`);
 };
 
