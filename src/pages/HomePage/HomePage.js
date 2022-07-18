@@ -6,13 +6,13 @@ import { ShopItem } from '../../components/ShopItem/ShopItem';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-export const HomePage = () => {
+export const HomePage = ({ errorMessage }) => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
 
-  /* useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, []); */
+  }, []);
 
   return (
     <div className='HomePage'>
@@ -25,6 +25,7 @@ export const HomePage = () => {
           })}
         </div>
       )}
+      {errorMessage && <p>{errorMessage}</p>}
       {isLoggedIn && (
         <button>
           <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>

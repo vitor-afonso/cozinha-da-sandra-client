@@ -21,20 +21,20 @@ const MockShopItem = ({ name, price, imageUrl }) => {
 describe('ShopItem', () => {
   it('should render img element', async () => {
     render(<MockShopItem imageUrl='imageUrl' />);
-    const imgElement = await screen.findByRole('img');
+    const imgElement = screen.getByRole('img');
 
     expect(imgElement).toBeInTheDocument();
   });
 
   it('should render element with same name as passed as prop', async () => {
     render(<MockShopItem name='Bolo de chocolate' />);
-    const titleElement = await screen.findByText(/bolo de chocolate/i);
+    const titleElement = screen.getByText(/bolo de chocolate/i);
     expect(titleElement).toBeInTheDocument();
   });
 
   it('should render element with same price as passed as prop', async () => {
     render(<MockShopItem price={11.99} />);
-    const priceElement = await screen.findByText(/€/i);
+    const priceElement = screen.getByText(/€/i);
     expect(priceElement.textContent).toBe('11.99€');
   });
 

@@ -18,9 +18,9 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
-    const res = await getAllActiveItems();
-    console.log('getShopItems data in itemsSlice', res.data);
-    return res.data; // we return a promise that is being handled by extraReducers in itemsSlice
+    const { data } = await getAllActiveItems();
+    console.log('getShopItems data in itemsSlice', data);
+    return data; // we return a promise that is being handled by extraReducers in itemsSlice
   } catch (error) {
     //return thunkAPI.rejectWithValue(error.response); // this would be handled by extraReducers getShopItems.rejected in itemsSlice
 
