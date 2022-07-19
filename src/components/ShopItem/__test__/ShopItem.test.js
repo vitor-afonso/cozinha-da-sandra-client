@@ -9,7 +9,7 @@ import { store } from '../../../redux/store';
 const MockShopItem = ({ name, price, imageUrl }) => {
   return (
     <Router>
-      <AuthProviderWrapper>
+      <AuthProviderWrapper isLoggedIn={true}>
         <Provider store={store}>
           <ShopItem name={name} price={price} imageUrl={imageUrl} />
         </Provider>
@@ -51,7 +51,7 @@ describe('ShopItem', () => {
   });
 
   /* it('should render decrease element', async () => {
-    render(<MockShopItem isLoggedIn={true} />);
+    render(<MockShopItem />);
     const decreaseButtonElement = await screen.findByRole('button', { name: 'decrease' });
     expect(decreaseButtonElement).toBeInTheDocument();
   }); */

@@ -11,7 +11,7 @@ import { server, rest } from '../../../mocks/server';
 const MockHomePage = () => {
   return (
     <Router>
-      <AuthProviderWrapper>
+      <AuthProviderWrapper isLoggedIn={true}>
         <Provider store={store}>
           <HomePage />
         </Provider>

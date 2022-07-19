@@ -7,7 +7,7 @@ import { AuthContext } from '../../context/auth.context';
 import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart, clearCart } from '../../redux/features/items/itemsSlice';
 
 export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
   const location = useLocation();
@@ -36,7 +36,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
           <p>{price}€</p>
         </div>
 
-        {!isLoggedIn && location.pathname === '/' && (
+        {!isLoggedIn && (
           <div>
             <Link to='/login' data-testid='go-to-login'>
               <span>Adicionar ao carrinho</span>
@@ -54,8 +54,15 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
               </>
             )}
             <br />
-            {!cartItems.includes(_id) && <button onClick={() => dispatch(addToCart({ id: _id }))}>Adicionar ao carrinho</button>}
-            {cartItems.includes(_id) && <button onClick={() => dispatch(removeFromCart({ id: _id }))}>Remover do carrinho</button>}
+            <>
+              {!cartItems.includes(_id) && <button onClick={() => dispatch(addToCart({ id: _id }))}>Adicionar ao carrinho</button>}
+              {cartItems.includes(_id) && <button onClick={() => dispatch(removeFromCart({ id: _id }))}>Remover do carrinho</button>}
+            </>
+            {user.type === 'admin' && (
+              <Link to={`/items/edit/${_id}`}>
+                <span>Edit</span>
+              </Link>
+            )}
           </div>
         )}
       </div>

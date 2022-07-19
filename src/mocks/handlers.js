@@ -3,7 +3,6 @@
 import { rest } from 'msw';
 
 export const handlers = [
-  // Handles a POST /login request
   rest.get(`${process.env.REACT_APP_PROJECT_API}/api/`, (req, res, ctx) => {
     return res(
       ctx.status(200),

@@ -19,15 +19,24 @@ import { CartPage } from './pages/CartPage';
 import { AppHeader } from './components/AppHeader';
 import { ForgotPage } from './pages/ForgotPage';
 import { ResetPage } from './pages/ResetPage';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { getShopItems } from './redux/features/items/itemsSlice';
 import { useDispatch } from 'react-redux';
+import { AppFooter } from './components/AppFooter';
 
 function App() {
   const dispatch = useDispatch();
+  // to prevent re re-calling of API
+  const effectRan = useRef(false);
   useEffect(() => {
-    dispatch(getShopItems());
-  }, []);
+    if (effectRan.current === false) {
+      dispatch(getShopItems());
+
+      return () => {
+        effectRan.current = true;
+      };
+    }
+  }, [dispatch]);
   return (
     <div className='App'>
       <AppHeader />
@@ -51,6 +60,8 @@ function App() {
         <Route path='/forgot' element={<ForgotPage />} />
         <Route path='/reset' element={<ResetPage />} />
       </Routes>
+
+      <AppFooter />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { ShopItem } from '../../components/ShopItem/ShopItem';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-export const HomePage = ({ errorMessage }) => {
+export const HomePage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
 
@@ -20,12 +20,26 @@ export const HomePage = ({ errorMessage }) => {
       {isLoading && <p>Loading...</p>}
       {shopItems.length !== 0 && (
         <div className='shop-items-container' data-testid='shop-items-container'>
-          {shopItems.map((item) => {
-            return <ShopItem key={item._id} {...item} />;
-          })}
+          <div className='items-doces-container' data-testid='items-container'>
+            {shopItems.map((item) => {
+              if (item.category === 'doces') {
+                return <ShopItem key={item._id} {...item} />;
+              }
+            })}
+          </div>
+
+          <hr />
+
+          <div className='items-salgados-container' data-testid='items-container'>
+            {shopItems.map((item) => {
+              if (item.category === 'salgados') {
+                return <ShopItem key={item._id} {...item} />;
+              }
+            })}
+          </div>
         </div>
       )}
-      {errorMessage && <p>{errorMessage}</p>}
+
       {isLoggedIn && (
         <button>
           <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>
