@@ -20,25 +20,36 @@ import { AboutPage } from './pages/AboutPage';
 import { CartPage } from './pages/CartPage';
 import { ForgotPage } from './pages/ForgotPage';
 import { ResetPage } from './pages/ResetPage';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { getShopItems } from './redux/features/items/itemsSlice';
 import { getShopOrders } from './redux/features/orders/ordersSlice';
+import { AuthContext } from './context/auth.context';
 
 function App() {
   const dispatch = useDispatch();
+  const { user } = useContext(AuthContext);
   // to prevent re re-calling of API
   const effectRan = useRef(false);
+  const adminEffectRan = useRef(false);
   useEffect(() => {
     if (effectRan.current === false) {
       dispatch(getShopItems());
-      dispatch(getShopOrders());
-
       return () => {
         effectRan.current = true;
       };
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    if (adminEffectRan.current === false && user) {
+      dispatch(getShopOrders());
+
+      return () => {
+        adminEffectRan.current = true;
+      };
+    }
+  }, [dispatch, user]);
 
   return (
     <div className='App'>
