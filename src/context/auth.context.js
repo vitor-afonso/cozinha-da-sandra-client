@@ -1,5 +1,7 @@
 // jshint esversion:9
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '../redux/features/items/itemsSlice';
 import { verify } from './../api';
 
 const AuthContext = React.createContext();
@@ -11,6 +13,7 @@ function AuthProviderWrapper(props) {
   const storeToken = (token) => {
     localStorage.setItem('authToken', token);
   };
+  const dispatch = useDispatch();
 
   const authenticateUser = async () => {
     // Get the stored token from the localStorage
@@ -50,6 +53,7 @@ function AuthProviderWrapper(props) {
   const logOutUser = () => {
     // To log out the user, remove the token
     removeToken();
+    dispatch(clearCart());
     // and update the state variables
     authenticateUser();
   };

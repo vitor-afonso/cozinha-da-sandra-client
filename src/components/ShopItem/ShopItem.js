@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart, clearCart } from '../../redux/features/items/itemsSlice';
 
-export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
+export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) => {
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
@@ -33,6 +33,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
           <Link to={`/items/${_id}`}>
             <h3>{name}</h3>
           </Link>
+          {location.pathname === `/items/${_id}` && <p>{description}</p>}
           <p>{price}€</p>
         </div>
 
@@ -58,7 +59,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount }) => {
               {!cartItems.includes(_id) && <button onClick={() => dispatch(addToCart({ id: _id }))}>Adicionar ao carrinho</button>}
               {cartItems.includes(_id) && <button onClick={() => dispatch(removeFromCart({ id: _id }))}>Remover do carrinho</button>}
             </>
-            {user.type === 'admin' && (
+            {user.userType === 'admin' && (
               <Link to={`/items/edit/${_id}`}>
                 <span>Edit</span>
               </Link>
