@@ -4,7 +4,6 @@ import { ShopOrder } from './../components/ShopOrder';
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
-// jshint esversion:9
 export const OrdersPage = () => {
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
 
