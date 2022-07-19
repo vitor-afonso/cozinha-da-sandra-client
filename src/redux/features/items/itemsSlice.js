@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getAllActiveItems } from '../../../api';
 
 const initialState = {
@@ -61,7 +61,7 @@ const itemsSlice = createSlice({
         state.cartTotal -= itemToRemove.price * itemToRemove.amount;
         itemToRemove.amount = 1;
       }
-      console.log('state.cartItems after removed item', current(state));
+      //console.log('state.cartItems after removed item', current(state));
     },
 
     increaseItemAmount: (state, { payload }) => {
@@ -78,16 +78,6 @@ const itemsSlice = createSlice({
       state.cartAmount--;
       state.cartTotal -= ShopItem.price;
     },
-    /* calculateTotals: (state) => {
-      let amount = 0;
-      let total = 0;
-      state.cartItems.forEach((item) => {
-        amount += item.amount;
-        total += item.amount * item.price;
-      });
-      state.cartAmount = amount;
-      state.cartTotal = total;
-    }, */
   },
   extraReducers: {
     [getShopItems.pending]: (state) => {
