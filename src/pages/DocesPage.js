@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItem/ShopItem';
@@ -9,6 +9,10 @@ import { AuthContext } from '../context/auth.context';
 export const DocesPage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div>

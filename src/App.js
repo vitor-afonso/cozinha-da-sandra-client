@@ -2,6 +2,8 @@
 
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
+import { AppHeader } from './components/AppHeader';
+import { AppFooter } from './components/AppFooter';
 import { HomePage } from './pages/HomePage/HomePage';
 import { SignupPage } from './pages/SignupPage';
 import { LoginPage } from './pages/LoginPage';
@@ -16,13 +18,12 @@ import { EditProfilePage } from './pages/EditProfilePage';
 import { ItemDetailsPage } from './pages/ItemDetailsPage';
 import { AboutPage } from './pages/AboutPage';
 import { CartPage } from './pages/CartPage';
-import { AppHeader } from './components/AppHeader';
 import { ForgotPage } from './pages/ForgotPage';
 import { ResetPage } from './pages/ResetPage';
 import { useEffect, useRef } from 'react';
-import { getShopItems } from './redux/features/items/itemsSlice';
 import { useDispatch } from 'react-redux';
-import { AppFooter } from './components/AppFooter';
+import { getShopItems } from './redux/features/items/itemsSlice';
+import { getShopOrders } from './redux/features/orders/ordersSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,12 +32,14 @@ function App() {
   useEffect(() => {
     if (effectRan.current === false) {
       dispatch(getShopItems());
+      dispatch(getShopOrders());
 
       return () => {
         effectRan.current = true;
       };
     }
   }, [dispatch]);
+
   return (
     <div className='App'>
       <AppHeader />

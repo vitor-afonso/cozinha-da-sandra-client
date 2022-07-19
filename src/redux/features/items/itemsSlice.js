@@ -40,7 +40,7 @@ const itemsSlice = createSlice({
       state.cartTotal += shopItem.price;
 
       //we have to use current if want to see the current state or it returns [PROXY]
-      console.log('current cart items  =>', current(state).cartItems);
+      //console.log('current cart items  =>', current(state).cartItems);
     },
 
     clearCart: (state) => {
