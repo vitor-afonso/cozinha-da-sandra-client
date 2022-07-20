@@ -72,7 +72,7 @@ function App() {
         <Route path='/cart' element={<CartPage />} />
         <Route path='/about' element={<AboutPage />} />
         <Route path='/forgot' element={<ForgotPage />} />
-        <Route path='/reset' element={<ResetPage />} />
+        <Route path='/reset/:userId' element={<ResetPage />} />
       </Routes>
 
       <AppFooter />

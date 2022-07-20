@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const API_URL = `${process.env.REACT_APP_PROJECT_API}/api`;
 
-/************************* HomePage ****************************/
+/************************* HOME ****************************/
 
 export const getAllActiveItems = () => {
   return axios.get(`${API_URL}/`);
@@ -140,4 +140,20 @@ export const verify = (storedToken) => {
   return axios.get(`${API_URL}/verify`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
+};
+
+/************************* EMAIL *****************************/
+
+export const sendEmail = (reqBody) => {
+  return axios.post(`${API_URL}/send-email`, reqBody, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const forgotPassword = (reqBody) => {
+  return axios.post(`${API_URL}/forgot`, reqBody);
+};
+
+export const resetPassword = (reqBody, userId) => {
+  return axios.post(`${API_URL}/reset/${userId}`, reqBody);
 };

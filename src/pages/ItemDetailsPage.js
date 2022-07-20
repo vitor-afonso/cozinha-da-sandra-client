@@ -10,7 +10,7 @@ export const ItemDetailsPage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
   const [shopItem, setShopItem] = useState(null);
-  const { itemId } = useParams('');
+  const { itemId } = useParams();
 
   const effectRan = useRef(false);
 
