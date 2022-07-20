@@ -72,11 +72,11 @@ const itemsSlice = createSlice({
       state.cartTotal += shopItem.price;
     },
     decreaseItemAmount: (state, { payload }) => {
-      const ShopItem = state.shopItems.find((item) => item._id === payload.id);
+      const shopItem = state.shopItems.find((item) => item._id === payload.id);
 
-      ShopItem.amount--;
+      shopItem.amount--;
       state.cartAmount--;
-      state.cartTotal -= ShopItem.price;
+      state.cartTotal -= shopItem.price;
     },
   },
   extraReducers: {
