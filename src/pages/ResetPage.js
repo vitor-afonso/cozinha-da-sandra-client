@@ -23,13 +23,11 @@ export const ResetPage = () => {
     try {
       const requestBody = { password: newPassword };
 
-      let response = await resetPassword(requestBody, userId);
-      console.log('reset pass response =>', response);
+      await resetPassword(requestBody, userId);
 
       setSuccessMessage('A sua palavra pass foi actualizada com sucesso.');
       setTimeout(() => navigate('/login'), 5000);
     } catch (error) {
-      console.log('error reset password', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
     }

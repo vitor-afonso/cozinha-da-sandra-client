@@ -17,7 +17,7 @@ export const ForgotPage = () => {
       const requestBody = { email };
 
       let response = await forgotPassword(requestBody);
-      console.log('response from forgot password =>', response);
+
       setSuccessMessage(`Email com link para repor palavra pass enviado para ${email}.`);
     } catch (error) {
       const errorDescription = error.response.data.message;
