@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { getShopItems } from './redux/features/items/itemsSlice';
 import { getShopOrders } from './redux/features/orders/ordersSlice';
 import { AuthContext } from './context/auth.context';
+import { SendEmailPage } from './pages/SendEmailPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ function App() {
         <Route path='/about' element={<AboutPage />} />
         <Route path='/forgot' element={<ForgotPage />} />
         <Route path='/reset/:userId' element={<ResetPage />} />
+        <Route path='/send-email/orders/:orderId' element={<SendEmailPage />} />
       </Routes>
 
       <AppFooter />
