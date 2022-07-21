@@ -48,11 +48,11 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) =>
         {isLoggedIn && (
           <div>
             {cartItems.includes(_id) && (
-              <>
+              <div>
                 <button onClick={() => dispatch(increaseItemAmount({ id: _id }))}>increase</button>
                 <p>{amount}</p>
                 <button onClick={() => handleDecrease()}>decrease</button>
-              </>
+              </div>
             )}
             <br />
             <>

@@ -30,8 +30,8 @@ export const SignupPage = () => {
       <div>
         <h2>Cria a tua conta</h2>
         <p>
-          Já tens uma conta?
-          <Link to='/login'>Faz Login</Link>
+          Já tens uma conta? <br />
+          Faz <Link to='/login'>login</Link>.
         </p>
       </div>
 

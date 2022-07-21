@@ -7,30 +7,29 @@ import { ShopItem } from '../components/ShopItem/ShopItem';
 
 export const ItemDetailsPage = () => {
   const { shopItems } = useSelector((store) => store.items);
-  const [shopItem, setShopItem] = useState(null);
+
   const { itemId } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (itemId) {
-      let oneItem = shopItems.find((item) => item._id === itemId);
-      setShopItem(oneItem);
-    }
-  }, [itemId]);
-
   return (
-    <div className='ItemDetailsPage'>
-      {shopItem ? (
-        <>
-          <h2>Detalhes do Item</h2>
-          <ShopItem {...shopItem} />
-        </>
+    <>
+      {shopItems.length > 0 ? (
+        shopItems.map((item) => {
+          if (item._id === itemId) {
+            return (
+              <div className='ItemDetailsPage' key={item._id}>
+                <h2>Detalhes - {item.name} </h2>
+                <ShopItem {...item} />
+              </div>
+            );
+          }
+        })
       ) : (
         <p>Loading...</p>
       )}
-    </div>
+    </>
   );
 };
