@@ -31,7 +31,7 @@ export const NewItemPage = () => {
 
         let { data } = await addItem(requestBody);
 
-        console.log('newly created item =>', data);
+        //console.log('newly created item =>', data);
 
         setSuccessMessage('Item criado com sucesso.');
       } else {

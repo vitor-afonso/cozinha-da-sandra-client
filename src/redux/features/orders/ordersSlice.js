@@ -36,6 +36,11 @@ const ordersSlice = createSlice({
       //we have to use current if want to see the current state or it returns [PROXY]
       console.log('current shop orders  =>', current(state).shopOrders);
     },
+    getOrderAuthorEmail: (state, { payload }) => {
+      const oneOrder = state.shopOrders.find((order) => order._id === payload.id);
+      console.log('oneOrder reducer', oneOrder.userId.email);
+      return oneOrder.userId.email;
+    },
     rejectOrder: (state, { payload }) => {
       const oneOrder = state.shopOrders.find((order) => order._id === payload.id);
       oneOrder.orderStatus = 'rejected';
@@ -60,5 +65,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { confirmOrder, rejectOrder, deleteOrder } = ordersSlice.actions;
+export const { confirmOrder, rejectOrder, deleteOrder, getOrderAuthorEmail } = ordersSlice.actions;
 export default ordersSlice.reducer;

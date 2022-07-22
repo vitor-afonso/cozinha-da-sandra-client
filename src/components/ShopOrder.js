@@ -1,12 +1,13 @@
 // jshint esversion:9
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { parseDate } from '../utils/app.utils';
 
 export function ShopOrder({ order, handleConfirmOrder }) {
   const createdAt = parseDate(order.createdAt);
   const deliveredAt = parseDate(order.deliveryDate);
+  const location = useLocation();
 
   //fn compares dates to know if we can render confirm button
   const checkDeliveryDate = () => {
@@ -29,7 +30,7 @@ export function ShopOrder({ order, handleConfirmOrder }) {
   return (
     <div className='ShopOrder'>
       <p>
-        <b>Encomenda Nº</b>: {order._id}
+        <b>ID</b>: {order._id}
       </p>
       <p>Utilizador: {order.userId.username}</p>
       <p>Telefone: {order.contact}</p>
@@ -41,10 +42,13 @@ export function ShopOrder({ order, handleConfirmOrder }) {
 
         {order.orderStatus === 'pending' && (
           <>
-            {checkDeliveryDate() && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>}
-            <Link to={`/send-email/orders/${order._id}`}>
-              <span>Contactar cliente</span>
-            </Link>
+            {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>}
+
+            {location.pathname === '/orders' && (
+              <Link to={`/send-email/orders/${order._id}`}>
+                <span>Contactar cliente</span>
+              </Link>
+            )}
           </>
         )}
       </div>
