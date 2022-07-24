@@ -1,13 +1,21 @@
 // jshint esversion:9
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { parseDate } from '../utils/app.utils';
 
 export function ShopOrder({ order, handleConfirmOrder }) {
-  const createdAt = parseDate(order.createdAt);
-  const deliveredAt = parseDate(order.deliveryDate);
+  const [createdAt, setCreatedAt] = useState('');
+  const [deliveredAt, setDeliveredAt] = useState('');
+
   const location = useLocation();
+
+  useEffect(() => {
+    if (order) {
+      setCreatedAt(parseDate(order.createdAt));
+      setDeliveredAt(parseDate(order.deliveryDate));
+    }
+  }, [order]);
 
   //fn compares dates to know if we can render confirm button
   const checkDeliveryDate = () => {
@@ -53,7 +61,17 @@ export function ShopOrder({ order, handleConfirmOrder }) {
         )}
       </div>
       {order.message && <p>Mensagem: {order.message}</p>}
-      <div>Items: {order.items.length > 0 && order.items.map((item) => <span key={item._id}> {item.name}, </span>)}</div>
+      <div>
+        Items:
+        {order.items.length > 0 &&
+          order.items.map((item) => {
+            return (
+              <div>
+                {item.name} Quantidade: {item.amount}
+              </div>
+            );
+          })}
+      </div>
       <p>Preço Total: {order.total}€</p>
       <br />
       <hr />
