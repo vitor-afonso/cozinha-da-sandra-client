@@ -1,16 +1,19 @@
 // jshint esversion:9
 
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
+import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { parseDate } from '../utils/app.utils';
 
-export function ShopOrder({ order, handleConfirmOrder }) {
+export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
-
+  const dispatch = useDispatch();
   const location = useLocation();
 
   useEffect(() => {
@@ -57,6 +60,44 @@ export function ShopOrder({ order, handleConfirmOrder }) {
     }
   };
 
+  const handleConfirmOrder = async () => {
+    try {
+      let requestBody = { orderStatus: 'confirmed' };
+
+      let confirmationEmail = {
+        from: 'cozinhadasandra22@gmail.com',
+        to: order.userId.email,
+        subject: 'Encomenda confirmada',
+        message: `
+        A sua encomenda com o ID: ${order._id} foi confirmada. Por favor indique o ID da sua encomenda ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+    
+        Com os melhores cumprimentos,
+    
+        A Cozinha da Sandra
+        `,
+      };
+
+      (async () => {
+        await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
+        dispatch(confirmOrder({ id: order._id }));
+      })();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    try {
+      let requestBody = { paid: true };
+
+      await updateOrder(requestBody, order._id);
+
+      dispatch(confirmPayment({ id: order._id }));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className='ShopOrder'>
       <p>
@@ -82,13 +123,14 @@ export function ShopOrder({ order, handleConfirmOrder }) {
       <div>
         <p>
           <b>Status: </b> {translateStatus(order.orderStatus)}
-          {location.pathname === '/orders' && (
-            <Link to={`/send-email/orders/${order._id}`}>
-              <span>Contactar cliente</span>
-            </Link>
-          )}
         </p>
         {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>} </>}
+      </div>
+      <div>
+        <p>
+          <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
+        </p>
+        {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
       </div>
 
       {order.message && (
@@ -109,7 +151,12 @@ export function ShopOrder({ order, handleConfirmOrder }) {
       </p>
       {user.userType === 'admin' && (
         <Link to={`/orders/edit/${order._id}`}>
-          <span>Edit</span>
+          <span>Editar </span>
+        </Link>
+      )}
+      {location.pathname === '/orders' && (
+        <Link to={`/send-email/orders/${order._id}`}>
+          <span>Contactar </span>
         </Link>
       )}
       <br />
