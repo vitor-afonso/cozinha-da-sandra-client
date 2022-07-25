@@ -19,6 +19,10 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) =>
     }
     dispatch(decreaseItemAmount({ id: _id }));
   };
+  const handleIncrease = () => {
+    dispatch(increaseItemAmount({ id: _id }));
+    dispatch(addToCart({ id: _id }));
+  };
 
   return (
     <div className={`ShopItem`} style={{ width: '100%' }} data-testid={`shop-item-${_id}`}>
@@ -49,7 +53,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) =>
           <div>
             {cartItems.includes(_id) && (
               <div>
-                <button onClick={() => dispatch(increaseItemAmount({ id: _id }))}>increase</button>
+                <button onClick={handleIncrease}>increase</button>
                 <p>{amount}</p>
                 <button onClick={() => handleDecrease()}>decrease</button>
               </div>

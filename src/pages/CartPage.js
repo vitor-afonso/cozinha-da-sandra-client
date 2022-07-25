@@ -36,7 +36,6 @@ export const CartPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsAddressNotVisible(true);
-    console.log('cartItems in cartPage =>', cartItems);
   }, []);
 
   const toggleForm = () => {
@@ -98,7 +97,7 @@ export const CartPage = () => {
         address: fullAddress ? fullAddress.join(' ') : '',
         message,
         deliveryMethod,
-        total: cartTotal,
+        total: cartTotal.toFixed(2),
         userId: user._id,
         items: cartItems,
       };

@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllActiveItems } from '../../../api';
 
 const initialState = {
@@ -40,7 +40,7 @@ const itemsSlice = createSlice({
       state.cartTotal += shopItem.price;
 
       //we have to use current if want to see the current state or it returns [PROXY]
-      //console.log('current cart items  =>', current(state).cartItems);
+      //console.log('adding to cart items  =>', current(state).cartItems);
     },
 
     clearCart: (state) => {
@@ -52,6 +52,7 @@ const itemsSlice = createSlice({
     },
 
     removeFromCart: (state, { payload }) => {
+      //removes all of same itemId from cartItems
       const itemToRemove = state.shopItems.find((item) => item._id === payload.id);
 
       if (itemToRemove) {
@@ -68,11 +69,13 @@ const itemsSlice = createSlice({
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
 
       shopItem.amount++;
-      state.cartAmount++;
-      state.cartTotal += shopItem.price;
+      console.log('increasing quantity', current(state).cartItems);
     },
     decreaseItemAmount: (state, { payload }) => {
+      //decreases quantity and removes one itemId from cartItems
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
+      const itemIndex = state.cartItems.indexOf(shopItem._id);
+      state.cartItems.splice(itemIndex, 1);
 
       shopItem.amount--;
       state.cartAmount--;
