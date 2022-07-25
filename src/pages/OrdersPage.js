@@ -9,6 +9,9 @@ export const OrdersPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    //provavelmente vou ter que fazer refresh à pagina
+    //para que os detalhes dos items apareçam
+    //quando o admin submeter uma nova encomenda
   }, []);
 
   return (

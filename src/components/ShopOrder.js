@@ -69,7 +69,8 @@ export function ShopOrder({ order }) {
         to: order.userId.email,
         subject: 'Encomenda confirmada',
         message: `
-        A sua encomenda com o ID: ${order._id} foi confirmada. Por favor indique o ID da sua encomenda ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+        A sua encomenda com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID da sua encomenda ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+        Pode ver todos os detalhes da sua encomenda na sua pagina de perfil.
     
         Com os melhores cumprimentos,
     
@@ -126,12 +127,6 @@ export function ShopOrder({ order }) {
         </p>
         {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>} </>}
       </div>
-      <div>
-        <p>
-          <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
-        </p>
-        {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
-      </div>
 
       {order.message && (
         <p>
@@ -149,6 +144,12 @@ export function ShopOrder({ order }) {
       <p>
         <b>Total:</b> {order.total}€
       </p>
+      <div>
+        <p>
+          <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
+        </p>
+        {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
+      </div>
       {user.userType === 'admin' && (
         <Link to={`/orders/edit/${order._id}`}>
           <span>Editar </span>
