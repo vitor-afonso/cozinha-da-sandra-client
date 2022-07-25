@@ -1,3 +1,4 @@
+import { OrderInfo } from './../components/OrderInfo';
 // jshint esversion:9
 
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -8,12 +9,11 @@ import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
 import { clearCart } from '../redux/features/items/itemsSlice';
 import { updateShopOrder } from '../redux/features/orders/ordersSlice';
-import { formatDate } from '../utils/app.utils';
 
 export const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, isLoading } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal } = useSelector((store) => store.items);
   const dispatch = useDispatch();
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [deliveryDate, setDeliveryDate] = useState('');
@@ -43,7 +43,7 @@ export const CartPage = () => {
   };
 
   const validateContact = (e) => {
-    //regEx to prevent from typing letters
+    //regEx to prevent from typing letters and adding limit of 9 digits
     const re = /^[0-9]{0,9}$/;
 
     if (e.target.value === '' || re.test(e.target.value)) {
@@ -71,7 +71,7 @@ export const CartPage = () => {
     //console.log(e.target.value);
   };
 
-  const placeOrder = async (e) => {
+  const submitOrder = async (e) => {
     // to prevent from throwing error on preventDefault
     e.preventDefault();
     /* if (e && e.preventDefault) {
@@ -108,7 +108,7 @@ export const CartPage = () => {
       dispatch(updateShopOrder(response.data));
       dispatch(clearCart());
 
-      console.log('response from placeOrder =>', response.data);
+      console.log('response from submitOrder =>', response.data);
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -116,7 +116,7 @@ export const CartPage = () => {
 
   return (
     <div>
-      <p>CartPage</p>
+      <p>Carrinho</p>
       {!successMessage && (
         <>
           {cartItems.length > 0 ? (
@@ -129,78 +129,30 @@ export const CartPage = () => {
                 })}
               </div>
 
-              <div ref={formRef} className={` ${isNotVisible && 'order-form'}`}>
-                <form onSubmit={placeOrder}>
-                  <div>
-                    <h2>Dados de entrega</h2>
-                  </div>
-                  <div>
-                    <label htmlFor='contact'>Contacto</label>
-                    <div>
-                      <input name='contact' type='text' required value={contact} onChange={(e) => validateContact(e)} placeholder='912345678' />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor='deliveryDate'>Data & Hora de entrega</label>
-
-                    <div>
-                      <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} />
-                    </div>
-                  </div>
-
-                  <fieldset>
-                    <legend>Entrega ou Take Away?</legend>
-                    <div>
-                      <label htmlFor='delivery'>Com Entrega</label>
-                      <input type='radio' name='delivery' value='delivery' checked={deliveryMethod === 'delivery'} onChange={handleRadioClick} />
-                    </div>
-                    <div>
-                      <label htmlFor='takeAway'>Take Away</label>
-                      <input type='radio' name='takeAway' value='takeAway' checked={deliveryMethod === 'takeAway'} onChange={handleRadioClick} />
-                    </div>
-                  </fieldset>
-
-                  <fieldset ref={addressRef} className={` ${isAddressNotVisible && 'order-form'}`}>
-                    <legend>Morada</legend>
-                    <div>
-                      <label htmlFor='addressStreet'>Rua</label>
-                      <div>
-                        <input name='addressStreet' type='text' required={requiredInput} value={addressStreet} onChange={(e) => setAddressStreet(e.target.value)} placeholder='Rua dos reis n 7' />
-                      </div>
-                    </div>
-                    <div>
-                      <label htmlFor='addressCode'>Código Postal</label>
-                      <div>
-                        <input name='addressCode' type='text' required={requiredInput} value={addressCode} onChange={(e) => validateAddressCode(e)} placeholder='8800-123' />
-                      </div>
-                    </div>
-                    <div>
-                      <label htmlFor='addressCity'>Cidade</label>
-                      <div>
-                        <input name='addressCity' type='text' required={requiredInput} value={addressCity} onChange={(e) => setAddressCity(e.target.value)} placeholder='Tavira' />
-                      </div>
-                    </div>
-                  </fieldset>
-
-                  <div>
-                    <label htmlFor='message'>Mensagem</label>
-                    <div>
-                      <textarea id='email-message' name='message' value={message} placeholder='Escreva aqui a sua mensagem...' onChange={(e) => setMessage(e.target.value)}></textarea>
-                    </div>
-                  </div>
-
-                  {errorMessage && <p>{errorMessage}</p>}
-
-                  <div>
-                    <span onClick={() => navigate(-1)}>Back</span>
-
-                    <button type='submit' onClick={() => placeOrder()}>
-                      Encomendar
-                    </button>
-                  </div>
-                </form>
-              </div>
+              <OrderInfo
+                formRef={formRef}
+                isNotVisible={isNotVisible}
+                submitOrder={submitOrder}
+                contact={contact}
+                validateContact={validateContact}
+                deliveryDate={deliveryDate}
+                setDeliveryDate={setDeliveryDate}
+                deliveryMethod={deliveryMethod}
+                handleRadioClick={handleRadioClick}
+                addressRef={addressRef}
+                isAddressNotVisible={isAddressNotVisible}
+                requiredInput={requiredInput}
+                addressStreet={addressStreet}
+                setAddressStreet={setAddressStreet}
+                addressCode={addressCode}
+                validateAddressCode={validateAddressCode}
+                addressCity={addressCity}
+                setAddressCity={setAddressCity}
+                message={message}
+                setMessage={setMessage}
+                errorMessage={errorMessage}
+                navigate={navigate}
+              />
 
               <div>
                 <p>Total: {cartTotal.toFixed(2)}€</p>

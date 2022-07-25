@@ -125,7 +125,7 @@ export function ShopOrder({ order }) {
         <p>
           <b>Status: </b> {translateStatus(order.orderStatus)}
         </p>
-        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>} </>}
+        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={handleConfirmOrder}>Confirmar</button>} </>}
       </div>
 
       {order.message && (
@@ -141,15 +141,15 @@ export function ShopOrder({ order }) {
             return <span key={index}> {item}</span>;
           })}
       </div>
-      <p>
-        <b>Total:</b> {order.total}€
-      </p>
       <div>
         <p>
           <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
         </p>
         {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
       </div>
+      <p>
+        <b>Total:</b> {order.total}€
+      </p>
       {user.userType === 'admin' && (
         <Link to={`/orders/edit/${order._id}`}>
           <span>Editar </span>

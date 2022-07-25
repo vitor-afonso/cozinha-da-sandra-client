@@ -87,11 +87,8 @@ export const SendEmailPage = () => {
           {errorMessage && <p>{errorMessage}</p>}
 
           <div>
-            <div>
-              <button type='button' onClick={() => navigate(-1)}>
-                Back
-              </button>
-            </div>
+            <span onClick={() => navigate(-1)}>Voltar</span>
+
             <button type='submit'>Enviar</button>
           </div>
         </form>
