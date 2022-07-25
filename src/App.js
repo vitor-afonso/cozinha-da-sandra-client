@@ -26,6 +26,7 @@ import { getShopItems } from './redux/features/items/itemsSlice';
 import { getShopOrders } from './redux/features/orders/ordersSlice';
 import { AuthContext } from './context/auth.context';
 import { SendEmailPage } from './pages/SendEmailPage';
+import { EditOrderPage } from './pages/EditOrderPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ function App() {
         <Route path='/salgados' element={<SalgadosPage />} />
         <Route path='/users' element={<UsersPage />} />
         <Route path='/orders' element={<OrdersPage />} />
-        <Route path='/orders/edit/:orderId' element={<OrdersPage />} />
+        <Route path='/orders/edit/:orderId' element={<EditOrderPage />} />
         <Route path='/items/add' element={<NewItemPage />} />
         <Route path='/items/:itemId' element={<ItemDetailsPage />} />
         <Route path='/items/edit/:itemId' element={<EditItemPage />} />

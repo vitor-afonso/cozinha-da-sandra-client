@@ -1,10 +1,12 @@
 // jshint esversion:9
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/auth.context';
 import { parseDate } from '../utils/app.utils';
 
 export function ShopOrder({ order, handleConfirmOrder }) {
+  const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
@@ -47,11 +49,11 @@ export function ShopOrder({ order, handleConfirmOrder }) {
 
   const translateStatus = (status) => {
     if (status === 'pending') {
-      return 'Pendente';
+      return 'Pendente ';
     } else if (status === 'confirmed') {
-      return 'Confirmado';
+      return 'Confirmado ';
     } else {
-      return 'Rejeitado';
+      return 'Rejeitado ';
     }
   };
 
@@ -60,36 +62,56 @@ export function ShopOrder({ order, handleConfirmOrder }) {
       <p>
         <b>ID</b>: {order._id}
       </p>
-      <p>Utilizador: {order.userId.username}</p>
-      <p>Telefone: {order.contact}</p>
-      {order.address && <p>Morada de entrega: {order.address}</p>}
-      <p>Data de criação: {createdAt}</p>
-      <p>Data de entrega: {deliveredAt}</p>
+      <p>
+        <b>Utilizador:</b> {order.userId.username}
+      </p>
+      <p>
+        <b>Telefone:</b> {order.contact}
+      </p>
+      {order.address && (
+        <p>
+          <b>Morada de entrega:</b> {order.address}
+        </p>
+      )}
+      <p>
+        <b>Data de criação:</b> {createdAt}
+      </p>
+      <p>
+        <b>Data de entrega:</b> {deliveredAt}
+      </p>
       <div>
-        <p>Status: {translateStatus(order.orderStatus)}</p>
-
-        {order.orderStatus === 'pending' && (
-          <>
-            {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>}
-
-            {location.pathname === '/orders' && (
-              <Link to={`/send-email/orders/${order._id}`}>
-                <span>Contactar cliente</span>
-              </Link>
-            )}
-          </>
-        )}
+        <p>
+          <b>Status: </b> {translateStatus(order.orderStatus)}
+          {location.pathname === '/orders' && (
+            <Link to={`/send-email/orders/${order._id}`}>
+              <span>Contactar cliente</span>
+            </Link>
+          )}
+        </p>
+        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={() => handleConfirmOrder(order._id)}>Confirmar</button>} </>}
       </div>
-      {order.message && <p>Mensagem: {order.message}</p>}
+
+      {order.message && (
+        <p>
+          <b>Mensagem:</b> {order.message}
+        </p>
+      )}
 
       <div>
-        Items:
+        <b>Items:</b>
         {itemsQuantity.length > 0 &&
           itemsQuantity.map((item, index) => {
-            return <p key={index}>{item}</p>;
+            return <span key={index}> {item}</span>;
           })}
       </div>
-      <p>Preço Total: {order.total}€</p>
+      <p>
+        <b>Total:</b> {order.total}€
+      </p>
+      {user.userType === 'admin' && (
+        <Link to={`/orders/edit/${order._id}`}>
+          <span>Edit</span>
+        </Link>
+      )}
       <br />
       <hr />
     </div>

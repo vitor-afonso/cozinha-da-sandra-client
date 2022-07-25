@@ -53,5 +53,22 @@ const formatDate = (date) => {
   return formatedDate;
 };
 
+const getItemsQuantity = (order) => {
+  const items = {};
+  const itemsArray = [];
+
+  // creates the item(key) and updates the quantity(value) for each item
+  order.items.forEach((item) => {
+    items[item.name] = (items[item.name] || 0) + 1;
+  });
+
+  // creates a string from each property in the object to be added to the array
+  for (let i in items) {
+    itemsArray.push(`${i}: ${items[i]}`);
+  }
+  return itemsArray;
+};
+
 exports.parseDate = parseDate;
 exports.formatDate = formatDate;
+exports.getItemsQuantity = getItemsQuantity;
