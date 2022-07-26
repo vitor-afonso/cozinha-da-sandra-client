@@ -1,8 +1,10 @@
 // jshint esversion:9
 
 import { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addItem, uploadImage } from '../api';
+import { createItem, uploadImage } from '../api';
+import { addNewShopItem } from '../redux/features/items/itemsSlice';
 
 export const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -10,44 +12,13 @@ export const NewItemPage = () => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [tempImageUrl, setTempImageUrl] = useState('');
-  const inputFileUpload = useRef(null);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const inputFileUpload = useRef(null);
+  const submitForm = useRef(null);
   const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      if (objImageToUpload) {
-        const uploadData = new FormData();
-
-        uploadData.append('imageUrl', objImageToUpload);
-
-        let { fileUrl } = await uploadImage(uploadData);
-
-        const requestBody = { name, category, imageUrl: fileUrl, description, price: Number(price) };
-
-        let { data } = await addItem(requestBody);
-
-        //console.log('newly created item =>', data);
-
-        setSuccessMessage('Item criado com sucesso.');
-      } else {
-        const requestBody = { name, category, description, price };
-
-        let { data } = await addItem(requestBody);
-
-        console.log('newly created item =>', data);
-
-        setSuccessMessage('Item criado com sucesso.');
-      }
-    } catch (error) {
-      const errorDescription = error.response.data.message;
-      setErrorMessage(errorDescription);
-    }
-  };
+  const dispatch = useDispatch();
 
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
@@ -69,9 +40,49 @@ export const NewItemPage = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (objImageToUpload) {
+        const uploadData = new FormData();
+
+        uploadData.append('imageUrl', objImageToUpload);
+
+        let { fileUrl } = await uploadImage(uploadData);
+
+        const requestBody = { name, category, imageUrl: fileUrl, description, price: Number(price) };
+
+        let { data } = await createItem(requestBody);
+
+        //console.log('newly created item =>', data);
+
+        dispatch(addNewShopItem(data));
+
+        setSuccessMessage('Item criado com sucesso.');
+
+        setTimeout(() => navigate('/'), 5000);
+      } else {
+        const requestBody = { name, category, description, price };
+
+        let { data } = await createItem(requestBody);
+
+        dispatch(addNewShopItem(data));
+
+        //console.log('newly created item =>', data);
+
+        setSuccessMessage('Item criado com sucesso.');
+
+        setTimeout(() => navigate('/'), 5000);
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
   return (
     <div>
-      <h2>Adicionar novo item</h2>
+      <h2>Criar novo item</h2>
 
       {!successMessage && (
         <form onSubmit={handleSubmit}>
@@ -113,19 +124,29 @@ export const NewItemPage = () => {
           <div>
             <div>
               <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
-              <button type='button' onClick={() => navigate(-1)}>
-                Back
-              </button>
               <button type='button' onClick={() => inputFileUpload.current.click()}>
                 Escolher Foto
               </button>
             </div>
-            <button type='submit'>Adicionar</button>
+            <button type='submit' ref={submitForm} hidden>
+              Criar Item
+            </button>
           </div>
         </form>
       )}
 
       {successMessage && <p>{successMessage}</p>}
+
+      <div>
+        {!successMessage && (
+          <>
+            <span onClick={() => navigate(-1)}>Voltar</span>
+            <button type='button' onClick={() => submitForm.current.click()}>
+              Criar Item
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 };

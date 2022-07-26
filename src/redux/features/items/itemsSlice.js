@@ -81,6 +81,10 @@ const itemsSlice = createSlice({
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
     },
+    addNewShopItem: (state, { payload }) => {
+      state.shopItems.push(payload);
+      //console.log('current shop orders  =>', current(state).shopOrders);
+    },
   },
   extraReducers: {
     [getShopItems.pending]: (state) => {
@@ -97,5 +101,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem } = itemsSlice.actions;
 export default itemsSlice.reducer;

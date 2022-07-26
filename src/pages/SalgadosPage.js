@@ -2,14 +2,14 @@
 
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
 
 export const SalgadosPage = () => {
   const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
-  const { isLoggedIn, user } = useContext(AuthContext);
-
+  const { isLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -28,11 +28,15 @@ export const SalgadosPage = () => {
         </div>
       )}
 
-      {isLoggedIn && (
-        <button>
-          <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>
-        </button>
-      )}
+      <>
+        <span onClick={() => navigate(-1)}>Voltar</span>
+
+        {isLoggedIn && (
+          <button>
+            <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>
+          </button>
+        )}
+      </>
     </div>
   );
 };

@@ -5,10 +5,11 @@ import { ShopOrder } from './../components/ShopOrder';
 import { useEffect, useRef, useState } from 'react';
 
 import { getAllOrders } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 export const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
-
+  const navigate = useNavigate();
   const adminEffectRan = useRef(false);
 
   useEffect(() => {
@@ -38,6 +39,9 @@ export const OrdersPage = () => {
         orders.map((order, index) => {
           return <ShopOrder key={index} order={order} />;
         })}
+      <div>
+        <span onClick={() => navigate(-1)}>Voltar</span>
+      </div>
     </div>
   );
 };

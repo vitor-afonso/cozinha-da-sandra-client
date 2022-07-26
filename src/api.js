@@ -42,7 +42,7 @@ export const deleteUser = (userId) => {
 
 /************************* ITEMS *****************************/
 
-export const addItem = (item) => {
+export const createItem = (item) => {
   return axios.post(`${API_URL}/items`, item, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
