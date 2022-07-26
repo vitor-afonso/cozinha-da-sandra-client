@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { parseDate } from '../utils/app.utils';
+import { parseDateToShow } from '../utils/app.utils';
 
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
@@ -21,8 +21,8 @@ export function ShopOrder({ order }) {
       const itemsArray = getItemsQuantity(order);
 
       setItemsQuantity(itemsArray);
-      setCreatedAt(parseDate(order.createdAt));
-      setDeliveredAt(parseDate(order.deliveryDate));
+      setCreatedAt(parseDateToShow(order.createdAt));
+      setDeliveredAt(parseDateToShow(order.deliveryDate));
     }
   }, [order]);
 

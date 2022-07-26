@@ -8,7 +8,7 @@ import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
 import { clearCart } from '../redux/features/items/itemsSlice';
-import { updateShopOrder } from '../redux/features/orders/ordersSlice';
+import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
   const { shopItems, cartItems, cartTotal } = useSelector((store) => store.items);
@@ -91,6 +91,7 @@ export const CartPage = () => {
       if (deliveryMethod === 'delivery') {
         fullAddress = [addressStreet, addressCode, addressCity];
       }
+
       let requestBody = {
         deliveryDate: new Date(deliveryDate),
         contact,
@@ -105,7 +106,7 @@ export const CartPage = () => {
       let response = await createOrder(requestBody);
 
       setSuccessMessage('Encomenda criada com sucesso. Será contactado o mais brevemente possivel para confirmar a encomenda e receber os dados de pagamento.');
-      dispatch(updateShopOrder(response.data));
+      dispatch(addNewShopOrder(response.data));
       dispatch(clearCart());
 
       console.log('response from submitOrder =>', response.data);

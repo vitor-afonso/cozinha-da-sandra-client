@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-const parseDate = (dateToParse) => {
+const parseDateToShow = (dateToParse) => {
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   let dateMinutes;
 
@@ -13,7 +13,7 @@ const parseDate = (dateToParse) => {
   let dateYear = date.getFullYear();
   let dateMonth = months[date.getMonth()];
   let dateDay = date.getDate();
-  let dateHour = date.getHours() - 1;
+  let dateHour = date.getHours();
   //to add a 0 when the MINUTES is only one digit
   if (date.getMinutes() <= 9) {
     dateMinutes = `${0}${date.getMinutes()}`;
@@ -25,12 +25,12 @@ const parseDate = (dateToParse) => {
   return parsedDate;
 };
 
-const formatDate = (date) => {
+const parseDateToEdit = (dateToFormat) => {
   // to prevent other than date type arguments
-  if (typeof date.getMonth === 'function') {
+  if (typeof dateToFormat.getMonth === 'function') {
     return;
   }
-
+  let date = new Date(dateToFormat);
   let dateYear = date.getFullYear();
   let dateMonth;
   //to add a 0 when the MONTH is only one digit
@@ -39,8 +39,20 @@ const formatDate = (date) => {
   } else {
     dateMonth = date.getMonth() + 1;
   }
-  let dateDay = date.getDate() + 1;
-  let dateHour = date.getHours();
+  let dateDay;
+  //to add a 0 when the DAY is only one digit
+  if (date.getDate() <= 9) {
+    dateDay = `${0}${date.getDate()}`;
+  } else {
+    dateDay = date.getDate();
+  }
+  let dateHour;
+  //to add a 0 when the HOUR is only one digit
+  if (date.getUTCHours() <= 9) {
+    dateHour = `${0}${date.getUTCHours() + 1}`;
+  } else {
+    dateHour = date.getUTCHours() + 1;
+  }
   let dateMinutes;
   //to add a 0 when the MINUTES is only one digit
   if (date.getMinutes() <= 9) {
@@ -69,6 +81,6 @@ const getItemsQuantity = (order) => {
   return itemsArray;
 };
 
-exports.parseDate = parseDate;
-exports.formatDate = formatDate;
+exports.parseDateToShow = parseDateToShow;
+exports.parseDateToEdit = parseDateToEdit;
 exports.getItemsQuantity = getItemsQuantity;
