@@ -34,10 +34,10 @@ const parseDateToEdit = (dateToFormat) => {
   let dateYear = date.getFullYear();
   let dateMonth;
   //to add a 0 when the MONTH is only one digit
-  if (date.getMonth() <= 9) {
-    dateMonth = `${0}${date.getMonth() + 1}`;
+  if (date.getUTCMonth() <= 9) {
+    dateMonth = `${0}${date.getUTCMonth() + 1}`;
   } else {
-    dateMonth = date.getMonth() + 1;
+    dateMonth = date.getUTCMonth() + 1;
   }
   let dateDay;
   //to add a 0 when the DAY is only one digit

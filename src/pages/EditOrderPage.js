@@ -121,7 +121,7 @@ export const EditOrderPage = () => {
         <>
           <h2>EditOrderPage</h2>
           <p>
-            <b>Autor da enconmenda:</b> {order.userId.username}
+            <b>Autor da encomenda:</b> {order.userId.username}
           </p>
           <form onSubmit={handleSubmit}>
             <div>
@@ -138,7 +138,7 @@ export const EditOrderPage = () => {
               <label htmlFor='deliveryDate'>Data & Hora de entrega</label>
 
               <div>
-                <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} />
+                <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} min={new Date()} />
               </div>
             </div>
 
@@ -178,7 +178,7 @@ export const EditOrderPage = () => {
       )}
       {successMessage && <p>{successMessage}</p>}
       <div>
-        <span onClick={() => navigate('/orders')}>Voltar</span>
+        <span onClick={() => navigate(-1)}>Voltar</span>
 
         {!successMessage && (
           <button type='button' onClick={() => submitForm.current.click()}>
