@@ -14,20 +14,19 @@ export const EditOrderPage = () => {
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [order, setOrder] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [contact, setContact] = useState('');
   const [fullAddress, setFullAddress] = useState('');
   const [message, setMessage] = useState('');
-  const [order, setOrder] = useState(null);
+  const [deliveryMethod, setDeliveryMethod] = useState('');
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState('');
-
-  const navigate = useNavigate();
+  const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
-  const adminEffectRan = useRef(false);
   const { orderId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (adminEffectRan.current === false && orderId) {
@@ -52,6 +51,7 @@ export const EditOrderPage = () => {
   const setOrderDetails = (order) => {
     setContact(order.contact);
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
+    console.log('edit order parseDateToEdit deliveryDate:', parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
     if (order.deliveryMethod === 'delivery') {
@@ -83,14 +83,27 @@ export const EditOrderPage = () => {
     }
   };
 
+  const clearInputs = () => {
+    setContact('');
+    setDeliveryDate('');
+    setDeliveryMethod('');
+    setFullAddress('');
+    setMessage('');
+  };
+
+  const clearInputsAndGoBack = () => {
+    clearInputs();
+    navigate(-1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!contact || !user._id) {
       return;
     }
-    if (!deliveryMethod) {
-      setErrorMessage('Por favor escolha um metodo de entrega.');
+    if (deliveryMethod === 'delivery' && !fullAddress) {
+      setErrorMessage('Por favor adicione morada para entrega.');
       return;
     }
 
@@ -110,6 +123,8 @@ export const EditOrderPage = () => {
       // this will update the state with the updated order
       dispatch(deleteShopOrder({ id: orderId }));
       dispatch(addNewShopOrder(response.data));
+
+      clearInputs();
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -138,7 +153,7 @@ export const EditOrderPage = () => {
               <label htmlFor='deliveryDate'>Data & Hora de entrega</label>
 
               <div>
-                <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} min={new Date()} />
+                <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} min={new Date().toISOString().slice(0, -8)} />
               </div>
             </div>
 
@@ -176,9 +191,11 @@ export const EditOrderPage = () => {
           </form>
         </>
       )}
+
       {successMessage && <p>{successMessage}</p>}
+
       <div>
-        <span onClick={() => navigate(-1)}>Voltar</span>
+        <span onClick={clearInputsAndGoBack}>Voltar</span>
 
         {!successMessage && (
           <button type='button' onClick={() => submitForm.current.click()}>

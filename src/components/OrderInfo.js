@@ -1,4 +1,5 @@
 // jshint esversion:9
+import ms from 'ms';
 
 export const OrderInfo = ({
   formRef,
@@ -24,6 +25,11 @@ export const OrderInfo = ({
   errorMessage,
   navigate,
 }) => {
+  // ms converts days to milliseconds
+  // then i can use it to difine the date that the user cal book
+  const minDay = ms('2d');
+  const maxDay = ms('31d');
+
   return (
     <div ref={formRef} className={` ${isNotVisible && 'order-form'}`}>
       <form onSubmit={submitOrder}>
@@ -41,7 +47,15 @@ export const OrderInfo = ({
           <label htmlFor='deliveryDate'>Data & Hora de entrega</label>
 
           <div>
-            <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} />
+            <input
+              name='deliveryDate'
+              type='datetime-local'
+              required
+              value={deliveryDate}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+              min={new Date(+new Date() + minDay).toISOString().slice(0, -8)}
+              max={new Date(+new Date() + maxDay).toISOString().slice(0, -8)}
+            />
           </div>
         </div>
 
