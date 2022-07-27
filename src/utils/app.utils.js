@@ -81,52 +81,6 @@ const getItemsQuantity = (order) => {
   return itemsArray;
 };
 
-const parseClientMinDate = () => {
-  let date = new Date();
-  let dateYear = date.getFullYear();
-  let dateMonth;
-  //to add a 0 when the MONTH is only one digit
-  if (date.getUTCMonth() <= 9) {
-    dateMonth = `${0}${date.getUTCMonth() + 1}`;
-  } else {
-    dateMonth = date.getUTCMonth() + 1;
-  }
-  let dateDay;
-  //to add a 0 when the DAY is only one digit
-  if (date.getDate() <= 9) {
-    dateDay = `${0}${date.getDate() + 5}`;
-  } else {
-    dateDay = date.getDate() + 5;
-  }
-  let minDate = `${dateYear}-${dateMonth}-${dateDay}`;
-
-  return minDate;
-};
-
-const parseAdminMinDate = () => {
-  let date = new Date();
-  let dateYear = date.getFullYear();
-  let dateMonth;
-  //to add a 0 when the MONTH is only one digit
-  if (date.getUTCMonth() <= 9) {
-    dateMonth = `${0}${date.getUTCMonth() + 1}`;
-  } else {
-    dateMonth = date.getUTCMonth() + 1;
-  }
-  let dateDay;
-  //to add a 0 when the DAY is only one digit
-  if (date.getDate() <= 9) {
-    dateDay = `${0}${date.getDate() + 1}`;
-  } else {
-    dateDay = date.getDate() + 1;
-  }
-  let minDate = `${dateYear}-${dateMonth}-${dateDay}T00:00`;
-
-  return minDate;
-};
-
 exports.parseDateToShow = parseDateToShow;
 exports.parseDateToEdit = parseDateToEdit;
 exports.getItemsQuantity = getItemsQuantity;
-exports.parseClientMinDate = parseClientMinDate;
-exports.parseAdminMinDate = parseAdminMinDate;
