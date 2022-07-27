@@ -51,7 +51,6 @@ export const EditOrderPage = () => {
   const setOrderDetails = (order) => {
     setContact(order.contact);
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
-    console.log('edit order parseDateToEdit deliveryDate:', parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
     if (order.deliveryMethod === 'delivery') {

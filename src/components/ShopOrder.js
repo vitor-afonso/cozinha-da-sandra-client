@@ -121,6 +121,9 @@ export function ShopOrder({ order }) {
       <p>
         <b>Data de entrega:</b> {deliveredAt}
       </p>
+      <p>
+        <b>Metodo de entrega:</b> {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}
+      </p>
       <div>
         <p>
           <b>Status: </b> {translateStatus(order.orderStatus)}
