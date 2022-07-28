@@ -10,7 +10,7 @@ const initialState = {
   cartTotal: 0,
   orderDeliveryFee: 2.99,
   addedDeliveryFee: false,
-  hasDeliveryDiscount: true, //change this to give discount or not to all placed orders
+  hasDeliveryDiscount: false, //change this to give discount or not to all placed orders
   isLoading: true,
 };
 

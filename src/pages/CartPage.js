@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
-import { addDeliveryFee, clearCart, handlecartTotalDiscount, removeDeliveryFee } from '../redux/features/items/itemsSlice';
+import { addDeliveryFee, clearCart, removeDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
