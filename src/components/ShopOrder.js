@@ -1,46 +1,34 @@
 // jshint esversion:9
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { parseDateToShow } from '../utils/app.utils';
+import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
 export function ShopOrder({ order }) {
+  const { orderDeliveryFee } = useSelector((store) => store.items);
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
+  const [itemsPrice, setItemsPrice] = useState([]);
   const dispatch = useDispatch();
   const location = useLocation();
 
   useEffect(() => {
     if (order) {
-      const itemsArray = getItemsQuantity(order);
+      const itemsQuantityArray = getItemsQuantity(order);
+      const itemsPriceArray = getItemsPrice(order);
 
-      setItemsQuantity(itemsArray);
+      setItemsQuantity(itemsQuantityArray);
+      setItemsPrice(itemsPriceArray);
       setCreatedAt(parseDateToShow(order.createdAt));
       setDeliveredAt(parseDateToShow(order.deliveryDate));
     }
   }, [order]);
-
-  const getItemsQuantity = (order) => {
-    const items = {};
-    const itemsArray = [];
-
-    // creates the item(key) and updates the quantity(value) for each item
-    order.items.forEach((item) => {
-      items[item.name] = (items[item.name] || 0) + 1;
-    });
-
-    // creates a string from each property in the object to be added to the array
-    for (let i in items) {
-      itemsArray.push(`${i}: ${items[i]}`);
-    }
-    return itemsArray;
-  };
 
   //fn compares dates to know if we can render confirm button
   const checkDeliveryDate = () => {
@@ -138,12 +126,46 @@ export function ShopOrder({ order }) {
       )}
 
       <div>
-        <b>Items:</b>
+        <b>Items Quantidade: </b>
         {itemsQuantity.length > 0 &&
           itemsQuantity.map((item, index) => {
-            return <span key={index}> {item}</span>;
+            return (
+              <span key={index}>
+                {item}
+                <br />
+              </span>
+            );
           })}
       </div>
+      <br />
+
+      <div>
+        <b>Items Preço: </b>
+        {itemsPrice.length > 0 &&
+          itemsPrice.map((item, index) => {
+            return (
+              <span key={index}>
+                {item}€
+                <br />
+              </span>
+            );
+          })}
+      </div>
+
+      {order.deliveryMethod === 'delivery' && (
+        <>
+          {order.deliveryDiscount ? (
+            <p>
+              <b>Taxa de entrega:</b> <span style={{ textDecoration: 'line-through' }}>{order.deliveryFee}€</span> 0€
+            </p>
+          ) : (
+            <p>
+              <b>Taxa de entrega:</b> {order.deliveryFee}€
+            </p>
+          )}
+        </>
+      )}
+
       <div>
         <p>
           <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}

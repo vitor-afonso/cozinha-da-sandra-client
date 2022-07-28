@@ -8,6 +8,9 @@ const initialState = {
   cartItems: [],
   cartAmount: 0,
   cartTotal: 0,
+  orderDeliveryFee: 2.99,
+  hasDeliveryFee: false,
+  hasDeliveryDiscount: false,
   isLoading: true,
 };
 
@@ -81,6 +84,26 @@ const itemsSlice = createSlice({
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
     },
+    addDeliveryFee: (state) => {
+      if (state.hasDeliveryDiscount) {
+        state.hasDeliveryFee = true;
+        return;
+      }
+      if (!state.hasDeliveryFee) {
+        state.cartTotal += state.orderDeliveryFee;
+        state.hasDeliveryFee = true;
+      }
+    },
+    removeDeliveryFee: (state) => {
+      if (state.hasDeliveryDiscount) {
+        state.hasDeliveryFee = false;
+        return;
+      }
+      if (state.hasDeliveryFee) {
+        state.cartTotal -= state.orderDeliveryFee;
+        state.hasDeliveryFee = false;
+      }
+    },
     addNewShopItem: (state, { payload }) => {
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
@@ -101,5 +124,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, addDeliveryFee, removeDeliveryFee } = itemsSlice.actions;
 export default itemsSlice.reducer;

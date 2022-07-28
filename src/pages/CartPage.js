@@ -7,16 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
-import { clearCart } from '../redux/features/items/itemsSlice';
+import { addDeliveryFee, clearCart, removeDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
-  const { shopItems, cartItems, cartTotal } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState('');
   const [contact, setContact] = useState('');
   const [addressStreet, setAddressStreet] = useState('');
   const [addressCity, setAddressCity] = useState('');
@@ -27,7 +28,6 @@ export const CartPage = () => {
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
 
   const [requiredInput, setRequiredInput] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState('');
 
   const navigate = useNavigate();
   const formRef = useRef();
@@ -64,9 +64,11 @@ export const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
+      dispatch(addDeliveryFee());
     } else {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
+      dispatch(removeDeliveryFee());
     }
     //console.log(e.target.value);
   };
@@ -98,6 +100,8 @@ export const CartPage = () => {
         address: fullAddress ? fullAddress.join(' ') : '',
         message,
         deliveryMethod,
+        deliveryFee: deliveryMethod === 'delivery' ? orderDeliveryFee : 0,
+        deliveryDiscount: hasDeliveryDiscount,
         total: cartTotal.toFixed(2),
         userId: user._id,
         items: cartItems,
@@ -105,7 +109,9 @@ export const CartPage = () => {
 
       let response = await createOrder(requestBody);
 
-      setSuccessMessage('Encomenda criada com sucesso. Será contactado o mais brevemente possivel para confirmar a encomenda e receber os dados de pagamento.');
+      setSuccessMessage(
+        'Encomenda criada com sucesso. Será contactado o mais brevemente possivel para confirmar a encomenda e receber os dados de pagamento. Encontre os detalhes da sua encomenda no seu perfil.'
+      );
       dispatch(addNewShopOrder(response.data));
       dispatch(clearCart());
 
@@ -129,6 +135,18 @@ export const CartPage = () => {
                   }
                 })}
               </div>
+
+              {deliveryMethod === 'delivery' && (
+                <div>
+                  {hasDeliveryDiscount ? (
+                    <p>
+                      Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
+                    </p>
+                  ) : (
+                    <p>Taxa de entrega: {orderDeliveryFee}€</p>
+                  )}
+                </div>
+              )}
 
               <OrderInfo
                 formRef={formRef}
