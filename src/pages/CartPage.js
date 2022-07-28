@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
-import { addDeliveryFee, clearCart, removeDeliveryFee } from '../redux/features/items/itemsSlice';
+import { addDeliveryFee, clearCart, handlecartTotalDiscount, removeDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, addedDeliveryFee, cartTotalDiscount } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -64,12 +64,18 @@ export const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      dispatch(addDeliveryFee());
-    } else {
+      if (!cartTotalDiscount || !addedDeliveryFee) {
+        dispatch(addDeliveryFee());
+      }
+    }
+    if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      dispatch(removeDeliveryFee());
+      if (addedDeliveryFee || cartTotalDiscount) {
+        dispatch(removeDeliveryFee());
+      }
     }
+
     //console.log(e.target.value);
   };
 
@@ -138,7 +144,7 @@ export const CartPage = () => {
 
               {deliveryMethod === 'delivery' && (
                 <div>
-                  {hasDeliveryDiscount ? (
+                  {hasDeliveryDiscount || cartTotal > 20 ? (
                     <p>
                       Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
                     </p>

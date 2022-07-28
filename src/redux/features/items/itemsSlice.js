@@ -9,8 +9,8 @@ const initialState = {
   cartAmount: 0,
   cartTotal: 0,
   orderDeliveryFee: 2.99,
-  hasDeliveryFee: false,
-  hasDeliveryDiscount: false,
+  addedDeliveryFee: false,
+  hasDeliveryDiscount: true, //change this to give discount or not to all placed orders
   isLoading: true,
 };
 
@@ -65,6 +65,7 @@ const itemsSlice = createSlice({
         state.cartTotal -= itemToRemove.price * itemToRemove.amount;
         itemToRemove.amount = 1;
       }
+
       //console.log('state.cartItems after removed item', current(state));
     },
 
@@ -72,7 +73,6 @@ const itemsSlice = createSlice({
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
 
       shopItem.amount++;
-      console.log('increasing quantity', current(state).cartItems);
     },
     decreaseItemAmount: (state, { payload }) => {
       //decreases quantity and removes one itemId from cartItems
@@ -84,26 +84,29 @@ const itemsSlice = createSlice({
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
     },
+
     addDeliveryFee: (state) => {
       if (state.hasDeliveryDiscount) {
-        state.hasDeliveryFee = true;
+        state.addedDeliveryFee = true;
         return;
       }
-      if (!state.hasDeliveryFee) {
+      if (!state.addedDeliveryFee) {
         state.cartTotal += state.orderDeliveryFee;
-        state.hasDeliveryFee = true;
+        state.addedDeliveryFee = true;
       }
     },
+
     removeDeliveryFee: (state) => {
       if (state.hasDeliveryDiscount) {
-        state.hasDeliveryFee = false;
+        state.addedDeliveryFee = false;
         return;
       }
-      if (state.hasDeliveryFee) {
+      if (state.addedDeliveryFee) {
         state.cartTotal -= state.orderDeliveryFee;
-        state.hasDeliveryFee = false;
+        state.addedDeliveryFee = false;
       }
     },
+
     addNewShopItem: (state, { payload }) => {
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
