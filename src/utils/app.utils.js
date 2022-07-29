@@ -34,7 +34,7 @@ const parseDateToEdit = (dateToFormat) => {
   let dateYear = date.getFullYear();
   let dateMonth;
   //to add a 0 when the MONTH is only one digit
-  if (date.getUTCMonth() <= 9) {
+  if (date.getUTCMonth() + 1 <= 9) {
     dateMonth = `${0}${date.getUTCMonth() + 1}`;
   } else {
     dateMonth = date.getUTCMonth() + 1;
@@ -48,7 +48,7 @@ const parseDateToEdit = (dateToFormat) => {
   }
   let dateHour;
   //to add a 0 when the HOUR is only one digit
-  if (date.getUTCHours() <= 9) {
+  if (date.getUTCHours() + 1 <= 9) {
     dateHour = `${0}${date.getUTCHours() + 1}`;
   } else {
     dateHour = date.getUTCHours() + 1;

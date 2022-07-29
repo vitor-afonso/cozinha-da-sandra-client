@@ -44,7 +44,7 @@ export const CartPage = () => {
 
   const validateContact = (e) => {
     //regEx to prevent from typing letters and adding limit of 9 digits
-    const re = /^[0-9]{0,9}$/;
+    const re = /^[0-9]{0,14}$/;
 
     if (e.target.value === '' || re.test(e.target.value)) {
       setContact(e.target.value);
@@ -64,14 +64,14 @@ export const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      if (!cartTotalDiscount || !addedDeliveryFee) {
+      if (!addedDeliveryFee) {
         dispatch(addDeliveryFee());
       }
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      if (addedDeliveryFee || cartTotalDiscount) {
+      if (addedDeliveryFee) {
         dispatch(removeDeliveryFee());
       }
     }

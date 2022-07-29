@@ -50,6 +50,7 @@ export const EditOrderPage = () => {
 
   const setOrderDetails = (order) => {
     setContact(order.contact);
+    console.log('edit order order.deliveryDate', parseDateToEdit(order.deliveryDate));
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
@@ -64,7 +65,7 @@ export const EditOrderPage = () => {
 
   const validateContact = (e) => {
     //regEx to prevent from typing letters and adding limit of 9 digits
-    const re = /^[0-9]{0,9}$/;
+    const re = /^[0-9]{0,14}$/;
 
     if (e.target.value === '' || re.test(e.target.value)) {
       setContact(e.target.value);
