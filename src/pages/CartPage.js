@@ -154,6 +154,12 @@ export const CartPage = () => {
                 </div>
               )}
 
+              <div>
+                <p>Total: {cartTotal.toFixed(2)}€</p>
+                {isNotVisible && <button onClick={() => toggleForm()}>Encomendar</button>}
+                <button onClick={() => dispatch(clearCart())}>Clear Cart</button>
+              </div>
+
               <OrderInfo
                 formRef={formRef}
                 isNotVisible={isNotVisible}
@@ -178,12 +184,6 @@ export const CartPage = () => {
                 errorMessage={errorMessage}
                 navigate={navigate}
               />
-
-              <div>
-                <p>Total: {cartTotal.toFixed(2)}€</p>
-                {isNotVisible && <button onClick={() => toggleForm()}>Encomendar</button>}
-                <button onClick={() => dispatch(clearCart())}>Clear Cart</button>
-              </div>
             </>
           ) : (
             <p>Sem items no carrinho.</p>
