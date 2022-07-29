@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
-import { addDeliveryFee, clearCart, removeDeliveryFee } from '../redux/features/items/itemsSlice';
+import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, addedDeliveryFee } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -64,26 +64,19 @@ export const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      if (!addedDeliveryFee) {
-        dispatch(addDeliveryFee({ deliveryMethod: e.target.value }));
-      }
+      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      if (addedDeliveryFee) {
-        dispatch(removeDeliveryFee({ deliveryMethod: e.target.value }));
-      }
+      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
     }
 
     //console.log(e.target.value);
   };
 
   const submitOrder = async (e) => {
-    // to prevent from throwing error on preventDefault
     e.preventDefault();
-    /* if (e && e.preventDefault) {
-    } */
 
     if (!contact || !user._id) {
       return;
@@ -106,11 +99,11 @@ export const CartPage = () => {
         address: fullAddress ? fullAddress.join(' ') : '',
         message,
         deliveryMethod,
-        deliveryFee: deliveryMethod === 'delivery' ? orderDeliveryFee : 0,
-        deliveryDiscount: hasDeliveryDiscount,
-        total: cartTotal.toFixed(2),
-        userId: user._id,
+        deliveryFee: addedDeliveryFee ? orderDeliveryFee : 0,
+        amountForFreeDelivery: amountForFreeDelivery,
         items: cartItems,
+        userId: user._id,
+        total: cartTotal.toFixed(2),
       };
 
       let response = await createOrder(requestBody);
@@ -144,7 +137,7 @@ export const CartPage = () => {
 
               {deliveryMethod === 'delivery' && (
                 <div>
-                  {hasDeliveryDiscount || cartTotal > 20 ? (
+                  {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
                     <p>
                       Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
                     </p>
@@ -155,7 +148,7 @@ export const CartPage = () => {
               )}
 
               <div>
-                <p>Total: {cartTotal.toFixed(2)}€</p>
+                <p>Total: {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€</p>
                 {isNotVisible && <button onClick={() => toggleForm()}>Encomendar</button>}
                 <button onClick={() => dispatch(clearCart())}>Clear Cart</button>
               </div>

@@ -26,7 +26,7 @@ export const OrderInfo = ({
   navigate,
 }) => {
   // ms converts days to milliseconds
-  // then i can use it to difine the date that the user cal book
+  // then i can use it to define the date that the user can book
   const minDay = ms('2d');
   const maxDay = ms('31d');
 

@@ -17,7 +17,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
       dispatch(removeFromCart({ id: _id }));
       return;
     }
-    dispatch(decreaseItemAmount({ id: _id, deliveryMethod: deliveryMethod }));
+    dispatch(decreaseItemAmount({ id: _id, deliveryMethod }));
   };
 
   const handleIncrease = () => {

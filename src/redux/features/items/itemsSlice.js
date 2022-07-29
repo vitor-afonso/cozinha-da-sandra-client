@@ -11,6 +11,7 @@ const initialState = {
   orderDeliveryFee: 2.99,
   addedDeliveryFee: false,
   hasDeliveryDiscount: false, //<= change this to give discount or not to all new orders
+  amountForFreeDelivery: 20,
   isLoading: true,
 };
 
@@ -41,12 +42,7 @@ const itemsSlice = createSlice({
       state.cartItems.push(shopItem._id);
       state.cartAmount++;
       state.cartTotal += shopItem.price;
-
-      //checks if discount is appliable when on increase/adding of items in cart
-      if (state.addedDeliveryFee && state.cartTotal > 20 && !state.hasDeliveryDiscount) {
-        state.cartTotal -= state.orderDeliveryFee;
-        state.addedDeliveryFee = false;
-      }
+      console.log('cartTotal after adding item to cart', current(state).cartTotal);
 
       //we have to use current if want to see the current state or it returns [PROXY]
       //console.log('adding to cart items  =>', current(state).cartItems);
@@ -89,41 +85,23 @@ const itemsSlice = createSlice({
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
 
-      //checks if discount is appliable when on decreasing of items in cart
-      if (!state.addedDeliveryFee && state.cartTotal < 20 && payload.deliveryMethod === 'delivery') {
-        state.cartTotal += state.orderDeliveryFee;
+      /* if (state.cartTotal < state.amountForFreeDelivery && payload.deliveryMethod === 'delivery') {
         state.addedDeliveryFee = true;
-      }
-
-      //console.log('state.cartItems after decrease item', current(shopItem));
+        state.amountForFreeDelivery = 25;
+      } */
     },
-
-    addDeliveryFee: (state, { payload }) => {
-      if (state.hasDeliveryDiscount) {
-        state.addedDeliveryFee = true;
-        return;
-      }
-      if (!state.addedDeliveryFee && state.cartTotal < 20 && payload.deliveryMethod === 'delivery') {
-        state.cartTotal += state.orderDeliveryFee;
-        state.addedDeliveryFee = true;
-      }
-    },
-
-    removeDeliveryFee: (state, { payload }) => {
-      if (state.hasDeliveryDiscount) {
-        state.addedDeliveryFee = false;
-        return;
-      }
-
-      if ((state.addedDeliveryFee && state.cartTotal > 20) || payload.deliveryMethod === 'takeAway') {
-        state.cartTotal -= state.orderDeliveryFee;
-        state.addedDeliveryFee = false;
-      }
-    },
-
     addNewShopItem: (state, { payload }) => {
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
+    },
+    handleAddedDeliveryFee: (state, { payload }) => {
+      if (payload.deliveryMethod === 'delivery') {
+        state.addedDeliveryFee = true;
+      }
+
+      if (payload.deliveryMethod === 'takeAway') {
+        state.addedDeliveryFee = false;
+      }
     },
   },
   extraReducers: {
@@ -141,5 +119,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, addDeliveryFee, removeDeliveryFee } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, handleAddedDeliveryFee } = itemsSlice.actions;
 export default itemsSlice.reducer;
