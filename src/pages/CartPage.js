@@ -11,7 +11,7 @@ import { addDeliveryFee, clearCart, removeDeliveryFee } from '../redux/features/
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 
 export const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, addedDeliveryFee, cartTotalDiscount } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, addedDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -65,14 +65,14 @@ export const CartPage = () => {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
       if (!addedDeliveryFee) {
-        dispatch(addDeliveryFee());
+        dispatch(addDeliveryFee({ deliveryMethod: e.target.value }));
       }
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
       if (addedDeliveryFee) {
-        dispatch(removeDeliveryFee());
+        dispatch(removeDeliveryFee({ deliveryMethod: e.target.value }));
       }
     }
 
@@ -137,7 +137,7 @@ export const CartPage = () => {
               <div>
                 {shopItems.map((item) => {
                   if (cartItems.includes(item._id)) {
-                    return <ShopItem key={item._id} {...item} />;
+                    return <ShopItem key={item._id} {...item} deliveryMethod={deliveryMethod} />;
                   }
                 })}
               </div>

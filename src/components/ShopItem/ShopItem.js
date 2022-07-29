@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from '../../redux/features/items/itemsSlice';
 
-export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) => {
+export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deliveryMethod }) => {
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
@@ -17,8 +17,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description }) =>
       dispatch(removeFromCart({ id: _id }));
       return;
     }
-    dispatch(decreaseItemAmount({ id: _id }));
+    dispatch(decreaseItemAmount({ id: _id, deliveryMethod: deliveryMethod }));
   };
+
   const handleIncrease = () => {
     dispatch(increaseItemAmount({ id: _id }));
     dispatch(addToCart({ id: _id }));

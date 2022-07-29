@@ -10,7 +10,7 @@ const initialState = {
   cartTotal: 0,
   orderDeliveryFee: 2.99,
   addedDeliveryFee: false,
-  hasDeliveryDiscount: false, //change this to give discount or not to all placed orders
+  hasDeliveryDiscount: false, //<= change this to give discount or not to all new orders
   isLoading: true,
 };
 
@@ -42,6 +42,12 @@ const itemsSlice = createSlice({
       state.cartAmount++;
       state.cartTotal += shopItem.price;
 
+      //checks if discount is appliable when on increase/adding of items in cart
+      if (state.addedDeliveryFee && state.cartTotal > 20 && !state.hasDeliveryDiscount) {
+        state.cartTotal -= state.orderDeliveryFee;
+        state.addedDeliveryFee = false;
+      }
+
       //we have to use current if want to see the current state or it returns [PROXY]
       //console.log('adding to cart items  =>', current(state).cartItems);
     },
@@ -66,12 +72,11 @@ const itemsSlice = createSlice({
         itemToRemove.amount = 1;
       }
 
-      //console.log('state.cartItems after removed item', current(state));
+      //console.log('state.cartItems after removed item', current(state.cartItems));
     },
 
     increaseItemAmount: (state, { payload }) => {
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
-
       shopItem.amount++;
     },
     decreaseItemAmount: (state, { payload }) => {
@@ -83,25 +88,34 @@ const itemsSlice = createSlice({
       shopItem.amount--;
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
+
+      //checks if discount is appliable when on decreasing of items in cart
+      if (!state.addedDeliveryFee && state.cartTotal < 20 && payload.deliveryMethod === 'delivery') {
+        state.cartTotal += state.orderDeliveryFee;
+        state.addedDeliveryFee = true;
+      }
+
+      //console.log('state.cartItems after decrease item', current(shopItem));
     },
 
-    addDeliveryFee: (state) => {
+    addDeliveryFee: (state, { payload }) => {
       if (state.hasDeliveryDiscount) {
         state.addedDeliveryFee = true;
         return;
       }
-      if (!state.addedDeliveryFee) {
+      if (!state.addedDeliveryFee && state.cartTotal < 20 && payload.deliveryMethod === 'delivery') {
         state.cartTotal += state.orderDeliveryFee;
         state.addedDeliveryFee = true;
       }
     },
 
-    removeDeliveryFee: (state) => {
+    removeDeliveryFee: (state, { payload }) => {
       if (state.hasDeliveryDiscount) {
         state.addedDeliveryFee = false;
         return;
       }
-      if (state.addedDeliveryFee) {
+
+      if ((state.addedDeliveryFee && state.cartTotal > 20) || payload.deliveryMethod === 'takeAway') {
         state.cartTotal -= state.orderDeliveryFee;
         state.addedDeliveryFee = false;
       }
