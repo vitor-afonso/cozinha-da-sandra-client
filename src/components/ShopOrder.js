@@ -9,7 +9,7 @@ import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSli
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
 export function ShopOrder({ order }) {
-  const { orderDeliveryFee } = useSelector((store) => store.items);
+  const { hasDeliveryDiscount } = useSelector((store) => store.items);
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
@@ -87,6 +87,17 @@ export function ShopOrder({ order }) {
     }
   };
 
+  const getTotal = () => {
+    if (order.deliveryDiscount) {
+      return order.total;
+    }
+
+    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
+      return order.total + order.deliveryFee;
+    }
+    return order.total;
+  };
+
   return (
     <div className='ShopOrder'>
       <p>
@@ -98,11 +109,6 @@ export function ShopOrder({ order }) {
       <p>
         <b>Telefone:</b> {order.contact}
       </p>
-      {order.address && (
-        <p>
-          <b>Morada de entrega:</b> {order.address}
-        </p>
-      )}
       <p>
         <b>Data de criação:</b> {createdAt}
       </p>
@@ -112,6 +118,11 @@ export function ShopOrder({ order }) {
       <p>
         <b>Metodo de entrega:</b> {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}
       </p>
+      {order.address && (
+        <p>
+          <b>Morada de entrega:</b> {order.address}
+        </p>
+      )}
       <div>
         <p>
           <b>Status: </b> {translateStatus(order.orderStatus)}
@@ -173,7 +184,7 @@ export function ShopOrder({ order }) {
         {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
       </div>
       <p>
-        <b>Total:</b> {order.total}€
+        <b>Total:</b> {getTotal()}€
       </p>
       {user.userType === 'admin' && (
         <Link to={`/orders/edit/${order._id}`}>

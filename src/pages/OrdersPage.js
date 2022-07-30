@@ -6,34 +6,32 @@ import { useEffect, useRef, useState } from 'react';
 
 import { getAllOrders } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 export const OrdersPage = () => {
+  const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const adminEffectRan = useRef(false);
 
   useEffect(() => {
     if (adminEffectRan.current === false) {
-      window.scrollTo(0, 0);
-
-      (async () => {
-        try {
-          let { data } = await getAllOrders();
-          setOrders(data);
-          setFilteredOrders(data);
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-
+      dispatch(getShopOrders());
       return () => {
         adminEffectRan.current = true;
       };
     }
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (shopOrders.length > 0) {
+      setFilteredOrders(shopOrders);
+    }
+  }, [shopOrders]);
 
   const handleFilterSelect = (e) => {
     setFilterOption(e.target.value);
@@ -43,7 +41,7 @@ export const OrdersPage = () => {
   const filterOrders = (filterOption) => {
     switch (filterOption) {
       case 'paid':
-        let paidOrders = orders.filter((order) => {
+        let paidOrders = shopOrders.filter((order) => {
           if (order.paid && new Date(order.deliveryDate) > new Date()) {
             return order;
           }
@@ -54,7 +52,7 @@ export const OrdersPage = () => {
         setFilteredOrders(paidOrders);
         break;
       case 'delivery':
-        let deliveryOrders = orders.filter((order) => {
+        let deliveryOrders = shopOrders.filter((order) => {
           if (order.deliveryMethod === 'delivery' && new Date(order.deliveryDate) > new Date()) {
             return order;
           }
@@ -62,7 +60,7 @@ export const OrdersPage = () => {
         setFilteredOrders(deliveryOrders);
         break;
       case 'takeAway':
-        let takeAwayOrders = orders.filter((order) => {
+        let takeAwayOrders = shopOrders.filter((order) => {
           if (order.deliveryMethod === 'takeAway' && new Date(order.deliveryDate) > new Date()) {
             return order;
           }
@@ -70,7 +68,7 @@ export const OrdersPage = () => {
         setFilteredOrders(takeAwayOrders);
         break;
       case 'pending':
-        let pendingOrders = orders.filter((order) => {
+        let pendingOrders = shopOrders.filter((order) => {
           if (order.orderStatus === 'pending' && new Date(order.deliveryDate) > new Date()) {
             return order;
           }
@@ -78,7 +76,7 @@ export const OrdersPage = () => {
         setFilteredOrders(pendingOrders);
         break;
       case 'confirmed':
-        let confirmedOrders = orders.filter((order) => {
+        let confirmedOrders = shopOrders.filter((order) => {
           if (order.orderStatus === 'confirmed' && new Date(order.deliveryDate) > new Date()) {
             return order;
           }
@@ -86,13 +84,15 @@ export const OrdersPage = () => {
         setFilteredOrders(confirmedOrders);
         break;
       case 'deliveryDate':
-        let sortedOrders = orders.sort((a, b) => {
+        // because the array is frozen in strict mode, we need to copy the array before sorting it
+        let sortedOrders = shopOrders.slice().sort((a, b) => {
           return new Date(a.deliveryDate) - new Date(b.deliveryDate);
         });
         setFilteredOrders(sortedOrders);
         break;
       default:
-        let allOrders = orders.sort((a, b) => {
+        // because the array is frozen in strict mode, we need to copy the array before sorting it
+        let allOrders = shopOrders.slice().sort((a, b) => {
           return new Date(a.createdAt) - new Date(b.createdAt);
         });
         setFilteredOrders(allOrders);
@@ -114,7 +114,7 @@ export const OrdersPage = () => {
           <option value='deliveryDate'>Data de entrega</option>
         </select>
       </div>
-      {orders.length === 0 && <p>Loading...</p>}
+      {isLoading && <p>Loading...</p>}
       {filteredOrders.length > 0 ? (
         filteredOrders.map((order, index) => {
           return <ShopOrder key={index} order={order} />;

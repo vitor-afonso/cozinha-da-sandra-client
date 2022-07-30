@@ -75,14 +75,28 @@ export const CartPage = () => {
     //console.log(e.target.value);
   };
 
+  const checkIfHaveDiscount = () => {
+    if ((deliveryMethod === 'delivery' && cartTotal > amountForFreeDelivery) || hasDeliveryDiscount) {
+      return true;
+    }
+    return false;
+  };
+
   const submitOrder = async (e) => {
     e.preventDefault();
 
-    if (!contact || !user._id) {
+    if (!contact) {
+      setErrorMessage('Por favor adicione contacto telefónico.');
       return;
     }
+
     if (!deliveryMethod) {
       setErrorMessage('Por favor escolha um metodo de entrega.');
+      return;
+    }
+
+    if (!deliveryDate) {
+      setErrorMessage('Por favor escolha uma data de entrega.');
       return;
     }
 
@@ -101,10 +115,13 @@ export const CartPage = () => {
         deliveryMethod,
         deliveryFee: addedDeliveryFee ? orderDeliveryFee : 0,
         amountForFreeDelivery: amountForFreeDelivery,
+        deliveryDiscount: checkIfHaveDiscount(),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
       };
+
+      console.log('requestBody to create order: ', requestBody);
 
       let response = await createOrder(requestBody);
 
