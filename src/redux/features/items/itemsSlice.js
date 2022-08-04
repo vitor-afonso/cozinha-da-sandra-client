@@ -42,7 +42,7 @@ const itemsSlice = createSlice({
       state.cartItems.push(shopItem._id);
       state.cartAmount++;
       state.cartTotal += shopItem.price;
-      console.log('cartTotal after adding item to cart', current(state).cartTotal);
+      //console.log('cartTotal after adding item to cart', current(state).cartTotal);
 
       //we have to use current if want to see the current state or it returns [PROXY]
       //console.log('adding to cart items  =>', current(state).cartItems);

@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
-import { deleteShopOrder, addNewShopOrder } from '../redux/features/orders/ordersSlice';
+import { updateShopOrder } from '../redux/features/orders/ordersSlice';
 import { parseDateToEdit } from '../utils/app.utils';
 
 export const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
+  const { orderDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -111,19 +112,22 @@ export const EditOrderPage = () => {
         deliveryDate: new Date(deliveryDate),
         contact,
         address: deliveryMethod === 'delivery' ? fullAddress : '',
+        deliveryFee: deliveryMethod === 'delivery' ? orderDeliveryFee : 0,
+        deliveryDiscount: deliveryMethod === 'delivery' && order.total > order.amountForFreeDelivery ? true : false,
         message,
         deliveryMethod,
       };
 
-      let response = await updateOrder(requestBody, orderId);
+      let { data } = await updateOrder(requestBody, orderId);
 
       setSuccessMessage('Encomenda actualizada com sucesso.');
 
       // this will update the state with the updated order
-      dispatch(deleteShopOrder({ id: orderId }));
-      dispatch(addNewShopOrder(response.data));
+
+      dispatch(updateShopOrder(data));
 
       clearInputs();
+      setTimeout(() => navigate('/orders'), 5000);
     } catch (error) {
       setErrorMessage(error.message);
     }

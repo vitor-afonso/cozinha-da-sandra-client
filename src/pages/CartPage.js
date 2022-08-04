@@ -131,7 +131,7 @@ export const CartPage = () => {
       dispatch(addNewShopOrder(response.data));
       dispatch(clearCart());
 
-      console.log('response from submitOrder =>', response.data);
+      //console.log('response from submitOrder =>', response.data);
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -167,7 +167,7 @@ export const CartPage = () => {
               <div>
                 <p>Total: {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€</p>
                 {isNotVisible && <button onClick={() => toggleForm()}>Encomendar</button>}
-                <button onClick={() => dispatch(clearCart())}>Clear Cart</button>
+                <button onClick={() => dispatch(clearCart())}>Limpar Carrinho</button>
               </div>
 
               <OrderInfo

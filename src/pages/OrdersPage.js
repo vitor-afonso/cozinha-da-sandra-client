@@ -4,14 +4,12 @@ import { ShopOrder } from './../components/ShopOrder';
 
 import { useEffect, useRef, useState } from 'react';
 
-import { getAllOrders } from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 export const OrdersPage = () => {
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
-  const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
   const dispatch = useDispatch();
@@ -41,46 +39,26 @@ export const OrdersPage = () => {
   const filterOrders = (filterOption) => {
     switch (filterOption) {
       case 'paid':
-        let paidOrders = shopOrders.filter((order) => {
-          if (order.paid && new Date(order.deliveryDate) > new Date()) {
-            return order;
-          }
-        });
+        let paidOrders = shopOrders.filter((order) => order.paid && new Date(order.deliveryDate) > new Date());
         paidOrders = paidOrders.sort((a, b) => {
           return new Date(a.deliveryDate) - new Date(b.deliveryDate);
         });
         setFilteredOrders(paidOrders);
         break;
       case 'delivery':
-        let deliveryOrders = shopOrders.filter((order) => {
-          if (order.deliveryMethod === 'delivery' && new Date(order.deliveryDate) > new Date()) {
-            return order;
-          }
-        });
+        let deliveryOrders = shopOrders.filter((order) => order.deliveryMethod === 'delivery' && new Date(order.deliveryDate) > new Date());
         setFilteredOrders(deliveryOrders);
         break;
       case 'takeAway':
-        let takeAwayOrders = shopOrders.filter((order) => {
-          if (order.deliveryMethod === 'takeAway' && new Date(order.deliveryDate) > new Date()) {
-            return order;
-          }
-        });
+        let takeAwayOrders = shopOrders.filter((order) => order.deliveryMethod === 'takeAway' && new Date(order.deliveryDate) > new Date());
         setFilteredOrders(takeAwayOrders);
         break;
       case 'pending':
-        let pendingOrders = shopOrders.filter((order) => {
-          if (order.orderStatus === 'pending' && new Date(order.deliveryDate) > new Date()) {
-            return order;
-          }
-        });
+        let pendingOrders = shopOrders.filter((order) => order.orderStatus === 'pending' && new Date(order.deliveryDate) > new Date());
         setFilteredOrders(pendingOrders);
         break;
       case 'confirmed':
-        let confirmedOrders = shopOrders.filter((order) => {
-          if (order.orderStatus === 'confirmed' && new Date(order.deliveryDate) > new Date()) {
-            return order;
-          }
-        });
+        let confirmedOrders = shopOrders.filter((order) => order.orderStatus === 'confirmed' && new Date(order.deliveryDate) > new Date());
         setFilteredOrders(confirmedOrders);
         break;
       case 'deliveryDate':

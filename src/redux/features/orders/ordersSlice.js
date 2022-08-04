@@ -54,6 +54,11 @@ const ordersSlice = createSlice({
     deleteShopOrder: (state, { payload }) => {
       state.shopOrders = state.shopOrders.filter((item) => item !== payload.id);
     },
+    updateShopOrder: (state, { payload }) => {
+      state.shopOrders = state.shopOrders.filter((item) => item._id !== payload._id);
+      state.shopOrders.push(payload);
+      console.log('current shop orders in updateShopOrder   =>', current(state).shopOrders);
+    },
   },
   extraReducers: {
     [getShopOrders.pending]: (state) => {
@@ -70,5 +75,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { confirmOrder, rejectOrder, deleteShopOrder, confirmPayment, addNewShopOrder } = ordersSlice.actions;
+export const { confirmOrder, rejectOrder, deleteShopOrder, confirmPayment, addNewShopOrder, updateShopOrder } = ordersSlice.actions;
 export default ordersSlice.reducer;
