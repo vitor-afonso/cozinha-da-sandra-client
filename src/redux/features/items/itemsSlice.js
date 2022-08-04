@@ -103,6 +103,11 @@ const itemsSlice = createSlice({
         state.addedDeliveryFee = false;
       }
     },
+    updateShopItem: (state, { payload }) => {
+      state.shopItems = state.shopItems.filter((item) => item._id !== payload._id);
+      state.shopItems.push(payload);
+      //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
+    },
   },
   extraReducers: {
     [getShopItems.pending]: (state) => {
@@ -119,5 +124,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, handleAddedDeliveryFee } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, handleAddedDeliveryFee, updateShopItem } = itemsSlice.actions;
 export default itemsSlice.reducer;
