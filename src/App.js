@@ -35,7 +35,6 @@ function App() {
   // to prevent re re-calling of API
   const effectRan = useRef(false);
   const userEffectRan = useRef(false);
-  const adminEffectRan = useRef(false);
 
   useEffect(() => {
     if (effectRan.current === false) {
@@ -49,21 +48,10 @@ function App() {
   useEffect(() => {
     if (userEffectRan.current === false && user) {
       dispatch(getShopOrders());
-
+      dispatch(getShopUsers());
       return () => {
         userEffectRan.current = true;
       };
-    }
-  }, [dispatch, user]);
-
-  useEffect(() => {
-    if (user) {
-      if (adminEffectRan.current === false && user.userType === 'admin') {
-        dispatch(getShopUsers());
-        return () => {
-          adminEffectRan.current = true;
-        };
-      }
     }
   }, [dispatch, user]);
 

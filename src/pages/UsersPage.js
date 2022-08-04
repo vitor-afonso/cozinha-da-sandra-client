@@ -7,7 +7,7 @@ import { AuthContext } from '../context/auth.context';
 
 export const UsersPage = () => {
   const { user } = useContext(AuthContext);
-  const { shopUsers } = useSelector((store) => store.users);
+  const { shopUsers, isLoading } = useSelector((store) => store.users);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [str, setStr] = useState('');
   const effectRan = useRef(false);
@@ -42,7 +42,7 @@ export const UsersPage = () => {
 
       <br />
 
-      {shopUsers &&
+      {!isLoading ? (
         filteredUsers.map((oneUser) => {
           if (oneUser._id !== user._id) {
             return (
@@ -56,7 +56,10 @@ export const UsersPage = () => {
               </div>
             );
           }
-        })}
+        })
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };

@@ -102,9 +102,11 @@ export function ShopOrder({ order }) {
       <p>
         <b>ID</b>: {order._id}
       </p>
-      <p>
-        <b>Utilizador:</b> {order.userId.username}
-      </p>
+      {user.userType === 'admin' && (
+        <p>
+          <b>Utilizador:</b> {order.userId.username}
+        </p>
+      )}
       <p>
         <b>Telefone:</b> {order.contact}
       </p>
@@ -180,7 +182,7 @@ export function ShopOrder({ order }) {
         <p>
           <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
         </p>
-        {!order.paid && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
+        {!order.paid && user.userType === 'admin' && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
       </div>
       <p>
         <b>Total:</b> {getTotal()}€

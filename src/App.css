@@ -2,6 +2,7 @@
   text-align: center;
 }
 
-.order-form {
+.order-form,
+.profile-orders {
   display: none;
 }
