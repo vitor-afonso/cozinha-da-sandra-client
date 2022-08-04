@@ -3,26 +3,17 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getAllUsers } from '../api';
 import { AuthContext } from '../context/auth.context';
 
 export const UsersPage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
-  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [str, setStr] = useState('');
-
   const effectRan = useRef(false);
 
   useEffect(() => {
     if (effectRan.current === false) {
-      /* (async () => {
-        let { data } = await getAllUsers();
-        setUsers(data);
-        setFilteredUsers(data);
-      })(); */
-
       setFilteredUsers(shopUsers);
 
       return () => {
