@@ -87,7 +87,7 @@ export const OrdersPage = () => {
           <option value='pending'>Pendentes</option>
           <option value='confirmed'>Confirmadas</option>
           <option value='paid'>Pago</option>
-          <option value='delivery'>Proximas Entregas</option>
+          <option value='delivery'>Para Entrega</option>
           <option value='takeAway'>Take Away</option>
           <option value='deliveryDate'>Data de entrega</option>
         </select>
