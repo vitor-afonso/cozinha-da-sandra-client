@@ -27,13 +27,16 @@ import { getShopOrders } from './redux/features/orders/ordersSlice';
 import { AuthContext } from './context/auth.context';
 import { SendEmailPage } from './pages/SendEmailPage';
 import { EditOrderPage } from './pages/EditOrderPage';
+import { getShopUsers } from './redux/features/users/usersSlice';
 
 function App() {
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   // to prevent re re-calling of API
   const effectRan = useRef(false);
+  const userEffectRan = useRef(false);
   const adminEffectRan = useRef(false);
+
   useEffect(() => {
     if (effectRan.current === false) {
       dispatch(getShopItems());
@@ -44,12 +47,23 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (adminEffectRan.current === false && user) {
+    if (userEffectRan.current === false && user) {
       dispatch(getShopOrders());
 
       return () => {
-        adminEffectRan.current = true;
+        userEffectRan.current = true;
       };
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (user) {
+      if (adminEffectRan.current === false && user.userType === 'admin') {
+        dispatch(getShopUsers());
+        return () => {
+          adminEffectRan.current = true;
+        };
+      }
     }
   }, [dispatch, user]);
 

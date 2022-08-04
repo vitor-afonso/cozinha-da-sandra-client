@@ -1,12 +1,14 @@
 // jshint esversion:9
 
 import { useContext, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getAllUsers } from '../api';
 import { AuthContext } from '../context/auth.context';
 
 export const UsersPage = () => {
   const { user } = useContext(AuthContext);
+  const { shopUsers } = useSelector((store) => store.users);
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [str, setStr] = useState('');
@@ -15,11 +17,13 @@ export const UsersPage = () => {
 
   useEffect(() => {
     if (effectRan.current === false) {
-      (async () => {
+      /* (async () => {
         let { data } = await getAllUsers();
         setUsers(data);
         setFilteredUsers(data);
-      })();
+      })(); */
+
+      setFilteredUsers(shopUsers);
 
       return () => {
         effectRan.current = true;
@@ -29,9 +33,9 @@ export const UsersPage = () => {
 
   useEffect(() => {
     if (str === '') {
-      setFilteredUsers(users);
+      setFilteredUsers(shopUsers);
     } else {
-      let filteredUsers = users.filter((user) => user.username.toLowerCase().includes(str.toLowerCase()));
+      let filteredUsers = shopUsers.filter((user) => user.username.toLowerCase().includes(str.toLowerCase()));
       setFilteredUsers(filteredUsers);
     }
   }, [str]);
@@ -47,7 +51,7 @@ export const UsersPage = () => {
 
       <br />
 
-      {users &&
+      {shopUsers &&
         filteredUsers.map((oneUser) => {
           if (oneUser._id !== user._id) {
             return (

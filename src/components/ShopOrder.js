@@ -9,7 +9,6 @@ import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSli
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
 export function ShopOrder({ order }) {
-  const { hasDeliveryDiscount } = useSelector((store) => store.items);
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
