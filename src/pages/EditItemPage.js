@@ -137,7 +137,7 @@ export const EditItemPage = () => {
               </div>
 
               <div>
-                <label htmlFor='description'>Info</label>
+                <label htmlFor='description'>Detalhes</label>
                 <div>
                   <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione ingredientes.' onChange={(e) => setDescription(e.target.value)}></textarea>
                 </div>
