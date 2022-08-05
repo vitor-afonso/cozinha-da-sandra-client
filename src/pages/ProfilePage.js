@@ -36,7 +36,7 @@ export const ProfilePage = () => {
 
           <div>
             <div>
-              <img src={profileOwner.imageUrl} alt={profileOwner.username} />
+              <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ width: '150px', height: 'auto' }} />
             </div>
             <p>
               <b>Username: </b>
@@ -69,9 +69,13 @@ export const ProfilePage = () => {
                     return <ShopOrder key={order._id} order={order} />;
                   })}
               </div>
-              {user._id === userId && <Link to={`/profile/edit/${userId}`}>Editar Perfil</Link>}
             </div>
           )}
+
+          <div>
+            {user._id === userId && <Link to={`/profile/edit/${userId}`}>Editar Perfil</Link>}
+            {user.userType === 'admin' && user._id !== userId && <Link to={`/profile/edit/${userId}`}>Editar User Info</Link>}
+          </div>
         </>
       )}
     </div>

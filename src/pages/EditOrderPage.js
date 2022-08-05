@@ -188,7 +188,7 @@ export const EditOrderPage = () => {
 
             {errorMessage && <p>{errorMessage}</p>}
 
-            <button type='submit' ref={submitForm} hidden onClick={(e) => handleSubmit(e)}>
+            <button type='submit' ref={submitForm} hidden>
               Actualizar
             </button>
           </form>

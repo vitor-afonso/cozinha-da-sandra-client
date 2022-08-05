@@ -26,7 +26,13 @@ export const getShopUsers = createAsyncThunk('users/getShopUsers', async (dataFr
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    updateShopUser: (state, { payload }) => {
+      state.shopUsers = state.shopUsers.filter((item) => item._id !== payload._id);
+      state.shopUsers.push(payload);
+      //console.log('current shop users in updateShopUser   =>', current(state).shopUsers);
+    },
+  },
   extraReducers: {
     [getShopUsers.pending]: (state) => {
       state.isLoading = true;
@@ -42,5 +48,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const {} = usersSlice.actions;
+export const { updateShopUser } = usersSlice.actions;
 export default usersSlice.reducer;
