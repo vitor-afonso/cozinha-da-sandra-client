@@ -3,15 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { updateItem, uploadImage } from '../api';
-import { updateShopItem } from '../redux/features/items/itemsSlice';
+import { deleteItem, updateItem, uploadImage } from '../api';
+import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 
 export const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [itemToEdit, setItemToEdit] = useState(null);
-
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [tempImageUrl, setTempImageUrl] = useState('');
@@ -40,7 +39,7 @@ export const EditItemPage = () => {
         effectRan.current = true;
       };
     }
-  }, [itemId]);
+  }, [itemId, shopItems]);
 
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
@@ -62,6 +61,20 @@ export const EditItemPage = () => {
     }
   };
 
+  const handleDeleteItem = async () => {
+    // showDeleteModal() - on click apagar
+    // delete item - on confirm delete
+    try {
+      await deleteItem(itemId);
+
+      dispatch(removeShopItem({ id: itemId }));
+      setSuccessMessage('Item apagado com sucesso.');
+      setTimeout(() => navigate('/'), 5000);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,8 +90,6 @@ export const EditItemPage = () => {
 
         let { data } = await updateItem(requestBody, itemId);
 
-        //console.log('Updated item =>', data.updatedItem);
-
         dispatch(updateShopItem(data.updatedItem));
 
         setSuccessMessage('Item actualizado com sucesso.');
@@ -90,8 +101,6 @@ export const EditItemPage = () => {
         let { data } = await updateItem(requestBody, itemId);
 
         dispatch(updateShopItem(data.updatedItem));
-
-        //console.log('Updated item =>', data.updatedItem);
 
         setSuccessMessage('Item actualizado com sucesso.');
 
@@ -165,6 +174,9 @@ export const EditItemPage = () => {
             {!successMessage && (
               <>
                 <span onClick={() => navigate(-1)}>Voltar</span>
+                <button type='button' onClick={handleDeleteItem}>
+                  Apagar Item
+                </button>
                 <button type='button' onClick={() => submitFormButtom.current.click()}>
                   Actualizar Item
                 </button>
