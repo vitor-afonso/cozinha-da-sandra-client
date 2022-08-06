@@ -238,11 +238,12 @@ export const EditProfilePage = () => {
                 Activar
               </button>
             )}
-            {user.userType === 'user' && (
-              <button type='button' onClick={() => inputFileUpload.current.click()}>
-                Escolher Imagem
-              </button>
-            )}
+            {user.userType === 'user' ||
+              (user._id === userId && (
+                <button type='button' onClick={() => inputFileUpload.current.click()}>
+                  Escolher Imagem
+                </button>
+              ))}
             <button type='button' onClick={() => submitFormButton.current.click()}>
               Actualizar
             </button>

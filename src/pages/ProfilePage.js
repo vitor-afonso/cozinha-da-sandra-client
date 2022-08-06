@@ -74,7 +74,7 @@ export const ProfilePage = () => {
 
           <div>
             {user._id === userId && <Link to={`/profile/edit/${userId}`}>Editar Perfil</Link>}
-            {user.userType === 'admin' && user._id !== userId && <Link to={`/profile/edit/${userId}`}>Editar User Info</Link>}
+            {user.userType === 'admin' && user._id !== userId && <Link to={`/profile/edit/${userId}`}>Editar Info</Link>}
           </div>
         </>
       )}
