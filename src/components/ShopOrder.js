@@ -103,9 +103,9 @@ export function ShopOrder({ order }) {
         <b>ID</b>: {order._id}
       </p>
       {user.userType === 'admin' && (
-        <p>
+        <Link to={`/profile/edit/${order.userId._id}`}>
           <b>Utilizador:</b> {order.userId.username}
-        </p>
+        </Link>
       )}
       <p>
         <b>Telefone:</b> {order.contact}

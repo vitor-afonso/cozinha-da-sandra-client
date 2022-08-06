@@ -17,12 +17,13 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     if (userId) {
+      console.log('shopOrders in profile', shopOrders);
       let allUserOrders = shopOrders.filter((order) => order.userId._id === userId);
       let owner = shopUsers.find((user) => user._id === userId);
       setUserOrders(allUserOrders);
       setProfileOwner(owner);
     }
-  }, [userId, shopOrders]);
+  }, [userId, shopUsers, shopOrders]);
 
   const showOrders = () => {
     setIsVisible(!isVisible);

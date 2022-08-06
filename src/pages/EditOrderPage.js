@@ -3,9 +3,9 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { updateOrder } from '../api';
+import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
-import { updateShopOrder } from '../redux/features/orders/ordersSlice';
+import { deleteShopOrder, updateShopOrder } from '../redux/features/orders/ordersSlice';
 import { parseDateToEdit } from '../utils/app.utils';
 
 export const EditOrderPage = () => {
@@ -93,7 +93,21 @@ export const EditOrderPage = () => {
 
   const clearInputsAndGoBack = () => {
     clearInputs();
-    navigate(-1);
+    navigate('/orders');
+  };
+
+  const handleDeleteOrder = async () => {
+    // showDeleteModal() - on click apagar
+    // delete order - on confirm delete
+    try {
+      await deleteOrder(orderId);
+
+      dispatch(deleteShopOrder({ id: orderId }));
+      setSuccessMessage('Encomenda apagada com sucesso.');
+      setTimeout(() => navigate('/orders'), 5000);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -201,9 +215,14 @@ export const EditOrderPage = () => {
         <span onClick={clearInputsAndGoBack}>Voltar</span>
 
         {!successMessage && (
-          <button type='button' onClick={() => submitForm.current.click()}>
-            Actualizar
-          </button>
+          <>
+            <button type='button' onClick={handleDeleteOrder}>
+              Apagar Encomenda
+            </button>
+            <button type='button' onClick={() => submitForm.current.click()}>
+              Actualizar
+            </button>
+          </>
         )}
       </div>
     </div>

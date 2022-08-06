@@ -30,7 +30,11 @@ const usersSlice = createSlice({
     updateShopUser: (state, { payload }) => {
       state.shopUsers = state.shopUsers.filter((item) => item._id !== payload._id);
       state.shopUsers.push(payload);
-      //console.log('current shop users in updateShopUser   =>', current(state).shopUsers);
+      console.log('current shop users in updateShopUser   =>', current(state).shopUsers);
+    },
+    deleteShopUser: (state, { payload }) => {
+      state.shopUsers = state.shopUsers.filter((user) => user._id !== payload._id);
+      state.shopUsers.push(payload);
     },
   },
   extraReducers: {
@@ -48,5 +52,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const { updateShopUser } = usersSlice.actions;
+export const { updateShopUser, deleteShopUser } = usersSlice.actions;
 export default usersSlice.reducer;

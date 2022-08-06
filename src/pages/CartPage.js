@@ -9,9 +9,11 @@ import { ShopItem } from '../components/ShopItem/ShopItem';
 import { AuthContext } from '../context/auth.context';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
+import { updateShopUser } from '../redux/features/users/usersSlice';
 
 export const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
+  const { shopOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -82,23 +84,24 @@ export const CartPage = () => {
     return false;
   };
 
+  const updateStoreData = (data) => {
+    let orderItems = [];
+    shopItems.forEach((item) => {
+      if (data.orderResponse.items.includes(item._id)) {
+        for (let i = 0; i < item.amount; i++) {
+          orderItems.push(item);
+        }
+      }
+    });
+    let newOrder = { ...data.orderResponse, items: orderItems, userId: data.updatedUser };
+
+    dispatch(addNewShopOrder(newOrder));
+    dispatch(updateShopUser(data.updatedUser));
+    dispatch(clearCart());
+  };
+
   const submitOrder = async (e) => {
     e.preventDefault();
-
-    if (!contact) {
-      setErrorMessage('Por favor adicione contacto telefónico.');
-      return;
-    }
-
-    if (!deliveryMethod) {
-      setErrorMessage('Por favor escolha um metodo de entrega.');
-      return;
-    }
-
-    if (!deliveryDate) {
-      setErrorMessage('Por favor escolha uma data de entrega.');
-      return;
-    }
 
     try {
       let fullAddress;
@@ -121,17 +124,33 @@ export const CartPage = () => {
         total: cartTotal.toFixed(2),
       };
 
-      console.log('requestBody to create order: ', requestBody);
+      //console.log('requestBody to create order: ', requestBody);
 
-      let response = await createOrder(requestBody);
+      let { data } = await createOrder(requestBody);
 
       setSuccessMessage(
         'Encomenda criada com sucesso. Será contactado o mais brevemente possivel para confirmar a encomenda e receber os dados de pagamento. Encontre os detalhes da sua encomenda no seu perfil.'
       );
-      dispatch(addNewShopOrder(response.data));
-      dispatch(clearCart());
 
-      //console.log('response from submitOrder =>', response.data);
+      // here we do manual populate of the order.items and order.userId so that we can have all data avaiable dynamically in the shopOrders to be used in profilePage without having to make a API call
+
+      updateStoreData(data);
+
+      /* let orderItems = [];
+      shopItems.forEach((item) => {
+        if (data.orderResponse.items.includes(item._id)) {
+          for (let i = 0; i < item.amount; i++) {
+            orderItems.push(item);
+          }
+        }
+      });
+      let newOrder = { ...data.orderResponse, items: orderItems, userId: data.updatedUser }; 
+
+      let newOrder = 
+
+      dispatch(addNewShopOrder(newOrder));
+      dispatch(updateShopUser(data.updatedUser));
+      dispatch(clearCart());*/
     } catch (error) {
       setErrorMessage(error.message);
     }

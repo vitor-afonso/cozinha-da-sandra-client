@@ -45,6 +45,18 @@ export const UsersPage = () => {
       {!isLoading ? (
         filteredUsers.map((oneUser) => {
           if (oneUser._id !== user._id) {
+            if (oneUser.deleted) {
+              return (
+                <div key={oneUser._id}>
+                  <div>
+                    <img src={oneUser.imageUrl} alt={oneUser.username} />
+                  </div>
+                  <Link to={`/profile/${oneUser._id}`}>
+                    <span style={{ color: 'lightgrey' }}>{oneUser.username}</span>
+                  </Link>
+                </div>
+              );
+            }
             return (
               <div key={oneUser._id}>
                 <div>

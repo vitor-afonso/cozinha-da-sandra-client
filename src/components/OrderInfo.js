@@ -105,9 +105,7 @@ export const OrderInfo = ({
         <div>
           <span onClick={() => navigate(-1)}>Back</span>
 
-          <button type='submit' onClick={(e) => submitOrder(e)}>
-            Encomendar
-          </button>
+          <button type='submit'>Encomendar</button>
         </div>
       </form>
     </div>

@@ -13,15 +13,14 @@ export const getShopOrders = createAsyncThunk('items/getShopOrders', async (data
     //console.log('optional data from component =>', dataFromComponent);
     //console.log('thunkAPI =>', thunkAPI); // contains valious methods
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
+
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = await getAllOrders();
     console.log('getShopOrders data in ordersSlice', data);
     return data; // we return a promise that is being handled by extraReducers in ordersSlice
   } catch (error) {
-    //return thunkAPI.rejectWithValue(error.response); // this would be handled by extraReducers getShopOrders.rejected in ordersSlice
-
-    return thunkAPI.rejectWithValue('Something went wrong getting orders'); // this is being handled by extraReducers getShopOrders.rejected in ordersSlice
+    return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopOrders.rejected in ordersSlice
   }
 });
 
@@ -45,7 +44,7 @@ const ordersSlice = createSlice({
     },
     addNewShopOrder: (state, { payload }) => {
       state.shopOrders.push(payload);
-      //console.log('current shop orders  =>', current(state).shopOrders);
+      console.log('ordersSlice - current shop orders after adding new order =>', current(state).shopOrders);
     },
     rejectOrder: (state, { payload }) => {
       const oneOrder = state.shopOrders.find((order) => order._id === payload.id);

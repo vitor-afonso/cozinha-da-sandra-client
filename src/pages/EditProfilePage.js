@@ -3,9 +3,9 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { resetPassword, updateUser, uploadImage } from '../api';
+import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
 import { AuthContext } from '../context/auth.context';
-import { updateShopUser } from '../redux/features/users/usersSlice';
+import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
 
 export const EditProfilePage = () => {
   const { user } = useContext(AuthContext);
@@ -65,6 +65,31 @@ export const EditProfilePage = () => {
 
     if (e.target.value === '' || re.test(e.target.value)) {
       setContact(e.target.value);
+    }
+  };
+
+  const handleActivateUser = async () => {
+    try {
+      let response = await updateUser({ deleted: false }, userId);
+
+      dispatch(updateShopUser(response.data.updatedUser));
+      setSuccessMessage('Utilizador activado com sucesso.');
+      setTimeout(() => navigate('/users'), 5000);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleDeleteUser = async () => {
+    // showDeleteModal() - on click apagar
+    // delete user - on confirm delete
+    try {
+      let response = await deleteUser(userId);
+
+      dispatch(deleteShopUser(response.data));
+      setSuccessMessage('Utilizador "apagado" com sucesso.');
+      setTimeout(() => navigate('/users'), 5000);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -203,6 +228,16 @@ export const EditProfilePage = () => {
         {!successMessage && (
           <>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+            {profileOwner && !profileOwner.deleted && (
+              <button type='button' onClick={handleDeleteUser}>
+                Apagar
+              </button>
+            )}
+            {profileOwner && profileOwner.deleted && (
+              <button type='button' onClick={handleActivateUser}>
+                Activar
+              </button>
+            )}
             {user.userType === 'user' && (
               <button type='button' onClick={() => inputFileUpload.current.click()}>
                 Escolher Imagem
