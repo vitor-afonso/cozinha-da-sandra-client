@@ -54,9 +54,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           <div>
             {cartItems.includes(_id) && (
               <div>
-                <button onClick={handleIncrease}>increase</button>
+                <button onClick={handleIncrease}>+</button>
                 <p>{amount}</p>
-                <button onClick={() => handleDecrease()}>decrease</button>
+                <button onClick={() => handleDecrease()}>-</button>
               </div>
             )}
             <br />
@@ -66,7 +66,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
             </>
             {user.userType === 'admin' && (
               <Link to={`/items/edit/${_id}`}>
-                <span>Edit</span>
+                <span>Editar</span>
               </Link>
             )}
           </div>

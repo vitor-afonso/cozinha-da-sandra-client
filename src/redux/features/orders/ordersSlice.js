@@ -44,7 +44,7 @@ const ordersSlice = createSlice({
     },
     addNewShopOrder: (state, { payload }) => {
       state.shopOrders.push(payload);
-      console.log('ordersSlice - current shop orders after adding new order =>', current(state).shopOrders);
+      //console.log('ordersSlice - current shop orders after adding new order =>', current(state).shopOrders);
     },
     rejectOrder: (state, { payload }) => {
       const oneOrder = state.shopOrders.find((order) => order._id === payload.id);

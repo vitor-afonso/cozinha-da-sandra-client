@@ -133,24 +133,7 @@ export const CartPage = () => {
       );
 
       // here we do manual populate of the order.items and order.userId so that we can have all data avaiable dynamically in the shopOrders to be used in profilePage without having to make a API call
-
       updateStoreData(data);
-
-      /* let orderItems = [];
-      shopItems.forEach((item) => {
-        if (data.orderResponse.items.includes(item._id)) {
-          for (let i = 0; i < item.amount; i++) {
-            orderItems.push(item);
-          }
-        }
-      });
-      let newOrder = { ...data.orderResponse, items: orderItems, userId: data.updatedUser }; 
-
-      let newOrder = 
-
-      dispatch(addNewShopOrder(newOrder));
-      dispatch(updateShopUser(data.updatedUser));
-      dispatch(clearCart());*/
     } catch (error) {
       setErrorMessage(error.message);
     }

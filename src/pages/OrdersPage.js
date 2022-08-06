@@ -2,28 +2,16 @@
 
 import { ShopOrder } from './../components/ShopOrder';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getShopOrders } from '../redux/features/orders/ordersSlice';
+import { useSelector } from 'react-redux';
 
 export const OrdersPage = () => {
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const adminEffectRan = useRef(false);
-
-  useEffect(() => {
-    if (adminEffectRan.current === false) {
-      dispatch(getShopOrders());
-      return () => {
-        adminEffectRan.current = true;
-      };
-    }
-  }, [dispatch]);
 
   useEffect(() => {
     if (shopOrders.length > 0) {
