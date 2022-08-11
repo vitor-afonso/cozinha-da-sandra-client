@@ -28,6 +28,7 @@ import { AuthContext } from './context/auth.context';
 import { SendEmailPage } from './pages/SendEmailPage';
 import { EditOrderPage } from './pages/EditOrderPage';
 import { getShopUsers } from './redux/features/users/usersSlice';
+import { Button } from '@mui/material';
 
 function App() {
   const dispatch = useDispatch();
