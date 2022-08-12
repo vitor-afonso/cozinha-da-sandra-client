@@ -28,7 +28,25 @@ import { AuthContext } from './context/auth.context';
 import { SendEmailPage } from './pages/SendEmailPage';
 import { EditOrderPage } from './pages/EditOrderPage';
 import { getShopUsers } from './redux/features/users/usersSlice';
-import { Button } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Layout } from './components/Layout';
+
+// to update mui default values in the end when everything is styled
+const theme = createTheme({
+  /* palette: {
+    primary: {
+      main: '#009688',
+    },
+    secondary: deepPurple,
+  },
+  typography: {
+    fontFamily: 'Quicksand',
+    fontWeightLight: 400,
+    fontWeightRegular: 500,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
+  }, */
+});
 
 function App() {
   const dispatch = useDispatch();
@@ -58,30 +76,33 @@ function App() {
 
   return (
     <div className='App'>
-      <AppHeader />
+      <ThemeProvider theme={theme}>
+        <AppHeader />
+        <Layout>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/signup' element={<SignupPage />} />
+            <Route path='/login' element={<LoginPage />} />
+            <Route path='/doces' element={<DocesPage />} />
+            <Route path='/salgados' element={<SalgadosPage />} />
+            <Route path='/users' element={<UsersPage />} />
+            <Route path='/orders' element={<OrdersPage />} />
+            <Route path='/orders/edit/:orderId' element={<EditOrderPage />} />
+            <Route path='/items/add' element={<NewItemPage />} />
+            <Route path='/items/:itemId' element={<ItemDetailsPage />} />
+            <Route path='/items/edit/:itemId' element={<EditItemPage />} />
+            <Route path='/profile/:userId' element={<ProfilePage />} />
+            <Route path='/profile/edit/:userId' element={<EditProfilePage />} />
+            <Route path='/cart' element={<CartPage />} />
+            <Route path='/about' element={<AboutPage />} />
+            <Route path='/forgot' element={<ForgotPage />} />
+            <Route path='/reset/:userId' element={<ResetPage />} />
+            <Route path='/send-email/orders/:orderId' element={<SendEmailPage />} />
+          </Routes>
+        </Layout>
 
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/signup' element={<SignupPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/doces' element={<DocesPage />} />
-        <Route path='/salgados' element={<SalgadosPage />} />
-        <Route path='/users' element={<UsersPage />} />
-        <Route path='/orders' element={<OrdersPage />} />
-        <Route path='/orders/edit/:orderId' element={<EditOrderPage />} />
-        <Route path='/items/add' element={<NewItemPage />} />
-        <Route path='/items/:itemId' element={<ItemDetailsPage />} />
-        <Route path='/items/edit/:itemId' element={<EditItemPage />} />
-        <Route path='/profile/:userId' element={<ProfilePage />} />
-        <Route path='/profile/edit/:userId' element={<EditProfilePage />} />
-        <Route path='/cart' element={<CartPage />} />
-        <Route path='/about' element={<AboutPage />} />
-        <Route path='/forgot' element={<ForgotPage />} />
-        <Route path='/reset/:userId' element={<ResetPage />} />
-        <Route path='/send-email/orders/:orderId' element={<SendEmailPage />} />
-      </Routes>
-
-      <AppFooter />
+        <AppFooter />
+      </ThemeProvider>
     </div>
   );
 }
