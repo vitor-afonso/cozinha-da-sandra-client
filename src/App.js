@@ -2,7 +2,6 @@
 
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import { AppHeader } from './components/AppHeader';
 import { AppFooter } from './components/AppFooter';
 import { HomePage } from './pages/HomePage/HomePage';
 import { SignupPage } from './pages/SignupPage';
@@ -30,6 +29,7 @@ import { EditOrderPage } from './pages/EditOrderPage';
 import { getShopUsers } from './redux/features/users/usersSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Layout } from './components/Layout';
+import { Box } from '@mui/material';
 
 // to update mui default values in the end when everything is styled
 const theme = createTheme({
@@ -38,14 +38,10 @@ const theme = createTheme({
       main: '#009688',
     },
     secondary: deepPurple,
-  },
-  typography: {
-    fontFamily: 'Quicksand',
-    fontWeightLight: 400,
-    fontWeightRegular: 500,
-    fontWeightMedium: 600,
-    fontWeightBold: 700,
   }, */
+  typography: {
+    fontSize: 12,
+  },
 });
 
 function App() {
@@ -75,9 +71,8 @@ function App() {
   }, [dispatch, user]);
 
   return (
-    <div className='App'>
+    <Box className='App'>
       <ThemeProvider theme={theme}>
-        <AppHeader />
         <Layout>
           <Routes>
             <Route path='/' element={<HomePage />} />
@@ -103,7 +98,7 @@ function App() {
 
         <AppFooter />
       </ThemeProvider>
-    </div>
+    </Box>
   );
 }
 

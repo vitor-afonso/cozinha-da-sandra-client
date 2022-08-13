@@ -1,152 +1,77 @@
 // jshint esversion:9
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../context/auth.context';
+import { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import CakeOutlinedIcon from '@mui/icons-material/CakeOutlined';
-import LocalPizzaOutlinedIcon from '@mui/icons-material/LocalPizzaOutlined';
-import { ListItemIcon } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Avatar } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
+import { NavItems } from './NavItems';
 
 const drawerWidth = 260;
-const navItems = ['Home', 'About', 'Contact'];
+
+function ElevationScroll(props) {
+  const { children } = props;
+
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+  });
+
+  return React.cloneElement(children, {
+    elevation: trigger ? 4 : 0,
+  });
+}
 
 export const Layout = (props) => {
-  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
-  const { window } = props;
+  const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userId, setUserId] = useState('');
+  const { cartAmount } = useSelector((store) => store.items);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      setUserId(user._id);
-    }
-  }, [user]);
-
-  const offMenuItems = [
-    { text: 'Home', icon: <HomeOutlinedIcon color='inherit' />, path: '/' },
-    { text: 'Doces', icon: <CakeOutlinedIcon color='inherit' />, path: '/doces' },
-    { text: 'Salgados', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/salgados' },
-    { text: 'Registrar', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/signup' },
-    { text: 'Entrar', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/login' },
-    /* { text: 'Sobre nós', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/about' }, */
-  ];
-
-  const userMenuItems = [
-    { text: 'Home', icon: <HomeOutlinedIcon color='inherit' />, path: '/' },
-    { text: 'Doces', icon: <CakeOutlinedIcon color='inherit' />, path: '/doces' },
-    { text: 'Salgados', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/salgados' },
-    { text: 'Perfil', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: `/profile/${userId}` },
-    /* { text: 'Sobre nós', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/about' }, */
-    /* { text: 'Sair', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/Logout' }, */
-  ];
-  const adminMenuItems = [
-    { text: 'Home', icon: <HomeOutlinedIcon color='inherit' />, path: '/' },
-    { text: 'Doces', icon: <CakeOutlinedIcon color='inherit' />, path: '/doces' },
-    { text: 'Salgados', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/salgados' },
-    { text: 'Utilizadores', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/users' },
-    { text: 'Encomendas', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/orders' },
-    { text: 'Novo item', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/items/add' },
-    { text: 'Perfil', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: `/profile/${userId}` },
-    /* { text: 'Sair', icon: <LocalPizzaOutlinedIcon color='inherit' />, path: '/Logout' }, */
-  ];
-
+  const container = window !== undefined ? () => window().document.body : undefined;
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleLogout = () => {
-    if (user) {
-      logOutUser();
-    }
-  };
-
-  const drawer = (
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant='h6' sx={{ my: 2 }}>
-        A COZINHA DA SANDRA
-      </Typography>
-      <Divider />
-      <List>
-        {!isLoggedIn &&
-          offMenuItems.map((item, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton sx={{ textAlign: 'center' }}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        {isLoggedIn &&
-          user.userType === 'user' &&
-          userMenuItems.map((item, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton sx={{ textAlign: 'center' }}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-
-        {isLoggedIn &&
-          user.userType === 'admin' &&
-          adminMenuItems.map((item, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton sx={{ textAlign: 'center' }}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        {isLoggedIn && (
-          <ListItem disablePadding onClick={() => logOutUser()}>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemIcon>
-                <LocalPizzaOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary='Sair' />
-            </ListItemButton>
-          </ListItem>
-        )}
-      </List>
-    </Box>
-  );
-
-  const container = window !== undefined ? () => window().document.body : undefined;
-
   return (
-    <div>
+    <React.Fragment>
       <Box sx={{ display: 'flex' }}>
-        <AppBar component='nav'>
-          <Toolbar>
-            <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
-              <MenuIcon />
-            </IconButton>
-            <Typography variant='h6' component='div' sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-              MUI
-            </Typography>
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {navItems.map((item) => (
-                <Button key={item} sx={{ color: '#fff' }}>
-                  {item}
-                </Button>
-              ))}
-            </Box>
-          </Toolbar>
-        </AppBar>
+        <CssBaseline />
+        <ElevationScroll {...props}>
+          <AppBar component='nav'>
+            <Toolbar>
+              <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
+                <MenuIcon />
+              </IconButton>
+              <Typography variant='h6' component='div' sx={{ flexGrow: 1, visibility: { xs: 'hidden', md: 'visible', textAlign: 'left' } }}>
+                A COZINHA DA SANDRA
+              </Typography>
+              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                <NavItems />
+              </Box>
+
+              <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
+                <Avatar>
+                  <ShoppingCartIcon />
+                </Avatar>
+                <Box sx={{ position: 'absolute', top: 0, right: 0, fontWeight: 'bolder', borderRadius: '50%', padding: '2px' }}>{cartAmount}</Box>
+              </Box>
+            </Toolbar>
+          </AppBar>
+        </ElevationScroll>
         <Box component='nav'>
           <Drawer
             container={container}
@@ -157,18 +82,25 @@ export const Layout = (props) => {
               keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-              display: { xs: 'block', sm: 'none' },
+              display: { xs: 'block', md: 'none' },
               '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
             }}
           >
-            {drawer}
+            <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+              <Typography variant='h6' sx={{ my: 2 }}>
+                A COZINHA DA SANDRA
+              </Typography>
+              <Divider />
+              <NavItems />
+            </Box>
           </Drawer>
         </Box>
-        <Box component='main' sx={{ p: 3 }}>
+
+        <Box component='main' sx={{ width: '100%' }}>
           <Toolbar />
-          {props.children}
+          {children}
         </Box>
       </Box>
-    </div>
+    </React.Fragment>
   );
 };
