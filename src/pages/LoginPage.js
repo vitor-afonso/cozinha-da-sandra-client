@@ -1,19 +1,53 @@
 // jshint esversion:9
 
+import { Error } from '@mui/icons-material';
+import { Button, TextField, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
+import loginImage from '../images/login.svg';
 
 export const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const navigate = useNavigate();
+
+  const loginClasses = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop: '25px',
+    },
+    top: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    image: {
+      maxWidth: { xs: '250px', md: '450px' },
+    },
+    form: {
+      width: { xs: '300px', md: '500px' },
+    },
+    field: {
+      marginTop: 5,
+      marginBottom: 5,
+      display: 'block',
+    },
+  };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+
+    email === '' ? setEmailError(true) : setEmailError(false);
+    password === '' ? setPasswordError(true) : setPasswordError(false);
 
     try {
       const requestBody = { email, password };
@@ -36,42 +70,42 @@ export const LoginPage = () => {
   };
 
   return (
-    <div>
-      <div>
+    <Box sx={loginClasses.container}>
+      <Box sx={loginClasses.top}>
+        <Box sx={loginClasses.image}>
+          <img src={loginImage} alt='Login' className='auth-images' />
+        </Box>
         <div>
-          <h2>Login</h2>
+          <Typography variant='h4' sx={{ marginTop: '25px' }}>
+            Login
+          </Typography>
           <p>
             Novo na Cozinha da Sandra?
             <Link to='/signup'> Registra-te </Link>
             <br />
             <small>
-              <Link to='/forgot'>Esqueceste a password?</Link>
+              <Link to='/forgot'>Esqueceu password?</Link>
             </small>
           </p>
         </div>
-      </div>
+      </Box>
+      <Box sx={loginClasses.form}>
+        <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
+          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
 
-      <form onSubmit={handleLoginSubmit}>
-        <div>
-          <label htmlFor='email'>Email address</label>
-          <div>
-            <input id='email' name='email' type='email' autoComplete='email' required value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-        </div>
+          <TextField label='Password' type='password' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setPassword(e.target.value)} error={passwordError} />
 
-        <div>
-          <label htmlFor='password'>Password</label>
-          <div>
-            <input id='password' name='password' type='password' autoComplete='current-password' required value={password} onChange={(e) => setPassword(e.target.value)} />
-          </div>
-        </div>
+          {errorMessage && (
+            <Typography sx={{ marginBottom: '25px' }} color='error'>
+              {errorMessage}
+            </Typography>
+          )}
 
-        {errorMessage && <p>{errorMessage}</p>}
-
-        <div>
-          <button type='submit'>Login</button>
-        </div>
-      </form>
-    </div>
+          <Button variant='contained' type='submit'>
+            Entrar
+          </Button>
+        </form>
+      </Box>
+    </Box>
   );
 };

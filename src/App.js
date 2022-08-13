@@ -95,8 +95,6 @@ function App() {
             <Route path='/send-email/orders/:orderId' element={<SendEmailPage />} />
           </Routes>
         </Layout>
-
-        <AppFooter />
       </ThemeProvider>
     </Box>
   );

@@ -6,3 +6,8 @@
 .profile-orders {
   display: none;
 }
+
+.auth-images {
+  width: 100%;
+  height: auto;
+}

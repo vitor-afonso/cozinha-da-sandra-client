@@ -1,7 +1,7 @@
 // jshint esversion:9
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import * as React from 'react';
@@ -15,7 +15,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Avatar } from '@mui/material';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { Avatar, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { NavItems } from './NavItems';
@@ -38,8 +39,33 @@ function ElevationScroll(props) {
 export const Layout = (props) => {
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { cartAmount } = useSelector((store) => store.items);
+  const { cartAmount, cartTotal } = useSelector((store) => store.items);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const cartButtonLocations = ['/', '/doces', '/salgados'];
+
+  const layoutStyle = {
+    page: {
+      width: '100%',
+    },
+
+    cartTotalButton: {
+      width: '180px',
+      position: 'fixed',
+      marginLeft: '-90px',
+      bottom: 25,
+    },
+    cartNumber: {
+      position: 'absolute',
+      top: 0,
+      right: 2,
+      fontWeight: 'bolder',
+      borderRadius: '50%',
+      padding: '2px',
+      color: '#1976D2',
+    },
+  };
 
   const container = window !== undefined ? () => window().document.body : undefined;
   const handleDrawerToggle = () => {
@@ -64,10 +90,10 @@ export const Layout = (props) => {
               </Box>
 
               <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
-                <Avatar>
-                  <ShoppingCartIcon />
+                <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
+                  <ShoppingCartIcon color='primary' />
                 </Avatar>
-                <Box sx={{ position: 'absolute', top: 0, right: 0, fontWeight: 'bolder', borderRadius: '50%', padding: '2px' }}>{cartAmount}</Box>
+                <Box sx={layoutStyle.cartNumber}>{cartAmount}</Box>
               </Box>
             </Toolbar>
           </AppBar>
@@ -87,7 +113,7 @@ export const Layout = (props) => {
             }}
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-              <Typography variant='h6' sx={{ my: 2 }}>
+              <Typography variant='h6' sx={{ my: 2 }} color='primary'>
                 A COZINHA DA SANDRA
               </Typography>
               <Divider />
@@ -96,9 +122,15 @@ export const Layout = (props) => {
           </Drawer>
         </Box>
 
-        <Box component='main' sx={{ width: '100%' }}>
+        <Box component='main' sx={layoutStyle.page}>
           <Toolbar />
           {children}
+          {cartButtonLocations.includes(location.pathname) && (
+            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton}>
+              Carrinho: {cartTotal}
+            </Button>
+          )}
+          <br />
         </Box>
       </Box>
     </React.Fragment>
