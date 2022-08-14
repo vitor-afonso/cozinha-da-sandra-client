@@ -1,56 +1,100 @@
 // jshint esversion:9
 
+import { Box, TextField, Typography, Button } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../api';
+import forgotImage from '../images/forgot.svg';
 
 export const ForgotPage = () => {
-  //get email to check match
-  //call to api and send email with link to resetPage
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const navigate = useNavigate();
+
+  const forgotClasses = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop: '25px',
+    },
+    top: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    image: {
+      maxWidth: { xs: '250px', md: '450px' },
+    },
+    form: {
+      width: { xs: '300px', md: '500px' },
+    },
+    field: {
+      marginTop: 5,
+      marginBottom: 5,
+      display: 'block',
+    },
+  };
 
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
 
+    email === '' ? setEmailError(true) : setEmailError(false);
+
+    if (!email.includes('@')) {
+      setErrorMessage('Endereço de email inválido.');
+      setEmailError(true);
+      return;
+    }
+
     try {
       const requestBody = { email };
 
-      let response = await forgotPassword(requestBody);
+      await forgotPassword(requestBody);
 
-      setSuccessMessage(`Email com link para repor palavra pass enviado para ${email}.`);
+      setSuccessMessage(`Verifique caixa de correio de ${email}, e siga instruções para repor password.`);
     } catch (error) {
+      console.log('forgot error', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
     }
   };
   return (
-    <div>
-      <h2>Esqueceu password</h2>
-
+    <Box sx={forgotClasses.container}>
       {!successMessage && (
         <>
-          <div>
-            <p>Por favor digite o seu email</p>
-          </div>
+          <Box sx={forgotClasses.top}>
+            <Box sx={forgotClasses.image}>
+              <img src={forgotImage} alt='Forgot password' className='auth-images' />
+            </Box>
 
-          <form onSubmit={handleForgotSubmit}>
-            <div>
-              <label htmlFor='email'>Email</label>
-              <div>
-                <input id='email' name='email' type='email' autoComplete='email' required value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-            </div>
+            <Typography variant='h4' sx={{ marginTop: '25px' }}>
+              Esqueceu password
+            </Typography>
+            <Typography variant='p' sx={{ marginTop: '25px' }}>
+              Por favor digite o seu email.
+            </Typography>
+          </Box>
+          <Box sx={forgotClasses.form}>
+            <form noValidate autoComplete='off' onSubmit={handleForgotSubmit}>
+              <TextField label='Email' type='email' variant='outlined' fullWidth required sx={forgotClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
 
-            {errorMessage && <p>{errorMessage}</p>}
+              {errorMessage && (
+                <Typography sx={{ marginBottom: '25px' }} color='error'>
+                  {errorMessage}
+                </Typography>
+              )}
 
-            <div>
-              <button type='submit'>Enviar</button>
-            </div>
-          </form>
+              <Button variant='contained' type='submit'>
+                Recuperar
+              </Button>
+            </form>
+          </Box>
         </>
       )}
       {successMessage && <p>{successMessage}</p>}
-    </div>
+    </Box>
   );
 };
