@@ -94,7 +94,14 @@ export const ForgotPage = () => {
           </Box>
         </>
       )}
-      {successMessage && <p>{successMessage}</p>}
+      {successMessage && (
+        <Box sx={forgotClasses.top}>
+          <Box sx={forgotClasses.image}>
+            <img src={forgotImage} alt='Forgot password' className='auth-images' />
+          </Box>
+          <Typography sx={{ marginTop: '25px' }}>{successMessage}</Typography>
+        </Box>
+      )}
     </Box>
   );
 };

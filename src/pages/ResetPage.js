@@ -1,22 +1,54 @@
 // jshint esversion:9
 
+import { Box, TextField, Typography, Button } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
+import resetImage from '../images/reset.svg';
 
 export const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [newPassword, setNewPassword] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
+
+  const resetClasses = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginTop: '25px',
+    },
+    top: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    image: {
+      maxWidth: { xs: '250px', md: '450px' },
+    },
+    form: {
+      width: { xs: '300px', md: '500px' },
+    },
+    field: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+  };
 
   const handleResetSubmit = async (e) => {
     e.preventDefault();
 
+    newPassword === '' ? setPasswordError(true) : setPasswordError(false);
+    newPassword2 === '' ? setPasswordError(true) : setPasswordError(false);
+
     if (newPassword !== newPassword2) {
       setErrorMessage('Por favor insira a mesma password nos 2 campos.');
+      setPasswordError(true);
       return;
     }
 
@@ -25,7 +57,7 @@ export const ResetPage = () => {
 
       await resetPassword(requestBody, userId);
 
-      setSuccessMessage('A sua palavra pass foi actualizada com sucesso.');
+      setSuccessMessage('A sua password foi actualizada com sucesso.');
       setTimeout(() => navigate('/login'), 5000);
     } catch (error) {
       const errorDescription = error.response.data.message;
@@ -33,40 +65,57 @@ export const ResetPage = () => {
     }
   };
   return (
-    <div>
-      <h2>Repor password</h2>
-
+    <Box sx={resetClasses.container}>
       {!successMessage && (
         <>
-          <div>
-            <p>Por favor digite a sua nova password</p>
-          </div>
+          <Box sx={resetClasses.top}>
+            <Box sx={resetClasses.image}>
+              <img src={resetImage} alt='Reset password' className='auth-images' />
+            </Box>
 
-          <form onSubmit={handleResetSubmit}>
-            <div>
-              <label htmlFor='password'>Nova Password</label>
-              <div>
-                <input id='new-password' name='password' type='password' autoComplete='current-password' required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-              </div>
-            </div>
+            <Typography variant='h4' sx={{ marginTop: '25px' }}>
+              Repor password
+            </Typography>
+            <Typography variant='p' sx={{ marginTop: '25px', marginBottom: '25px' }}>
+              Por favor digite a sua nova password
+            </Typography>
+          </Box>
+          <Box sx={resetClasses.form}>
+            <form noValidate autoComplete='off' onSubmit={handleResetSubmit}>
+              <TextField label='Nova Password' type='password' variant='outlined' fullWidth required sx={resetClasses.field} onChange={(e) => setNewPassword(e.target.value)} error={passwordError} />
 
-            <div>
-              <label htmlFor='password'>Repita Nova Password</label>
-              <div>
-                <input id='new-password-2' name='password-2' type='password' autoComplete='current-password' required value={newPassword2} onChange={(e) => setNewPassword2(e.target.value)} />
-              </div>
-            </div>
+              <TextField
+                label='Repetir Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                sx={resetClasses.field}
+                onChange={(e) => setNewPassword2(e.target.value)}
+                error={passwordError}
+              />
 
-            {errorMessage && <p>{errorMessage}</p>}
+              {errorMessage && (
+                <Typography sx={{ marginBottom: '25px' }} color='error'>
+                  {errorMessage}
+                </Typography>
+              )}
 
-            <div>
-              <button type='submit'>Repor</button>
-            </div>
-          </form>
+              <Button variant='contained' type='submit'>
+                Repor
+              </Button>
+            </form>
+          </Box>
         </>
       )}
-
-      {successMessage && <p>{successMessage}</p>}
-    </div>
+      {successMessage && (
+        <Box sx={resetClasses.top}>
+          <Box sx={resetClasses.image}>
+            <img src={resetImage} alt='Forgot password' className='auth-images' />
+          </Box>
+          <Typography sx={{ marginTop: '25px' }}>{successMessage}</Typography>
+        </Box>
+      )}
+    </Box>
   );
 };
