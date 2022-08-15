@@ -3,12 +3,12 @@ import { AuthContext } from '../../context/auth.context';
 import { useEffect, useContext, useState } from 'react';
 
 import { ShopItem } from '../../components/ShopItem/ShopItem';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 
 export const HomePage = () => {
-  const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
+  const { shopItems, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);

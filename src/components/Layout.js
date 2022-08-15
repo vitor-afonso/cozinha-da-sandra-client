@@ -76,22 +76,26 @@ export const Layout = (props) => {
         <CssBaseline />
         <ElevationScroll {...props}>
           <AppBar component='nav'>
-            <Toolbar>
-              <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
-                <MenuIcon />
-              </IconButton>
-              <Typography variant='h6' component='div' sx={{ flexGrow: 1, visibility: { xs: 'hidden', md: 'visible', textAlign: 'left' } }}>
-                A COZINHA DA SANDRA
-              </Typography>
-              <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-                <NavItems />
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box>
+                <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
+                  <MenuIcon />
+                </IconButton>
+                <Typography variant='h6' component='div' sx={{ display: { xs: 'none', md: 'block' }, textAlign: 'left' }}>
+                  A COZINHA DA SANDRA
+                </Typography>
               </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                  <NavItems />
+                </Box>
 
-              <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
-                <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
-                  <ShoppingCartIcon color='primary' />
-                </Avatar>
-                <Box sx={layoutStyle.cartNumber}>{cartAmount}</Box>
+                <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
+                  <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
+                    <ShoppingCartIcon color='primary' />
+                  </Avatar>
+                  <Box sx={layoutStyle.cartNumber}>{cartAmount}</Box>
+                </Box>
               </Box>
             </Toolbar>
           </AppBar>
@@ -125,7 +129,7 @@ export const Layout = (props) => {
           {children}
           {cartButtonLocations.includes(location.pathname) && (
             <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton}>
-              Carrinho: {cartTotal}
+              Carrinho: {cartTotal.toFixed(2)}
             </Button>
           )}
           <br />
