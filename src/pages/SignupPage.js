@@ -71,7 +71,7 @@ export const SignupPage = () => {
     <Box sx={signupClasses.container}>
       <Box sx={signupClasses.top}>
         <Box sx={signupClasses.image}>
-          <img src={signupImage} alt='Login' className='auth-images' />
+          <img src={signupImage} alt='Signup' className='auth-images' />
         </Box>
         <div>
           <Typography variant='h4' sx={{ marginTop: '15px' }}>
