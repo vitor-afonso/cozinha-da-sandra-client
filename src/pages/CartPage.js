@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
-import { ShopItem } from '../components/ShopItem/ShopItem';
+import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { AuthContext } from '../context/auth.context';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';

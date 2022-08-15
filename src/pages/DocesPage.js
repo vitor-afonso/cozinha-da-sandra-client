@@ -3,7 +3,7 @@
 import { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShopItem } from '../components/ShopItem/ShopItem';
+import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { AuthContext } from '../context/auth.context';
 
 export const DocesPage = () => {

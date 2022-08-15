@@ -1,5 +1,5 @@
 // jshint esversion:9
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -38,6 +38,7 @@ export const Layout = (props) => {
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const { cartAmount, cartTotal } = useSelector((store) => store.items);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,7 +53,7 @@ export const Layout = (props) => {
       width: '180px',
       position: 'fixed',
       marginLeft: '-90px',
-      bottom: 25,
+      bottom: 16,
     },
     cartNumber: {
       position: 'absolute',
@@ -129,10 +130,9 @@ export const Layout = (props) => {
           {children}
           {cartButtonLocations.includes(location.pathname) && (
             <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton}>
-              Carrinho: {cartTotal.toFixed(2)}
+              Carrinho: {cartTotal.toFixed(2)}€
             </Button>
           )}
-          <br />
         </Box>
       </Box>
     </React.Fragment>

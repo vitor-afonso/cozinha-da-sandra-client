@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ShopItem } from '../components/ShopItem/ShopItem';
+import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
 export const ItemDetailsPage = () => {
   const { shopItems } = useSelector((store) => store.items);
