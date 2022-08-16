@@ -5,7 +5,7 @@ import { useEffect, useContext, useState } from 'react';
 import { ShopItem } from '../../components/ShopItem/ShopItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { orange, teal } from '@mui/material/colors';
 
 export const HomePage = () => {
@@ -27,7 +27,6 @@ export const HomePage = () => {
     },
     docesContainer: {
       width: '100%',
-      //backgroundColor: orange[50],
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -35,7 +34,6 @@ export const HomePage = () => {
     },
     salgadosContainer: {
       width: '100%',
-      //backgroundColor: teal[50],
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -62,14 +60,14 @@ export const HomePage = () => {
 
     if (shopItems.length > 0) {
       const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 3 && item.category === 'doces') {
+        if (docesCount < 4 && item.category === 'doces') {
           docesCount++;
           return item;
         }
       });
 
       const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 3 && item.category === 'salgados') {
+        if (salgadosCount < 4 && item.category === 'salgados') {
           salgadosCount++;
           return item;
         }
@@ -87,11 +85,17 @@ export const HomePage = () => {
       {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
         <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
           <Box className='items-doces-container' sx={homeClasses.docesContainer} data-testid='items-container'>
-            {shopItemsDoces.map((item) => {
-              if (item.category === 'doces') {
-                return <ShopItem key={item._id} {...item} />;
-              }
-            })}
+            <Grid container spacing={2}>
+              {shopItemsDoces.map((element) => {
+                if (element.category === 'doces') {
+                  return (
+                    <Grid item key={element._id} xs={12} md={4} lg={3}>
+                      <ShopItem {...element} />
+                    </Grid>
+                  );
+                }
+              })}
+            </Grid>
 
             <Button variant='outlined' sx={homeClasses.seeMoreDoces} onClick={() => navigate('/doces')}>
               Ver mais...
@@ -99,11 +103,17 @@ export const HomePage = () => {
           </Box>
 
           <Box className='items-salgados-container' sx={homeClasses.salgadosContainer} data-testid='items-container'>
-            {shopItemsSalgados.map((item) => {
-              if (item.category === 'salgados') {
-                return <ShopItem key={item._id} {...item} />;
-              }
-            })}
+            <Grid container spacing={2}>
+              {shopItemsSalgados.map((element) => {
+                if (element.category === 'salgados') {
+                  return (
+                    <Grid item key={element._id} xs={12} md={4} lg={3}>
+                      <ShopItem {...element} />
+                    </Grid>
+                  );
+                }
+              })}
+            </Grid>
             <Button variant='outlined' sx={homeClasses.seeMoreSalgados} onClick={() => navigate('/salgados')}>
               Ver mais...
             </Button>
