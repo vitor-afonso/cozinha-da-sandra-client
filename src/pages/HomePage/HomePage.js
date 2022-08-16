@@ -85,11 +85,11 @@ export const HomePage = () => {
       {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
         <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
           <Box className='items-doces-container' sx={homeClasses.docesContainer} data-testid='items-container'>
-            <Grid container spacing={2}>
+            <Grid container>
               {shopItemsDoces.map((element) => {
                 if (element.category === 'doces') {
                   return (
-                    <Grid item key={element._id} xs={12} md={4} lg={3}>
+                    <Grid item key={element._id} xs={12} sm={6} md={4} lg={3}>
                       <ShopItem {...element} />
                     </Grid>
                   );
@@ -103,11 +103,11 @@ export const HomePage = () => {
           </Box>
 
           <Box className='items-salgados-container' sx={homeClasses.salgadosContainer} data-testid='items-container'>
-            <Grid container spacing={2}>
+            <Grid container>
               {shopItemsSalgados.map((element) => {
                 if (element.category === 'salgados') {
                   return (
-                    <Grid item key={element._id} xs={12} md={4} lg={3}>
+                    <Grid item key={element._id} xs={12} sm={6} md={4} lg={3}>
                       <ShopItem {...element} />
                     </Grid>
                   );
