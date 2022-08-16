@@ -42,7 +42,11 @@ export const HomePage = () => {
       px: 4,
       pb: 6,
     },
-    seeMoreBtn: {
+    seeMoreDoces: {
+      mt: 2,
+      alignSelf: 'end',
+    },
+    seeMoreSalgados: {
       my: 2,
       alignSelf: 'end',
     },
@@ -89,7 +93,7 @@ export const HomePage = () => {
               }
             })}
 
-            <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate('/doces')}>
+            <Button variant='outlined' sx={homeClasses.seeMoreDoces} onClick={() => navigate('/doces')}>
               Ver mais...
             </Button>
           </Box>
@@ -100,7 +104,7 @@ export const HomePage = () => {
                 return <ShopItem key={item._id} {...item} />;
               }
             })}
-            <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate('/salgados')}>
+            <Button variant='outlined' sx={homeClasses.seeMoreSalgados} onClick={() => navigate('/salgados')}>
               Ver mais...
             </Button>
           </Box>
