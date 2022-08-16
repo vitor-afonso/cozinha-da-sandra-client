@@ -1,5 +1,5 @@
 // jshint esversion:9
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -129,7 +129,7 @@ export const Layout = (props) => {
           <Toolbar />
           {children}
           {cartButtonLocations.includes(location.pathname) && (
-            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton}>
+            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')}>
               Carrinho: {cartTotal.toFixed(2)}€
             </Button>
           )}

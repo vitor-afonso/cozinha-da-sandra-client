@@ -1,7 +1,7 @@
 // jshint esversion:9
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
@@ -47,7 +47,8 @@ export function ShopOrder({ order }) {
     }
   };
 
-  const handleConfirmOrder = async () => {
+  const handleConfirmOrder = async (e) => {
+    e.preventDefault();
     try {
       let requestBody = { orderStatus: 'confirmed' };
 
@@ -128,7 +129,7 @@ export function ShopOrder({ order }) {
         <p>
           <b>Status: </b> {translateStatus(order.orderStatus)}
         </p>
-        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && location.pathname === '/orders' && <button onClick={handleConfirmOrder}>Confirmar</button>} </>}
+        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && user.userType === 'admin' && <button onClick={handleConfirmOrder}>Confirmar</button>} </>}
       </div>
 
       {order.message && (

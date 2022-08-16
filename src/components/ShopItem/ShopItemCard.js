@@ -1,9 +1,10 @@
 // jshint esversion:9
 import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from '../../redux/features/items/itemsSlice';
+import { RWebShare } from 'react-web-share';
 
 /********************** MUI *************************/
 import * as React from 'react';
@@ -43,6 +44,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
   const { cartItems } = useSelector((store) => store.items);
   const [ingredientsList, setIngredientsList] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (ingredients) {
@@ -166,9 +168,18 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
         </Box>
       </CardContent>
       <CardActions disableSpacing sx={{ paddingTop: 0, paddingBottom: 0, borderTop: '1px solid #E4E4E4' }}>
-        <IconButton aria-label='share'>
-          <ShareIcon />
-        </IconButton>
+        <RWebShare
+          data={{
+            text: name,
+            url: location.pathname,
+            title: 'Share',
+          }}
+          onClick={() => console.log('shared successfully!')}
+        >
+          <IconButton aria-label='share'>
+            <ShareIcon />
+          </IconButton>
+        </RWebShare>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
           <ExpandMoreIcon />
         </ExpandMore>
