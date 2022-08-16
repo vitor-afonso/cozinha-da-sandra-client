@@ -1,5 +1,5 @@
 // jshint esversion:9
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
@@ -23,6 +23,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, Chip } from '@mui/material';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import { useEffect } from 'react';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -36,28 +37,47 @@ const ExpandMore = styled((props) => {
 }));
 /****************************************************/
 
-export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deliveryMethod, category }) => {
+export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deliveryMethod, category, ingredients }) => {
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
-
+  const [ingredientsList, setIngredientsList] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (ingredients) {
+      let allingredients = formatIngredients(ingredients);
+      setIngredientsList(allingredients);
+    }
+  }, [ingredients]);
+
+  const formatIngredients = (list) => {
+    let filteredList = list.split(',').filter((element) => element.length > 0);
+
+    let trimmedList = filteredList.map((element) => element.trim());
+
+    let upperList = trimmedList.map((element) => element[0].toUpperCase() + element.slice(1));
+
+    return upperList;
+  };
 
   const getCategoryColor = (category) => {
     if (category === 'doces') {
-      return orange[100];
+      return orange[50];
     }
-    return teal[100];
+    return teal[50];
   };
 
   const cardClasses = {
     container: {
       width: 300,
       mt: 4,
+      backgroundColor: getCategoryColor(category),
     },
     avatar: {
-      backgroundColor: getCategoryColor(category),
+      backgroundColor: '#FFF',
       cursor: 'pointer',
+      color: '#000',
     },
     editBtn: {
       color: grey[700],
@@ -144,16 +164,6 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
             </Box>
           )}
         </Box>
-
-        {isLoggedIn && (
-          <Box>
-            {cartItems.includes(_id) && (
-              <Button size='small' variant='outlined' sx={{ cursor: 'pointer', mt: 2, mb: 1 }} onClick={() => dispatch(removeFromCart({ id: _id }))}>
-                Remover do carrinho
-              </Button>
-            )}
-          </Box>
-        )}
       </CardContent>
       <CardActions disableSpacing sx={{ paddingTop: 0, paddingBottom: 0, borderTop: '1px solid #E4E4E4' }}>
         <IconButton aria-label='share'>
@@ -165,24 +175,18 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
-          <Typography paragraph color='textSecondary'>
+          <Typography paragraph color='textSecondary' sx={{ textAlign: 'left' }}>
             {description}
           </Typography>
-          <Typography paragraph color='textSecondary'>
+          <Typography paragraph sx={{ textAlign: 'left' }}>
             Ingredientes:
           </Typography>
-          <Typography paragraph color='textSecondary'>
-            {' '}
-            - item 1
-          </Typography>
-          <Typography paragraph color='textSecondary'>
-            {' '}
-            - item 2
-          </Typography>
-          <Typography paragraph color='textSecondary'>
-            {' '}
-            - item 3
-          </Typography>
+          {ingredientsList.length > 0 &&
+            ingredientsList.map((ingredient, index) => (
+              <Typography key={index} sx={{ textAlign: 'left' }} color='textSecondary'>
+                - {ingredient.trim()[0] + ingredient.slice(1).toLowerCase()}
+              </Typography>
+            ))}
         </CardContent>
       </Collapse>
     </Card>

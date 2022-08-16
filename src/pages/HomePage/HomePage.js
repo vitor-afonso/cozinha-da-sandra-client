@@ -27,7 +27,7 @@ export const HomePage = () => {
     },
     docesContainer: {
       width: '100%',
-      backgroundColor: orange[50],
+      //backgroundColor: orange[50],
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -35,7 +35,7 @@ export const HomePage = () => {
     },
     salgadosContainer: {
       width: '100%',
-      backgroundColor: teal[50],
+      //backgroundColor: teal[50],
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',

@@ -14,6 +14,7 @@ export const NewItemPage = () => {
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [description, setDescription] = useState('');
+  const [ingredients, setIngredients] = useState('');
   const [price, setPrice] = useState('');
   const inputFileUpload = useRef(null);
   const submitForm = useRef(null);
@@ -51,7 +52,7 @@ export const NewItemPage = () => {
 
         let { fileUrl } = await uploadImage(uploadData);
 
-        const requestBody = { name, category, imageUrl: fileUrl, description, price: Number(price) };
+        const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
 
         let { data } = await createItem(requestBody);
 
@@ -63,7 +64,7 @@ export const NewItemPage = () => {
 
         setTimeout(() => navigate('/'), 5000);
       } else {
-        const requestBody = { name, category, description, price };
+        const requestBody = { name, category, description, ingredients, price };
 
         let { data } = await createItem(requestBody);
 
@@ -115,7 +116,21 @@ export const NewItemPage = () => {
           <div>
             <label htmlFor='description'>Info</label>
             <div>
-              <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione ingredientes.' onChange={(e) => setDescription(e.target.value)}></textarea>
+              <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione descrição.' onChange={(e) => setDescription(e.target.value)}></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor='ingredients'>Ingredientes</label>
+            <div>
+              <textarea
+                id='add-item-ingredients'
+                name='ingredients'
+                required
+                value={ingredients}
+                placeholder='Adicione ingredientes separados por virgula.'
+                onChange={(e) => setIngredients(e.target.value)}
+              ></textarea>
             </div>
           </div>
 

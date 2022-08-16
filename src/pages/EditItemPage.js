@@ -16,6 +16,7 @@ export const EditItemPage = () => {
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [description, setDescription] = useState('');
+  const [ingredients, setIngredients] = useState('');
   const [price, setPrice] = useState('');
   const inputFileUpload = useRef(null);
   const { itemId } = useParams();
@@ -33,6 +34,7 @@ export const EditItemPage = () => {
       setName(item.name);
       setCategory(item.category);
       setDescription(item.description);
+      setIngredients(item.ingredients);
       setPrice(item.price);
 
       return () => {
@@ -86,7 +88,7 @@ export const EditItemPage = () => {
 
         let { fileUrl } = await uploadImage(uploadData);
 
-        const requestBody = { name, category, imageUrl: fileUrl, description, price: Number(price) };
+        const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
 
         let { data } = await updateItem(requestBody, itemId);
 
@@ -96,7 +98,7 @@ export const EditItemPage = () => {
 
         setTimeout(() => navigate('/'), 5000);
       } else {
-        const requestBody = { name, category, description, price };
+        const requestBody = { name, category, description, ingredients, price };
 
         let { data } = await updateItem(requestBody, itemId);
 
@@ -146,9 +148,23 @@ export const EditItemPage = () => {
               </div>
 
               <div>
-                <label htmlFor='description'>Detalhes</label>
+                <label htmlFor='description'>Descrição</label>
                 <div>
-                  <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione ingredientes.' onChange={(e) => setDescription(e.target.value)}></textarea>
+                  <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione descrição.' onChange={(e) => setDescription(e.target.value)}></textarea>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor='ingredients'>Ingredientes</label>
+                <div>
+                  <textarea
+                    id='add-item-ingredients'
+                    name='ingredients'
+                    required
+                    value={ingredients}
+                    placeholder='Adicione ingredientes separados por virgula.'
+                    onChange={(e) => setIngredients(e.target.value)}
+                  ></textarea>
                 </div>
               </div>
 
