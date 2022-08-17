@@ -58,15 +58,6 @@ export const Layout = (props) => {
       bottom: 16,
       fontSize: '18px',
     },
-    cartNumber: {
-      position: 'absolute',
-      top: 0,
-      right: 2,
-      fontWeight: 'bolder',
-      borderRadius: '50%',
-      padding: '2px',
-      color: '#816E94',
-    },
   };
 
   const container = window !== undefined ? () => window().document.body : undefined;
@@ -100,7 +91,6 @@ export const Layout = (props) => {
                       <ShoppingCartIcon color='primary' />
                     </Avatar>
                   </Badge>
-                  <Box sx={layoutStyle.cartNumber}>{cartAmount}</Box>
                 </Box>
               </Box>
             </Toolbar>

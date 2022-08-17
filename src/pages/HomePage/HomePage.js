@@ -5,8 +5,7 @@ import { useEffect, useContext, useState } from 'react';
 import { ShopItem } from '../../components/ShopItem/ShopItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, Button, Grid } from '@mui/material';
-import { orange, teal } from '@mui/material/colors';
+import { Box, Button, CircularProgress, Grid } from '@mui/material';
 
 export const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
@@ -21,6 +20,7 @@ export const HomePage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      minHeight: '100vh',
     },
     itemsContainer: {
       width: '100%',
@@ -77,7 +77,7 @@ export const HomePage = () => {
   return (
     <Box className='HomePage' sx={homeClasses.container}>
       {isLoggedIn ? <div>Olá {user.username}!</div> : <div>Please log in</div>}
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
       {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
         <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>

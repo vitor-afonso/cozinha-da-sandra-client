@@ -1,38 +1,40 @@
 // jshint esversion:9
 
-import { Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
 export const ItemDetailsPage = () => {
-  const { shopItems } = useSelector((store) => store.items);
+  const { shopItems, isLoading } = useSelector((store) => store.items);
+  const [oneItem, setOneItem] = useState(null);
   const { itemId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    if (itemId) {
+      let itemToDisplay = shopItems.find((item) => item._id === itemId);
+      setOneItem(itemToDisplay);
+    }
+  }, [itemId]);
 
   return (
-    <>
-      {shopItems.length > 0 ? (
-        shopItems.map((item) => {
-          if (item._id === itemId) {
-            return (
-              <div className='ItemDetailsPage' key={item._id}>
-                <Typography variant='h3' color='primary' sx={{ my: '25px' }}>
-                  {item.name}
-                </Typography>
-                <ShopItem {...item} />
-              </div>
-            );
-          }
-        })
-      ) : (
-        <p>Loading...</p>
+    <Box>
+      {oneItem && (
+        <Typography variant='h3' color='primary' sx={{ my: '25px' }}>
+          {oneItem.name}
+        </Typography>
       )}
-    </>
+      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+
+      {oneItem && (
+        <>
+          <ShopItem {...oneItem} />
+        </>
+      )}
+    </Box>
   );
 };

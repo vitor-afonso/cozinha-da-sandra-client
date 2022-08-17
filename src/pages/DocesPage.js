@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
@@ -8,17 +8,24 @@ import { ShopItem } from '../components/ShopItem/ShopItemCard';
 export const DocesPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
 
+  const docesClasses = {
+    container: {
+      px: 3,
+      mb: 12,
+    },
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <Box sx={{ px: 3, mb: 12 }}>
+    <Box sx={docesClasses.container}>
       <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
         DOCES
       </Typography>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
       {shopItems.length !== 0 && (
         <Grid container spacing={2}>

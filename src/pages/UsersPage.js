@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+import { Box, CircularProgress, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,6 +12,29 @@ export const UsersPage = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [str, setStr] = useState('');
   const effectRan = useRef(false);
+
+  const usersClasses = {
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      px: 3,
+    },
+    top: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+    },
+    field: {
+      minWidth: '300px',
+      maxWidth: '600px',
+      marginTop: 0,
+      marginBottom: 5,
+      fontSize: '20px',
+      display: 'block',
+    },
+  };
 
   useEffect(() => {
     if (effectRan.current === false) {
@@ -32,17 +56,18 @@ export const UsersPage = () => {
   }, [str]);
 
   return (
-    <div>
-      <div>
-        <label htmlFor='search'>
-          <h2>Procurar Utilizadores</h2>
-        </label>
-        <input type='text' placeholder='Nome de utilizador' name='search' value={str} onChange={(e) => setStr(e.target.value)} />
-      </div>
+    <Box sx={usersClasses.container}>
+      <Box sx={usersClasses.top}>
+        <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+          Utilizadores
+        </Typography>
 
-      <br />
+        <TextField label='Procurar' type='text' variant='outlined' fullWidth sx={usersClasses.field} onChange={(e) => setStr(e.target.value)} />
+      </Box>
 
-      {!isLoading ? (
+      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+
+      {/* {!isLoading && (
         filteredUsers.map((oneUser) => {
           if (oneUser._id !== user._id) {
             if (oneUser.deleted) {
@@ -69,9 +94,7 @@ export const UsersPage = () => {
             );
           }
         })
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
+      ) } */}
+    </Box>
   );
 };
