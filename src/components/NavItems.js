@@ -21,6 +21,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 export const NavItems = () => {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
   return (
     <List sx={{ display: { md: 'flex', flexGrow: 1 } }}>
       {!isLoggedIn && (
@@ -129,7 +130,7 @@ export const NavItems = () => {
                 <ListItemIcon sx={{ display: { md: 'none' } }}>
                   <AddCircleOutlineOutlinedIcon color='primary' />
                 </ListItemIcon>
-                <ListItemText primary={'Criar_item'} />
+                <ListItemText primary={'Criar Item'} sx={{ whiteSpace: 'nowrap' }} />
               </ListItemButton>
             </ListItem>
           )}

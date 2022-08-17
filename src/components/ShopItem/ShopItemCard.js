@@ -74,7 +74,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
     container: {
       maxWidth: 300,
       mx: 'auto',
-      mt: 2,
+      //mt: 2,
       backgroundColor: getCategoryColor(category),
     },
     avatar: {
@@ -156,9 +156,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
 
           {cartItems.includes(_id) && isLoggedIn && (
             <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-              <RemoveCircleOutlineOutlinedIcon fontSize='large' onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color='primary' />
+              <RemoveCircleOutlineOutlinedIcon fontSize='large' onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color='#000' />
               <Typography variant='span'>{amount}</Typography>
-              <ControlPointOutlinedIcon fontSize='large' onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color='primary' />
+              <ControlPointOutlinedIcon fontSize='large' onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color='#000' />
             </Box>
           )}
 

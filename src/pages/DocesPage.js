@@ -1,41 +1,38 @@
 // jshint esversion:9
 
-import { useContext, useEffect } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
-import { AuthContext } from '../context/auth.context';
 
 export const DocesPage = () => {
-  const { shopItems, cartTotal, isLoading } = useSelector((store) => store.items);
-  const { isLoggedIn } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { shopItems, isLoading } = useSelector((store) => store.items);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div>
-      <h2>DOCES</h2>
+    <Box sx={{ px: 3, mb: 12 }}>
+      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        DOCES
+      </Typography>
+
       {isLoading && <p>Loading...</p>}
+
       {shopItems.length !== 0 && (
-        <div className='shop-items-doces-container'>
-          {shopItems.map((item) => {
-            if (item.category === 'doces') {
-              return <ShopItem key={item._id} {...item} />;
+        <Grid container spacing={2}>
+          {shopItems.map((element) => {
+            if (element.category === 'doces') {
+              return (
+                <Grid item key={element._id} xs={12} sm={6} md={4} lg={3}>
+                  <ShopItem {...element} />
+                </Grid>
+              );
             }
           })}
-        </div>
+        </Grid>
       )}
-      <>
-        <span onClick={() => navigate(-1)}>Voltar</span>
-
-        {isLoggedIn && (
-          <button>
-            <Link to='/cart'>Ver Carrinho {cartTotal.toFixed(2)}€</Link>
-          </button>
-        )}
-      </>
-    </div>
+    </Box>
   );
 };

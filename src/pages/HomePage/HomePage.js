@@ -30,14 +30,14 @@ export const HomePage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      px: 4,
+      px: 3,
     },
     salgadosContainer: {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      px: 4,
+      px: 3,
       pb: 6,
     },
     seeMoreDoces: {
@@ -85,7 +85,7 @@ export const HomePage = () => {
       {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
         <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
           <Box className='items-doces-container' sx={homeClasses.docesContainer} data-testid='items-container'>
-            <Grid container>
+            <Grid container spacing={2}>
               {shopItemsDoces.map((element) => {
                 if (element.category === 'doces') {
                   return (
@@ -103,7 +103,7 @@ export const HomePage = () => {
           </Box>
 
           <Box className='items-salgados-container' sx={homeClasses.salgadosContainer} data-testid='items-container'>
-            <Grid container>
+            <Grid container spacing={2}>
               {shopItemsSalgados.map((element) => {
                 if (element.category === 'salgados') {
                   return (

@@ -19,7 +19,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { NavItems } from './NavItems';
 
-const drawerWidth = 260;
+const drawerWidth = 220;
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -83,7 +83,7 @@ export const Layout = (props) => {
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Box>
                 <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
-                  <MenuIcon />
+                  <MenuIcon fontSize='large' />
                 </IconButton>
                 <Typography variant='h6' component='div' sx={{ display: { xs: 'none', md: 'block' }, textAlign: 'left' }}>
                   A COZINHA DA SANDRA
@@ -132,7 +132,7 @@ export const Layout = (props) => {
           <Toolbar />
           {children}
           {cartButtonLocations.includes(location.pathname) && (
-            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='success'>
+            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon fontSize='large' />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='success'>
               Carrinho: {cartTotal.toFixed(2)}€
             </Button>
           )}
