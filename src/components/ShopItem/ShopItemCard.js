@@ -72,7 +72,8 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
 
   const cardClasses = {
     container: {
-      width: 300,
+      maxWidth: 300,
+      mx: 'auto',
       mt: 2,
       backgroundColor: getCategoryColor(category),
     },
