@@ -28,7 +28,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <HomeOutlinedIcon />
+                <HomeOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Home'} />
             </ListItemButton>
@@ -37,7 +37,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/doces')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <CakeOutlinedIcon />
+                <CakeOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Doces'} />
             </ListItemButton>
@@ -46,7 +46,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/salgados')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <LocalPizzaOutlinedIcon />
+                <LocalPizzaOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Salgados'} />
             </ListItemButton>
@@ -55,7 +55,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/signup')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <AppRegistrationOutlinedIcon />
+                <AppRegistrationOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Registrar'} />
             </ListItemButton>
@@ -64,7 +64,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/login')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <LoginOutlinedIcon />
+                <LoginOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Entrar'} />
             </ListItemButton>
@@ -77,7 +77,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <HomeOutlinedIcon />
+                <HomeOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Home'} />
             </ListItemButton>
@@ -86,7 +86,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/doces')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <CakeOutlinedIcon />
+                <CakeOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Doces'} />
             </ListItemButton>
@@ -95,7 +95,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate('/salgados')}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <LocalPizzaOutlinedIcon />
+                <LocalPizzaOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Salgados'} />
             </ListItemButton>
@@ -105,7 +105,7 @@ export const NavItems = () => {
             <ListItem disablePadding onClick={() => navigate('/users')}>
               <ListItemButton>
                 <ListItemIcon sx={{ display: { md: 'none' } }}>
-                  <PeopleAltOutlinedIcon />
+                  <PeopleAltOutlinedIcon color='primary' />
                 </ListItemIcon>
                 <ListItemText primary={'Utilizadores'} />
               </ListItemButton>
@@ -116,7 +116,7 @@ export const NavItems = () => {
             <ListItem disablePadding onClick={() => navigate('/orders')}>
               <ListItemButton>
                 <ListItemIcon sx={{ display: { md: 'none' } }}>
-                  <ListAltOutlinedIcon />
+                  <ListAltOutlinedIcon color='primary' />
                 </ListItemIcon>
                 <ListItemText primary={'Encomendas'} />
               </ListItemButton>
@@ -127,7 +127,7 @@ export const NavItems = () => {
             <ListItem disablePadding onClick={() => navigate('/items/add')}>
               <ListItemButton>
                 <ListItemIcon sx={{ display: { md: 'none' } }}>
-                  <AddCircleOutlineOutlinedIcon />
+                  <AddCircleOutlineOutlinedIcon color='primary' />
                 </ListItemIcon>
                 <ListItemText primary={'Criar_item'} />
               </ListItemButton>
@@ -137,7 +137,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => navigate(`/profile/${user._id}`)}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <AccountCircleOutlinedIcon />
+                <AccountCircleOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Perfil'} />
             </ListItemButton>
@@ -146,7 +146,7 @@ export const NavItems = () => {
           <ListItem disablePadding onClick={() => logOutUser()}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
-                <LogoutOutlinedIcon />
+                <LogoutOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary='Sair' />
             </ListItemButton>

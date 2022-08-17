@@ -50,10 +50,13 @@ export const Layout = (props) => {
     },
 
     cartTotalButton: {
-      width: '180px',
+      width: '240px',
+      height: '60px',
       position: 'fixed',
-      marginLeft: '-90px',
+      marginLeft: '-120px',
+      borderRadius: '20px',
       bottom: 16,
+      fontSize: '18px',
     },
     cartNumber: {
       position: 'absolute',
@@ -62,7 +65,7 @@ export const Layout = (props) => {
       fontWeight: 'bolder',
       borderRadius: '50%',
       padding: '2px',
-      color: '#1976D2',
+      color: '#816E94',
     },
   };
 
@@ -129,7 +132,7 @@ export const Layout = (props) => {
           <Toolbar />
           {children}
           {cartButtonLocations.includes(location.pathname) && (
-            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')}>
+            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='success'>
               Carrinho: {cartTotal.toFixed(2)}€
             </Button>
           )}

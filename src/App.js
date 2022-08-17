@@ -33,12 +33,14 @@ import { Box } from '@mui/material';
 
 // to update mui default values in the end when everything is styled
 const theme = createTheme({
-  /* palette: {
+  palette: {
     primary: {
-      main: '#009688',
+      main: '#816E94',
     },
-    secondary: deepPurple,
-  }, */
+    secondary: {
+      main: '#4C9F70',
+    },
+  },
   typography: {
     fontSize: 12,
   },

@@ -80,7 +80,10 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
     avatar: {
       backgroundColor: '#FFF',
       cursor: 'pointer',
-      color: '#000',
+    },
+    avatarLetter: {
+      fontSize: '18px',
+      fontWeight: 'bold',
     },
     editBtn: {
       color: grey[700],
@@ -120,7 +123,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
       <CardHeader
         avatar={
           <Avatar sx={cardClasses.avatar} aria-label='recipe' onClick={() => navigate(`/doces`)}>
-            {category[0].toUpperCase()}
+            <Typography color='primary' sx={cardClasses.avatarLetter}>
+              {category[0].toUpperCase()}
+            </Typography>
           </Avatar>
         }
         action={
@@ -132,7 +137,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           )
         }
         title={
-          <Typography sx={{ cursor: 'pointer' }} onClick={() => navigate(`/items/${_id}`)}>
+          <Typography sx={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate(`/items/${_id}`)} color='primary'>
             {name}
           </Typography>
         }
@@ -178,11 +183,11 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           onClick={() => console.log('shared successfully!')}
         >
           <IconButton aria-label='share'>
-            <ShareIcon />
+            <ShareIcon color='primary' />
           </IconButton>
         </RWebShare>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
-          <ExpandMoreIcon />
+          <ExpandMoreIcon color='primary' />
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>
@@ -190,7 +195,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           <Typography paragraph color='textSecondary' sx={{ textAlign: 'left' }}>
             {description}
           </Typography>
-          <Typography paragraph sx={{ textAlign: 'left' }}>
+          <Typography paragraph sx={{ textAlign: 'left', fontWeight: 'bold' }} color='primary'>
             Ingredientes:
           </Typography>
           {ingredientsList.length > 0 &&
