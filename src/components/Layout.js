@@ -14,7 +14,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { Avatar, Button } from '@mui/material';
+import { Avatar, Badge, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { NavItems } from './NavItems';
@@ -95,9 +95,11 @@ export const Layout = (props) => {
                 </Box>
 
                 <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
-                  <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
-                    <ShoppingCartIcon color='primary' />
-                  </Avatar>
+                  <Badge color='secondary' overlap='circular' badgeContent={`${cartAmount}`}>
+                    <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
+                      <ShoppingCartIcon color='primary' />
+                    </Avatar>
+                  </Badge>
                   <Box sx={layoutStyle.cartNumber}>{cartAmount}</Box>
                 </Box>
               </Box>

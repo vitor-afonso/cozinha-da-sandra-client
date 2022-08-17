@@ -31,14 +31,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Layout } from './components/Layout';
 import { Box } from '@mui/material';
 
-// to update mui default values in the end when everything is styled
+// to update mui default values
 const theme = createTheme({
   palette: {
     primary: {
       main: '#816E94',
     },
     secondary: {
-      main: '#4C9F70',
+      main: '#251351',
     },
     neutral: {
       main: '#031D44',
