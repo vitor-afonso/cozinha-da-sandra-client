@@ -40,6 +40,10 @@ const theme = createTheme({
     secondary: {
       main: '#4C9F70',
     },
+    neutral: {
+      main: '#031D44',
+      contrastText: '#fff',
+    },
   },
   typography: {
     fontSize: 12,

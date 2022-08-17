@@ -24,6 +24,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, Chip } from '@mui/material';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
 
 const ExpandMore = styled((props) => {
@@ -50,6 +52,9 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
     if (ingredients) {
       let allingredients = formatIngredients(ingredients);
       setIngredientsList(allingredients);
+      if (location.pathname === `/items/${_id}`) {
+        handleExpandClick();
+      }
     }
   }, [ingredients]);
 
@@ -146,26 +151,30 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
       <CardMedia component='img' height='194' image={imageUrl} alt={name} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/items/${_id}`)} />
       <CardContent>
         <Box sx={cardClasses.cardContent}>
-          <Chip label={`${price}€`} color='success' sx={{ mr: 1 }} />
+          <Typography sx={{ mr: 1, fontSize: '20px' }} color='neutral' onClick={() => navigate(`/items/${_id}`)}>
+            {price}€
+          </Typography>
 
           {!isLoggedIn && (
-            <Button size='small' variant='outlined' sx={{ cursor: 'pointer' }} onClick={() => navigate(`/login`)} data-testid='go-to-login'>
+            <Button size='small' variant='contained' sx={{ cursor: 'pointer' }} color='neutral' onClick={() => navigate(`/login`)} data-testid='go-to-login'>
               Adicionar
             </Button>
           )}
 
           {cartItems.includes(_id) && isLoggedIn && (
             <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-              <RemoveCircleOutlineOutlinedIcon fontSize='large' onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color='#000' />
-              <Typography variant='span'>{amount}</Typography>
-              <ControlPointOutlinedIcon fontSize='large' onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color='#000' />
+              <RemoveCircleIcon fontSize='large' onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color='neutral' />
+              <Typography variant='span' sx={{ fontSize: '20px' }} color='neutral'>
+                {amount}
+              </Typography>
+              <AddCircleIcon fontSize='large' onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color='neutral' />
             </Box>
           )}
 
           {isLoggedIn && (
             <Box>
               {!cartItems.includes(_id) && (
-                <Button size='small' variant='outlined' sx={{ cursor: 'pointer' }} onClick={() => dispatch(addToCart({ id: _id }))}>
+                <Button size='small' variant='contained' sx={{ cursor: 'pointer', fontWeight: 'bold' }} color='neutral' onClick={() => dispatch(addToCart({ id: _id }))}>
                   Adicionar
                 </Button>
               )}
@@ -183,11 +192,11 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           onClick={() => console.log('shared successfully!')}
         >
           <IconButton aria-label='share'>
-            <ShareIcon color='primary' />
+            <ShareIcon color='neutral' />
           </IconButton>
         </RWebShare>
         <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
-          <ExpandMoreIcon color='primary' />
+          <ExpandMoreIcon color='neutral' />
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout='auto' unmountOnExit>

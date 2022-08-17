@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+import { Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -21,7 +22,9 @@ export const ItemDetailsPage = () => {
           if (item._id === itemId) {
             return (
               <div className='ItemDetailsPage' key={item._id}>
-                <h2>Detalhes - {item.name} </h2>
+                <Typography variant='h3' color='primary' sx={{ my: '25px' }}>
+                  {item.name}
+                </Typography>
                 <ShopItem {...item} />
               </div>
             );
@@ -30,9 +33,6 @@ export const ItemDetailsPage = () => {
       ) : (
         <p>Loading...</p>
       )}
-      <div>
-        <span onClick={() => navigate(-1)}>Voltar</span>
-      </div>
     </>
   );
 };

@@ -40,13 +40,10 @@ export const HomePage = () => {
       px: 3,
       pb: 6,
     },
-    seeMoreDoces: {
-      mt: 2,
-      alignSelf: 'end',
-    },
-    seeMoreSalgados: {
+    seeMoreBtn: {
       my: 2,
       alignSelf: 'end',
+      fontWeight: 'bold',
     },
   };
 
@@ -97,7 +94,7 @@ export const HomePage = () => {
               })}
             </Grid>
 
-            <Button variant='outlined' sx={homeClasses.seeMoreDoces} onClick={() => navigate('/doces')}>
+            <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate('/doces')}>
               Ver mais...
             </Button>
           </Box>
@@ -114,7 +111,7 @@ export const HomePage = () => {
                 }
               })}
             </Grid>
-            <Button variant='outlined' sx={homeClasses.seeMoreSalgados} onClick={() => navigate('/salgados')}>
+            <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate('/salgados')}>
               Ver mais...
             </Button>
           </Box>

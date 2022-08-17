@@ -84,11 +84,6 @@ const itemsSlice = createSlice({
       shopItem.amount--;
       state.cartAmount--;
       state.cartTotal -= shopItem.price;
-
-      /* if (state.cartTotal < state.amountForFreeDelivery && payload.deliveryMethod === 'delivery') {
-        state.addedDeliveryFee = true;
-        state.amountForFreeDelivery = 25;
-      } */
     },
     addNewShopItem: (state, { payload }) => {
       state.shopItems.push(payload);

@@ -132,8 +132,8 @@ export const Layout = (props) => {
           <Toolbar />
           {children}
           {cartButtonLocations.includes(location.pathname) && (
-            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon fontSize='large' />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='success'>
-              Carrinho: {cartTotal.toFixed(2)}€
+            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon fontSize='large' />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='neutral'>
+              Carrinho: {cartTotal.toFixed(2).replace('-', '')}€
             </Button>
           )}
         </Box>
