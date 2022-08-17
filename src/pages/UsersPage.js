@@ -1,9 +1,10 @@
 // jshint esversion:9
 
-import { Box, CircularProgress, TextField, Typography } from '@mui/material';
+import { DeleteOutlined } from '@mui/icons-material';
+import { Box, CircularProgress, TextField, Typography, Card, CardHeader, Avatar, IconButton, Stack, Paper } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
 
 export const UsersPage = () => {
@@ -12,10 +13,12 @@ export const UsersPage = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [str, setStr] = useState('');
   const effectRan = useRef(false);
+  const navigate = useNavigate();
 
   const usersClasses = {
     container: {
       display: 'flex',
+      width: '100%',
       flexDirection: 'column',
       alignItems: 'center',
       px: 3,
@@ -31,8 +34,38 @@ export const UsersPage = () => {
       maxWidth: '600px',
       marginTop: 0,
       marginBottom: 5,
-      fontSize: '20px',
       display: 'block',
+    },
+    bottom: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%',
+    },
+    avatarContainer: {
+      width: '100%',
+      maxWidth: '600px',
+      display: 'flex',
+      alignItems: 'center',
+      padding: 1,
+      backgroundColor: '#ECE8ED',
+      cursor: 'pointer',
+    },
+    deletedAvatarContainer: {
+      width: '100%',
+      maxWidth: '600px',
+      display: 'flex',
+      alignItems: 'center',
+      padding: 1,
+      backgroundColor: '#ddd',
+      cursor: 'pointer',
+    },
+    avatar: {
+      width: '40px',
+      height: 'auto',
+      backgroundColor: '#FFF',
+      padding: 1,
+      mr: 3,
     },
   };
 
@@ -66,35 +99,32 @@ export const UsersPage = () => {
       </Box>
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
-
-      {/* {!isLoading && (
-        filteredUsers.map((oneUser) => {
-          if (oneUser._id !== user._id) {
-            if (oneUser.deleted) {
+      <Stack spacing={2} sx={usersClasses.bottom}>
+        {!isLoading &&
+          filteredUsers.map((oneUser) => {
+            if (oneUser._id !== user._id) {
+              if (oneUser.deleted) {
+                return (
+                  <Paper elevation={2} key={oneUser._id} sx={usersClasses.deletedAvatarContainer} onClick={() => navigate(`/profile/${oneUser._id}`)}>
+                    <Avatar src={oneUser.imageUrl} alt={oneUser.username} sx={usersClasses.avatar} />
+                    <Typography color='textSecondary' sx={{ fontSize: '18px' }}>
+                      {oneUser.username}
+                    </Typography>
+                  </Paper>
+                );
+              }
               return (
-                <div key={oneUser._id}>
-                  <div>
-                    <img src={oneUser.imageUrl} alt={oneUser.username} />
-                  </div>
-                  <Link to={`/profile/${oneUser._id}`}>
-                    <span style={{ color: 'lightgrey' }}>{oneUser.username}</span>
-                  </Link>
-                </div>
+                <Paper elevation={1} key={oneUser._id} sx={usersClasses.avatarContainer} onClick={() => navigate(`/profile/${oneUser._id}`)}>
+                  <Avatar src={oneUser.imageUrl} alt={oneUser.username} sx={usersClasses.avatar} />
+
+                  <Typography color='secondary' sx={{ fontSize: '18px' }}>
+                    {oneUser.username}
+                  </Typography>
+                </Paper>
               );
             }
-            return (
-              <div key={oneUser._id}>
-                <div>
-                  <img src={oneUser.imageUrl} alt={oneUser.username} />
-                </div>
-                <Link to={`/profile/${oneUser._id}`}>
-                  <span>{oneUser.username}</span>
-                </Link>
-              </div>
-            );
-          }
-        })
-      ) } */}
+          })}
+      </Stack>
     </Box>
   );
 };
