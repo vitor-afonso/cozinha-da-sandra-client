@@ -1,17 +1,15 @@
 // jshint esversion:9
 
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ShopOrder } from './../components/ShopOrder';
 
-import { useEffect, useState } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Box, FormControl, Typography, Select, MenuItem, FormHelperText } from '@mui/material';
 
 export const OrdersPage = () => {
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (shopOrders.length > 0) {
@@ -66,31 +64,38 @@ export const OrdersPage = () => {
   };
 
   return (
-    <div>
-      <h2>Encomendas</h2>
-      <div>
-        <label htmlFor='filterOrders'>Filtrar encomendas por: </label>
-        <select value={filterOption} name='filterOrders' onChange={(e) => handleFilterSelect(e)}>
-          <option value=''>Todas</option>
-          <option value='pending'>Pendentes</option>
-          <option value='confirmed'>Confirmadas</option>
-          <option value='paid'>Pago</option>
-          <option value='delivery'>Para Entrega</option>
-          <option value='takeAway'>Take Away</option>
-          <option value='deliveryDate'>Data de entrega</option>
-        </select>
-      </div>
+    <Box>
+      <Box>
+        <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+          Encomendas
+        </Typography>
+      </Box>
+
+      <Box>
+        <FormControl sx={{ minWidth: 300 }} size='small'>
+          <Select id='demo-simple-select-helper' value={filterOption} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={handleFilterSelect}>
+            <MenuItem value=''>Todas</MenuItem>
+            <MenuItem value='pending'>Pendentes</MenuItem>
+            <MenuItem value='confirmed'>Confirmadas</MenuItem>
+            <MenuItem value='paid'>Pagas</MenuItem>
+            <MenuItem value='delivery'>Para Entrega</MenuItem>
+            <MenuItem value='takeAway'>Take Away</MenuItem>
+            <MenuItem value='deliveryDate'>Data Entrega</MenuItem>
+          </Select>
+          <FormHelperText>Filtrar por categoria</FormHelperText>
+        </FormControl>
+      </Box>
+
       {isLoading && <p>Loading...</p>}
       {filteredOrders.length > 0 ? (
         filteredOrders.map((order, index) => {
           return <ShopOrder key={index} order={order} />;
         })
       ) : (
-        <p>0 encomendas para o filtro seleccionado</p>
+        <Typography paragraph sx={{ mt: 4 }}>
+          Nenhuma encomenda com o filtro seleccionado
+        </Typography>
       )}
-      <div>
-        <span onClick={() => navigate(-1)}>Voltar</span>
-      </div>
-    </div>
+    </Box>
   );
 };
