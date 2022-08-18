@@ -2,11 +2,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
+
+import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
 
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
@@ -16,6 +18,29 @@ export function ShopOrder({ order }) {
   const [itemsPrice, setItemsPrice] = useState([]);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const orderClasses = {
+    container: {
+      width: 300,
+      backgroundColor: '#E3DDE3',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+    infoField: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    addressField: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    actions: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      borderTop: '1px solid #CCC',
+    },
+  };
 
   useEffect(() => {
     if (order) {
@@ -99,107 +124,190 @@ export function ShopOrder({ order }) {
   };
 
   return (
-    <div className='ShopOrder'>
-      <p>
-        <b>ID</b>: {order._id}
-      </p>
+    <Card sx={orderClasses.container}>
+      <CardContent>
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>ID:</b>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {order._id}
+          </Typography>
+        </Box>
+
+        {user.userType === 'admin' && (
+          <Box sx={orderClasses.infoField}>
+            <Typography variant='body1' color='#031D44' onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
+              <b>Utilizador:</b>
+            </Typography>
+            <Typography variant='body1' gutterBottom>
+              {order.userId.username}
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Telefone:</b>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {order.contact}
+          </Typography>
+        </Box>
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Data de criação:</b>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {createdAt}
+          </Typography>
+        </Box>
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Data de entrega:</b>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {deliveredAt}
+          </Typography>
+        </Box>
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Metodo de entrega:</b>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}
+          </Typography>
+        </Box>
+
+        {order.address && (
+          <Box>
+            <Typography variant='body1' color='#031D44' align='left'>
+              <b>Morada: </b>
+            </Typography>
+
+            <Typography variant='body1' gutterBottom>
+              {order.address}
+            </Typography>
+          </Box>
+        )}
+
+        {order.message && (
+          <Box sx={orderClasses.infoField}>
+            <Typography variant='body1' color='#031D44'>
+              <b>Mensagem:</b>
+            </Typography>
+            <Typography variant='body1' gutterBottom>
+              {order.message}
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Quantidade: </b>
+          </Typography>
+          <Box>
+            {itemsQuantity.length > 0 &&
+              itemsQuantity.map((item, index) => {
+                return (
+                  <Typography variant='body1' gutterBottom key={index}>
+                    {item}
+                  </Typography>
+                );
+              })}
+          </Box>
+        </Box>
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Preço: </b>
+          </Typography>
+          <Box>
+            {itemsPrice.length > 0 &&
+              itemsPrice.map((item, index) => {
+                return (
+                  <Typography variant='body1' gutterBottom key={index}>
+                    {item}€
+                  </Typography>
+                );
+              })}
+          </Box>
+        </Box>
+
+        {order.deliveryMethod === 'delivery' && (
+          <>
+            {order.deliveryDiscount ? (
+              <Box sx={orderClasses.infoField}>
+                <Typography variant='body1' color='#031D44'>
+                  <b>Taxa de entrega:</b>
+                </Typography>
+                <Typography variant='body1' gutterBottom>
+                  <Typography sx={{ textDecoration: 'line-through' }}>{order.deliveryFee}€</Typography> 0€
+                </Typography>
+              </Box>
+            ) : (
+              <Box sx={orderClasses.infoField}>
+                <Typography variant='body1' color='#031D44'>
+                  <b>Taxa de entrega:</b>
+                </Typography>
+                <Typography variant='body1' gutterBottom>
+                  {order.deliveryFee}€
+                </Typography>
+              </Box>
+            )}
+          </>
+        )}
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Status: </b>
+          </Typography>
+          <Typography>
+            {translateStatus(order.orderStatus)}
+            {order.orderStatus === 'pending' && checkDeliveryDate() && user.userType === 'admin' && (
+              <Button size='small' onClick={handleConfirmOrder}>
+                Confirmar
+              </Button>
+            )}
+          </Typography>
+        </Box>
+
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Pago: </b>
+          </Typography>
+          <Typography>
+            {order.paid ? 'Sim' : 'Não'}
+            {!order.paid && user.userType === 'admin' && (
+              <Button size='small' onClick={() => handleConfirmPayment(order._id)}>
+                Confirmar
+              </Button>
+            )}
+          </Typography>
+        </Box>
+        <Box sx={orderClasses.infoField}>
+          <Typography variant='body1' color='#031D44'>
+            <b>Total:</b>
+          </Typography>
+          <Typography variant='body1'>{getTotal()}€</Typography>
+        </Box>
+      </CardContent>
+
       {user.userType === 'admin' && (
-        <Link to={`/profile/edit/${order.userId._id}`}>
-          <b>Utilizador:</b> {order.userId.username}
-        </Link>
-      )}
-      <p>
-        <b>Telefone:</b> {order.contact}
-      </p>
-      <p>
-        <b>Data de criação:</b> {createdAt}
-      </p>
-      <p>
-        <b>Data de entrega:</b> {deliveredAt}
-      </p>
-      <p>
-        <b>Metodo de entrega:</b> {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}
-      </p>
-      {order.address && (
-        <p>
-          <b>Morada de entrega:</b> {order.address}
-        </p>
-      )}
-      <div>
-        <p>
-          <b>Status: </b> {translateStatus(order.orderStatus)}
-        </p>
-        {order.orderStatus === 'pending' && <> {checkDeliveryDate() && user.userType === 'admin' && <button onClick={handleConfirmOrder}>Confirmar</button>} </>}
-      </div>
-
-      {order.message && (
-        <p>
-          <b>Mensagem:</b> {order.message}
-        </p>
-      )}
-
-      <div>
-        <b>Items Quantidade: </b>
-        {itemsQuantity.length > 0 &&
-          itemsQuantity.map((item, index) => {
-            return (
-              <span key={index}>
-                {item}
-                <br />
-              </span>
-            );
-          })}
-      </div>
-      <br />
-
-      <div>
-        <b>Items Preço: </b>
-        {itemsPrice.length > 0 &&
-          itemsPrice.map((item, index) => {
-            return (
-              <span key={index}>
-                {item}€
-                <br />
-              </span>
-            );
-          })}
-      </div>
-
-      {order.deliveryMethod === 'delivery' && (
-        <>
-          {order.deliveryDiscount ? (
-            <p>
-              <b>Taxa de entrega:</b> <span style={{ textDecoration: 'line-through' }}>{order.deliveryFee}€</span> 0€
-            </p>
-          ) : (
-            <p>
-              <b>Taxa de entrega:</b> {order.deliveryFee}€
-            </p>
+        <CardActions sx={orderClasses.actions}>
+          {location.pathname === '/orders' && (
+            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+              Contactar
+            </Button>
           )}
-        </>
-      )}
 
-      <div>
-        <p>
-          <b>Pago: </b> {order.paid ? 'Sim' : 'Não'}
-        </p>
-        {!order.paid && user.userType === 'admin' && <button onClick={() => handleConfirmPayment(order._id)}>Confirmar</button>}
-      </div>
-      <p>
-        <b>Total:</b> {getTotal()}€
-      </p>
-      {user.userType === 'admin' && (
-        <Link to={`/orders/edit/${order._id}`}>
-          <span>Editar </span>
-        </Link>
+          <Button size='small' onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            Editar
+          </Button>
+        </CardActions>
       )}
-      {location.pathname === '/orders' && (
-        <Link to={`/send-email/orders/${order._id}`}>
-          <span>Contactar </span>
-        </Link>
-      )}
-      <br />
-      <hr />
-    </div>
+    </Card>
   );
 }

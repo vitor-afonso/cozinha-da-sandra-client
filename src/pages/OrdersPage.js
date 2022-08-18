@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ShopOrder } from './../components/ShopOrder';
 
-import { Box, FormControl, Typography, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid } from '@mui/material';
 
 export const OrdersPage = () => {
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
@@ -87,15 +87,25 @@ export const OrdersPage = () => {
       </Box>
 
       {isLoading && <p>Loading...</p>}
-      {filteredOrders.length > 0 ? (
-        filteredOrders.map((order, index) => {
-          return <ShopOrder key={index} order={order} />;
-        })
-      ) : (
-        <Typography paragraph sx={{ mt: 4 }}>
-          Nenhuma encomenda com o filtro seleccionado
-        </Typography>
-      )}
+      <Box sx={{ padding: 3 }}>
+        <Grid container spacing={2}>
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order, index) => {
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                  <ShopOrder key={index} order={order} />
+                </Grid>
+              );
+            })
+          ) : (
+            <Grid item xs={12}>
+              <Typography paragraph sx={{ mt: 4 }}>
+                Nenhuma encomenda com o filtro seleccionado
+              </Typography>
+            </Grid>
+          )}
+        </Grid>
+      </Box>
     </Box>
   );
 };

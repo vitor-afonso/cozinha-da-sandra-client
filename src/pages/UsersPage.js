@@ -1,11 +1,13 @@
 // jshint esversion:9
 
 import { DeleteOutlined } from '@mui/icons-material';
-import { Box, CircularProgress, TextField, Typography, Card, CardHeader, Avatar, IconButton, Stack, Paper } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
+
+import { Box, CircularProgress, TextField, Typography, Card, CardHeader, Avatar, IconButton, Stack, Paper, InputAdornment } from '@mui/material';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 export const UsersPage = () => {
   const { user } = useContext(AuthContext);
@@ -48,7 +50,7 @@ export const UsersPage = () => {
       display: 'flex',
       alignItems: 'center',
       padding: 1,
-      backgroundColor: '#ECE8ED',
+      backgroundColor: '#E3DDE3',
       cursor: 'pointer',
     },
     deletedAvatarContainer: {
@@ -95,7 +97,21 @@ export const UsersPage = () => {
           Utilizadores
         </Typography>
 
-        <TextField label='Procurar' type='text' variant='outlined' fullWidth sx={usersClasses.field} onChange={(e) => setStr(e.target.value)} />
+        <TextField
+          label='Procurar'
+          type='text'
+          variant='outlined'
+          fullWidth
+          sx={usersClasses.field}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchOutlinedIcon />
+              </InputAdornment>
+            ),
+          }}
+          onChange={(e) => setStr(e.target.value)}
+        />
       </Box>
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
