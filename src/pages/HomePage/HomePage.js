@@ -1,11 +1,12 @@
 // jshint esversion:9
 import { AuthContext } from '../../context/auth.context';
 import { useEffect, useContext, useState } from 'react';
+import heroImage from '../../images/hero.svg';
 
 import { ShopItem } from '../../components/ShopItem/ShopItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Box, Button, CircularProgress, Grid } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 
 export const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
@@ -22,7 +23,33 @@ export const HomePage = () => {
       alignItems: 'center',
       minHeight: '100vh',
     },
+    hero: {
+      width: '100%',
+      padding: 3,
+      backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
+    },
+    heroText: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+      py: 3,
+    },
+    heroTitle: {
+      fontSize: 50,
+      fontWeight: 'bold',
+      color: '#031D44',
+      pb: 2,
+      //whiteSpace: 'nowrap',
+    },
+    heroDescription: {
+      fontSize: '16px',
+      color: '#031D44',
+      maxWidth: '600px',
+    },
     itemsContainer: {
+      mt: 3,
       width: '100%',
     },
     docesContainer: {
@@ -76,7 +103,24 @@ export const HomePage = () => {
 
   return (
     <Box className='HomePage' sx={homeClasses.container}>
-      {isLoggedIn ? <div>Olá {user.username}!</div> : <div>Please log in</div>}
+      <Grid container spacing={0} sx={homeClasses.hero}>
+        <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'end' } }}>
+          <Box sx={{ maxWidth: { md: '600px' } }}>
+            <img src={heroImage} alt='Cake' width='100%' height='auto' />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'start' } }}>
+          <Box sx={homeClasses.heroText}>
+            <Typography variant='h2' sx={homeClasses.heroTitle}>
+              {user ? `Bem-vindo ${user.username}!` : 'Bem-vindo!'}
+            </Typography>
+            <Typography variant='body1' sx={homeClasses.heroDescription}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus.
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
       {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
