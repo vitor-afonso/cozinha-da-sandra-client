@@ -75,6 +75,10 @@ const itemsSlice = createSlice({
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
       shopItem.amount++;
     },
+    setItemAmount: (state, { payload }) => {
+      const shopItem = state.shopItems.find((item) => item._id === payload.id);
+      shopItem.amount = payload.amount;
+    },
     decreaseItemAmount: (state, { payload }) => {
       //decreases quantity and removes one itemId from cartItems
       const shopItem = state.shopItems.find((item) => item._id === payload.id);
@@ -124,5 +128,6 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, addNewShopItem, handleAddedDeliveryFee, updateShopItem, removeShopItem } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handleAddedDeliveryFee, updateShopItem, removeShopItem } =
+  itemsSlice.actions;
 export default itemsSlice.reducer;

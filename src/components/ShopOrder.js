@@ -72,8 +72,7 @@ export function ShopOrder({ order }) {
     }
   };
 
-  const handleConfirmOrder = async (e) => {
-    e.preventDefault();
+  const handleConfirmOrder = async () => {
     try {
       let requestBody = { orderStatus: 'confirmed' };
 
@@ -91,10 +90,8 @@ export function ShopOrder({ order }) {
         `,
       };
 
-      (async () => {
-        await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
-        dispatch(confirmOrder({ id: order._id }));
-      })();
+      await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
+      dispatch(confirmOrder({ id: order._id }));
     } catch (error) {
       console.log(error.message);
     }
@@ -244,9 +241,12 @@ export function ShopOrder({ order }) {
                 <Typography variant='body1' color='#031D44'>
                   <b>Taxa de entrega:</b>
                 </Typography>
-                <Typography variant='body1' gutterBottom>
-                  <Typography sx={{ textDecoration: 'line-through' }}>{order.deliveryFee}€</Typography> 0€
-                </Typography>
+                <Box variant='body1'>
+                  <Typography sx={{ textDecoration: 'line-through' }} gutterBottom>
+                    {order.deliveryFee}€
+                  </Typography>{' '}
+                  0€
+                </Box>
               </Box>
             ) : (
               <Box sx={orderClasses.infoField}>

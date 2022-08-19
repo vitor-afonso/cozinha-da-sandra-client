@@ -1,15 +1,28 @@
 // jshint esversion:9
 
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ShopOrder } from './../components/ShopOrder';
 
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid } from '@mui/material';
+import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 export const OrdersPage = () => {
+  const dispatch = useDispatch();
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
+  const userEffectRan = useRef(false);
+
+  useEffect(() => {
+    if (userEffectRan.current === false) {
+      dispatch(getShopOrders());
+
+      return () => {
+        userEffectRan.current = true;
+      };
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (shopOrders.length > 0) {
@@ -92,15 +105,15 @@ export const OrdersPage = () => {
           {filteredOrders.length > 0 ? (
             filteredOrders.map((order, index) => {
               return (
-                <Grid item xs={12} sm={6} md={4} lg={3}>
-                  <ShopOrder key={index} order={order} />
+                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                  <ShopOrder order={order} />
                 </Grid>
               );
             })
           ) : (
             <Grid item xs={12}>
               <Typography paragraph sx={{ mt: 4 }}>
-                Nenhuma encomenda com o filtro seleccionado
+                Nenhuma encomenda com o filtro seleccionado.
               </Typography>
             </Grid>
           )}

@@ -1,16 +1,26 @@
 // jshint esversion:9
-
+import * as React from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder, updateShopOrder } from '../redux/features/orders/ordersSlice';
-import { parseDateToEdit } from '../utils/app.utils';
+import { addToCart, addToEditCart, clearCart, decreaseItemAmount, increaseItemAmount, removeFromCart, setItemAmount } from '../redux/features/items/itemsSlice';
+import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
+import { ShopItem } from '../components/ShopItem/ShopItemCard';
+
+import { Paper, ListItem, ListItemIcon, ListItemText, Typography, List, ListItemAvatar, Avatar, Box, Button, Grid } from '@mui/material';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 export const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
-  const { orderDeliveryFee } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -26,15 +36,31 @@ export const EditOrderPage = () => {
   const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
+
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const editOrderClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    list: {
+      //maxWidth: 300,
+    },
+    gridItem: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  };
 
   useEffect(() => {
     if (adminEffectRan.current === false && orderId) {
+      dispatch(clearCart());
       window.scrollTo(0, 0);
 
       let orderToEdit = shopOrders.find((item) => item._id === orderId);
-
       setOrder(orderToEdit);
 
       return () => {
@@ -46,6 +72,18 @@ export const EditOrderPage = () => {
   useEffect(() => {
     if (order) {
       setOrderDetails(order);
+    }
+  }, [order]);
+
+  useEffect(() => {
+    if (order) {
+      // to set the items in to the cart
+      let itemsArr = getItemsAmount(order.items);
+
+      order.items.forEach((item) => {
+        dispatch(addToCart({ id: item._id }));
+        dispatch(setItemAmount({ id: item._id, amount: itemsArr[item.name] }));
+      });
     }
   }, [order]);
 
@@ -93,6 +131,7 @@ export const EditOrderPage = () => {
 
   const clearInputsAndGoBack = () => {
     clearInputs();
+    dispatch(clearCart());
     navigate('/orders');
   };
 
@@ -130,6 +169,8 @@ export const EditOrderPage = () => {
         deliveryDiscount: deliveryMethod === 'delivery' && order.total > order.amountForFreeDelivery ? true : false,
         message,
         deliveryMethod,
+        items: cartItems,
+        total: cartTotal.toFixed(2),
       };
 
       let { data } = await updateOrder(requestBody, orderId);
@@ -137,10 +178,11 @@ export const EditOrderPage = () => {
       setSuccessMessage('Encomenda actualizada com sucesso.');
 
       // this will update the state with the updated order
-
+      console.log('Encomenda actualizada com sucesso.', data);
       dispatch(updateShopOrder(data));
 
       clearInputs();
+      dispatch(clearCart());
       setTimeout(() => navigate('/orders'), 5000);
     } catch (error) {
       setErrorMessage(error.message);
@@ -148,17 +190,72 @@ export const EditOrderPage = () => {
   };
 
   return (
-    <div>
+    <Box sx={editOrderClasses.container}>
       {order && !successMessage && (
         <>
-          <h2>EditOrderPage</h2>
-          <p>
-            <b>Autor da encomenda:</b> {order.userId.username}
-          </p>
-          <form onSubmit={handleSubmit}>
+          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+            EDITAR ENCOMENDA
+          </Typography>
+
+          <Grid container spacing={2}>
+            {shopItems.map((element) => {
+              if (cartItems.includes(element._id)) {
+                return (
+                  <Grid item key={element._id} xs={12} sm={6} md={4} lg={3} sx={editOrderClasses.gridItem}>
+                    <ShopItem {...element} deliveryMethod={deliveryMethod} />
+                  </Grid>
+                );
+              }
+            })}
+          </Grid>
+
+          <Box sx={editOrderClasses.list}>
+            <PopupState variant='popover' popupId='demo-popup-menu'>
+              {(popupState) => (
+                <React.Fragment>
+                  <Button variant='contained' {...bindTrigger(popupState)} sx={{ mt: 2 }}>
+                    Adicionar Item
+                  </Button>
+                  <Menu {...bindMenu(popupState)}>
+                    {shopItems.map((item) => {
+                      if (!cartItems.includes(item._id)) {
+                        return (
+                          <MenuItem onClick={() => dispatch(addToCart({ id: item._id }))}>
+                            {item.name}
+                            <AddOutlinedIcon />
+                          </MenuItem>
+                        );
+                      }
+                    })}
+                  </Menu>
+                </React.Fragment>
+              )}
+            </PopupState>
+          </Box>
+
+          {deliveryMethod === 'delivery' && (
             <div>
-              <h2>Dados de entrega</h2>
+              {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
+                <p>
+                  Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
+                </p>
+              ) : (
+                <p>Taxa de entrega: {orderDeliveryFee}€</p>
+              )}
             </div>
+          )}
+
+          <div>
+            <p>Total: {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€</p>
+            <Button variant='outlined' onClick={() => dispatch(clearCart())}>
+              Limpar Carrinho
+            </Button>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <p>
+              <b>Autor da encomenda:</b> {order.userId.username}
+            </p>
             <div>
               <label htmlFor='contact'>Contacto</label>
               <div>
@@ -217,7 +314,7 @@ export const EditOrderPage = () => {
         {!successMessage && (
           <>
             <button type='button' onClick={handleDeleteOrder}>
-              Apagar Encomenda
+              Apagar
             </button>
             <button type='button' onClick={() => submitForm.current.click()}>
               Actualizar
@@ -225,6 +322,6 @@ export const EditOrderPage = () => {
           </>
         )}
       </div>
-    </div>
+    </Box>
   );
 };

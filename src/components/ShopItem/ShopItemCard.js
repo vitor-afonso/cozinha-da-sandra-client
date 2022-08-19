@@ -21,9 +21,7 @@ import Typography from '@mui/material/Typography';
 import { grey, orange, teal } from '@mui/material/colors';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Button, Chip } from '@mui/material';
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
-import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
+import { Box, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
@@ -182,23 +180,25 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           )}
         </Box>
       </CardContent>
-      <CardActions disableSpacing sx={{ paddingTop: 0, paddingBottom: 0, borderTop: '1px solid #E4E4E4' }}>
-        <RWebShare
-          data={{
-            text: name,
-            url: location.pathname,
-            title: 'Share',
-          }}
-          onClick={() => console.log('shared successfully!')}
-        >
-          <IconButton aria-label='share'>
-            <ShareIcon color='neutral' />
-          </IconButton>
-        </RWebShare>
-        <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
-          <ExpandMoreIcon color='neutral' />
-        </ExpandMore>
-      </CardActions>
+      {!location.pathname.includes('/orders') && !location.pathname.includes('/cart') && (
+        <CardActions disableSpacing sx={{ paddingTop: 0, paddingBottom: 0, borderTop: '1px solid #E4E4E4' }}>
+          <RWebShare
+            data={{
+              text: name,
+              url: location.pathname,
+              title: 'Share',
+            }}
+            onClick={() => console.log('shared successfully!')}
+          >
+            <IconButton aria-label='share'>
+              <ShareIcon color='neutral' />
+            </IconButton>
+          </RWebShare>
+          <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
+            <ExpandMoreIcon color='neutral' />
+          </ExpandMore>
+        </CardActions>
+      )}
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
           <Typography paragraph color='textSecondary' sx={{ textAlign: 'left' }}>
