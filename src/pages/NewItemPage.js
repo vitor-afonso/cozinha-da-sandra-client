@@ -1,25 +1,71 @@
 // jshint esversion:9
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createItem, uploadImage } from '../api';
 import { addNewShopItem } from '../redux/features/items/itemsSlice';
+import itemImage from '../images/item.svg';
+
+import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import AddIcon from '@mui/icons-material/Add';
 
 export const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [name, setName] = useState('');
+  const [nameError, setNameError] = useState(false);
   const [category, setCategory] = useState('');
+  const [categoryError, setCategoryError] = useState(false);
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState(false);
   const [ingredients, setIngredients] = useState('');
+  const [ingredientsError, setIngredientsError] = useState(false);
   const [price, setPrice] = useState('');
+  const [priceError, setPriceError] = useState(false);
   const inputFileUpload = useRef(null);
   const submitForm = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (itemImage) {
+      setTempImageUrl(itemImage);
+    }
+  }, [itemImage]);
+
+  const newItemClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    formContainer: {
+      marginTop: 0,
+    },
+    form: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+    nameField: {
+      marginTop: 0,
+      marginBottom: 2,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
+      marginBottom: 5,
+    },
+  };
 
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
@@ -44,124 +90,157 @@ export const NewItemPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!name) {
+      setNameError(true);
+      setErrorMessage('Por favor introduza Titulo.');
+      return;
+    }
+    setNameError(false);
+
+    if (!category) {
+      setCategoryError(true);
+      setErrorMessage('Por favor escolha categoria.');
+      return;
+    }
+    setCategoryError(false);
+
+    if (!price) {
+      setPriceError(true);
+      setErrorMessage('Por favor introduza um preço.');
+      return;
+    }
+    setPriceError(false);
+
+    if (!description) {
+      setDescriptionError(true);
+      setErrorMessage('Por favor introduza descrição.');
+      return;
+    }
+    setDescriptionError(false);
+
+    if (!ingredients) {
+      setIngredientsError(true);
+      setErrorMessage('Por favor introduza ingredientes.');
+      return;
+    }
+    setIngredientsError(false);
+
+    if (!objImageToUpload) {
+      setErrorMessage('Por favor adicione imagem.');
+      return;
+    }
+
     try {
-      if (objImageToUpload) {
-        const uploadData = new FormData();
+      const uploadData = new FormData();
 
-        uploadData.append('imageUrl', objImageToUpload);
+      uploadData.append('imageUrl', objImageToUpload);
 
-        let { fileUrl } = await uploadImage(uploadData);
+      let { fileUrl } = await uploadImage(uploadData);
 
-        const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
+      const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
 
-        let { data } = await createItem(requestBody);
+      let { data } = await createItem(requestBody);
 
-        //console.log('newly created item =>', data);
+      //console.log('newly created item =>', data);
 
-        dispatch(addNewShopItem(data));
+      dispatch(addNewShopItem(data));
 
-        setSuccessMessage('Item criado com sucesso.');
+      setSuccessMessage('Item criado com sucesso.');
 
-        setTimeout(() => navigate('/'), 5000);
-      } else {
-        const requestBody = { name, category, description, ingredients, price };
-
-        let { data } = await createItem(requestBody);
-
-        dispatch(addNewShopItem(data));
-
-        //console.log('newly created item =>', data);
-
-        setSuccessMessage('Item criado com sucesso.');
-
-        setTimeout(() => navigate('/'), 5000);
-      }
+      setTimeout(() => navigate('/'), 5000);
     } catch (error) {
       setErrorMessage(error.message);
     }
   };
 
   return (
-    <div>
-      <h2>Criar novo item</h2>
+    <Box sx={newItemClasses.container}>
+      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        Criar item
+      </Typography>
 
       {!successMessage && (
-        <form onSubmit={handleSubmit}>
-          <figure>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ width: '150px', height: 'auto' }} />}</figure>
-          <div>
-            <label htmlFor='name'>Nome</label>
-            <div>
-              <input id='add-item-name' name='name' type='text' required value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-          </div>
+        <Box sx={newItemClasses.formContainer}>
+          <Box sx={newItemClasses.form}>
+            <form onSubmit={handleSubmit} noValidate>
+              <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-          <div>
-            <label htmlFor='category'>Categoria</label>
-            <div>
-              <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-                <option value='' disabled></option>
-                <option value='doces'>Doces</option>
-                <option value='salgados'>Salgados</option>
-              </select>
-            </div>
-          </div>
+              <TextField label='Titulo' type='text' variant='outlined' fullWidth required sx={newItemClasses.nameField} onChange={(e) => setName(e.target.value)} error={nameError} value={name} />
 
-          <div>
-            <label htmlFor='price'>Preço</label>
-            <div>
-              <input id='add-item-price' name='price' type='text' required value={price} onChange={handlePrice} />
-            </div>
-          </div>
+              <Box>
+                <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
+                  <FormLabel id='demo-row-radio-buttons-group-label'>Categoria</FormLabel>
+                  <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
+                    <FormControlLabel value='doces' control={<Radio />} label='Doces' />
+                    <FormControlLabel value='salgados' control={<Radio />} label='Salgados' />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
 
-          <div>
-            <label htmlFor='description'>Info</label>
-            <div>
-              <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione descrição.' onChange={(e) => setDescription(e.target.value)}></textarea>
-            </div>
-          </div>
+              <TextField label='Preço' type='text' variant='outlined' fullWidth required sx={newItemClasses.formField} onChange={(e) => handlePrice(e)} error={priceError} value={price} />
 
-          <div>
-            <label htmlFor='ingredients'>Ingredientes</label>
-            <div>
-              <textarea
-                id='add-item-ingredients'
-                name='ingredients'
+              <TextField
+                id='outlined-multiline-flexible'
+                label='Descrição'
+                multiline
+                maxRows={4}
+                sx={newItemClasses.formTextArea}
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
                 required
-                value={ingredients}
-                placeholder='Adicione ingredientes separados por virgula.'
+                placeholder='Escreva aqui a descrição...'
+                error={descriptionError}
+              />
+
+              <TextField
+                id='outlined-multiline-flexible'
+                label='Ingredientes'
+                multiline
+                maxRows={4}
+                sx={newItemClasses.formTextArea}
                 onChange={(e) => setIngredients(e.target.value)}
-              ></textarea>
-            </div>
-          </div>
+                value={ingredients}
+                required
+                placeholder='Escreva aqui os ingredientes separados por virgula...'
+                error={ingredientsError}
+              />
 
-          {errorMessage && <p>{errorMessage}</p>}
+              {errorMessage && (
+                <Typography paragraph sx={{ my: '25px' }} color='error'>
+                  {errorMessage}
+                </Typography>
+              )}
 
-          <div>
-            <div>
-              <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
-              <button type='button' onClick={() => inputFileUpload.current.click()}>
-                Escolher Foto
-              </button>
-            </div>
-            <button type='submit' ref={submitForm} hidden>
-              Criar Item
-            </button>
-          </div>
-        </form>
+              <div>
+                <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+
+                <button type='submit' ref={submitForm} hidden>
+                  Criar
+                </button>
+              </div>
+            </form>
+          </Box>
+        </Box>
       )}
 
       {successMessage && <p>{successMessage}</p>}
 
-      <div>
+      <Box>
+        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+          Voltar
+        </Button>
+
         {!successMessage && (
           <>
-            <span onClick={() => navigate(-1)}>Voltar</span>
-            <button type='button' onClick={() => submitForm.current.click()}>
-              Criar Item
-            </button>
+            <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+              Imagem
+            </Button>
+            <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
+              Criar
+            </Button>
           </>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
