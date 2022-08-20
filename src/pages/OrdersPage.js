@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShopOrder } from './../components/ShopOrder';
 
-import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid } from '@mui/material';
+import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 export const OrdersPage = () => {
@@ -99,7 +99,8 @@ export const OrdersPage = () => {
         </FormControl>
       </Box>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+
       <Box sx={{ padding: 3 }}>
         <Grid container spacing={2}>
           {filteredOrders.length > 0 ? (
@@ -112,9 +113,11 @@ export const OrdersPage = () => {
             })
           ) : (
             <Grid item xs={12}>
-              <Typography paragraph sx={{ mt: 4 }}>
-                Nenhuma encomenda com o filtro seleccionado.
-              </Typography>
+              {!isLoading && (
+                <Typography paragraph sx={{ mt: 4 }}>
+                  Nenhuma encomenda com o filtro seleccionado.
+                </Typography>
+              )}
             </Grid>
           )}
         </Grid>

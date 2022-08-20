@@ -2,37 +2,18 @@
 import * as React from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder, updateShopOrder } from '../redux/features/orders/ordersSlice';
-import { addToCart, addToEditCart, clearCart, decreaseItemAmount, increaseItemAmount, removeFromCart, setItemAmount } from '../redux/features/items/itemsSlice';
+import { addToCart, clearCart, setItemAmount } from '../redux/features/items/itemsSlice';
 import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
-import {
-  Paper,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  List,
-  ListItemAvatar,
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  TextField,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-} from '@mui/material';
+import { Typography, Box, Button, Grid, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import Radio from '@mui/material/Radio';
 
@@ -46,7 +27,7 @@ export const EditOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [contact, setContact] = useState('');
-  const [contactError, setContactError] = useState('');
+  const [contactError, setContactError] = useState(false);
   const [fullAddress, setFullAddress] = useState('');
   const [message, setMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState('');
@@ -58,7 +39,6 @@ export const EditOrderPage = () => {
 
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const editOrderClasses = {
     container: {
@@ -220,6 +200,8 @@ export const EditOrderPage = () => {
       setErrorMessage('Por favor adicione contacto.');
       return;
     }
+    setContactError(false);
+
     if (deliveryMethod === 'delivery' && !fullAddress) {
       setErrorMessage('Por favor adicione morada para entrega.');
       return;
@@ -282,10 +264,10 @@ export const EditOrderPage = () => {
                     Adicionar Item
                   </Button>
                   <Menu {...bindMenu(popupState)}>
-                    {shopItems.map((item) => {
+                    {shopItems.map((item, index) => {
                       if (!cartItems.includes(item._id)) {
                         return (
-                          <MenuItem onClick={() => dispatch(addToCart({ id: item._id }))}>
+                          <MenuItem key={index} onClick={() => dispatch(addToCart({ id: item._id }))}>
                             <Box sx={editOrderClasses.listItem}>
                               <Typography color='primary' sx={{ fontWeight: 'bold' }}>
                                 {item.name}
@@ -381,7 +363,11 @@ export const EditOrderPage = () => {
                   />
                 )}
 
-                {errorMessage && <p>{errorMessage}</p>}
+                {errorMessage && (
+                  <Typography paragraph sx={{ my: '25px' }} color='error'>
+                    {errorMessage}
+                  </Typography>
+                )}
 
                 <button type='submit' ref={submitForm} hidden>
                   Actualizar

@@ -1,12 +1,11 @@
 // jshint esversion:9
 
-import { DeleteOutlined } from '@mui/icons-material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
 
-import { Box, CircularProgress, TextField, Typography, Card, CardHeader, Avatar, IconButton, Stack, Paper, InputAdornment } from '@mui/material';
+import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, InputAdornment } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 export const UsersPage = () => {
@@ -72,23 +71,23 @@ export const UsersPage = () => {
   };
 
   useEffect(() => {
-    if (effectRan.current === false) {
+    if (effectRan.current === false && shopUsers.length > 0) {
       setFilteredUsers(shopUsers);
 
       return () => {
         effectRan.current = true;
       };
     }
-  }, []);
+  }, [shopUsers]);
 
   useEffect(() => {
-    if (str === '') {
+    if (str === '' && shopUsers.length > 0) {
       setFilteredUsers(shopUsers);
     } else {
       let filteredUsers = shopUsers.filter((user) => user.username.toLowerCase().includes(str.toLowerCase()));
       setFilteredUsers(filteredUsers);
     }
-  }, [str]);
+  }, [str, shopUsers]);
 
   return (
     <Box sx={usersClasses.container}>
@@ -115,6 +114,7 @@ export const UsersPage = () => {
       </Box>
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+
       <Stack spacing={2} sx={usersClasses.bottom}>
         {!isLoading &&
           filteredUsers.map((oneUser) => {

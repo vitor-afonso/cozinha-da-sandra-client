@@ -102,6 +102,22 @@ export function ShopOrder({ order }) {
     }
   };
 
+  const getTotal = () => {
+    if (order.deliveryDiscount) {
+      return order.total;
+    }
+
+    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
+      return order.total + order.deliveryFee;
+    }
+    return order.total;
+  };
+
+  const checkUserType = () => {
+    if (order.orderStatus === 'pending' || user.userType === 'admin') {
+      return true;
+    }
+  };
   const handleConfirmPayment = async () => {
     try {
       let requestBody = { paid: true };
@@ -112,17 +128,6 @@ export function ShopOrder({ order }) {
     } catch (error) {
       console.log(error.message);
     }
-  };
-
-  const getTotal = () => {
-    if (order.deliveryDiscount) {
-      return order.total;
-    }
-
-    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
-      return order.total + order.deliveryFee;
-    }
-    return order.total;
   };
 
   return (
@@ -300,17 +305,19 @@ export function ShopOrder({ order }) {
         </Box>
       </CardContent>
 
-      <CardActions sx={orderClasses.actions}>
-        {user.userType === 'admin' && location.pathname === '/orders' && (
-          <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
-            Contactar
-          </Button>
-        )}
+      {checkUserType() && (
+        <CardActions sx={orderClasses.actions}>
+          {user.userType === 'admin' && location.pathname === '/orders' && (
+            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+              Contactar
+            </Button>
+          )}
 
-        <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
-          Editar
-        </Button>
-      </CardActions>
+          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            Editar
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 }
