@@ -9,6 +9,7 @@ import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSli
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
 import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { grey } from '@mui/material/colors';
 
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
@@ -39,6 +40,10 @@ export function ShopOrder({ order }) {
       display: 'flex',
       justifyContent: 'flex-end',
       borderTop: '1px solid #CCC',
+    },
+    editBtn: {
+      color: grey[700],
+      cursor: 'pointer',
     },
   };
 
@@ -295,19 +300,17 @@ export function ShopOrder({ order }) {
         </Box>
       </CardContent>
 
-      {user.userType === 'admin' && (
-        <CardActions sx={orderClasses.actions}>
-          {location.pathname === '/orders' && (
-            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
-              Contactar
-            </Button>
-          )}
-
-          <Button size='small' onClick={() => navigate(`/orders/edit/${order._id}`)}>
-            Editar
+      <CardActions sx={orderClasses.actions}>
+        {user.userType === 'admin' && location.pathname === '/orders' && (
+          <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+            Contactar
           </Button>
-        </CardActions>
-      )}
+        )}
+
+        <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+          Editar
+        </Button>
+      </CardActions>
     </Card>
   );
 }

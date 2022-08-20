@@ -10,13 +10,31 @@ import { addToCart, addToEditCart, clearCart, decreaseItemAmount, increaseItemAm
 import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
-import { Paper, ListItem, ListItemIcon, ListItemText, Typography, List, ListItemAvatar, Avatar, Box, Button, Grid } from '@mui/material';
+import {
+  Paper,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  List,
+  ListItemAvatar,
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  TextField,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+} from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import Radio from '@mui/material/Radio';
 
 export const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -28,6 +46,7 @@ export const EditOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [contact, setContact] = useState('');
+  const [contactError, setContactError] = useState('');
   const [fullAddress, setFullAddress] = useState('');
   const [message, setMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState('');
@@ -47,11 +66,52 @@ export const EditOrderPage = () => {
       pb: 3,
     },
     list: {
-      //maxWidth: 300,
+      //minWidth: 300,
+    },
+    listItem: {
+      width: '100%',
+      minWidth: 200,
+      display: 'flex',
+      justifyContent: 'space-between',
     },
     gridItem: {
       marginLeft: 'auto',
       marginRight: 'auto',
+    },
+    infoContainer: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      maxWidth: 600,
+      my: 2,
+    },
+    infoField: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    deliveryField: {
+      display: 'flex',
+    },
+    addressField: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    formContainer: {
+      marginTop: 0,
+      marginBottom: 5,
+    },
+    form: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
     },
   };
 
@@ -132,7 +192,7 @@ export const EditOrderPage = () => {
   const clearInputsAndGoBack = () => {
     clearInputs();
     dispatch(clearCart());
-    navigate('/orders');
+    navigate(-1);
   };
 
   const handleDeleteOrder = async () => {
@@ -152,7 +212,12 @@ export const EditOrderPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!contact || !user._id) {
+    if (!user._id || user.userType !== 'admin') {
+      return;
+    }
+    if (!contact) {
+      setContactError(true);
+      setErrorMessage('Por favor adicione contacto.');
       return;
     }
     if (deliveryMethod === 'delivery' && !fullAddress) {
@@ -213,7 +278,7 @@ export const EditOrderPage = () => {
             <PopupState variant='popover' popupId='demo-popup-menu'>
               {(popupState) => (
                 <React.Fragment>
-                  <Button variant='contained' {...bindTrigger(popupState)} sx={{ mt: 2 }}>
+                  <Button variant='contained' {...bindTrigger(popupState)} sx={{ my: 2 }}>
                     Adicionar Item
                   </Button>
                   <Menu {...bindMenu(popupState)}>
@@ -221,8 +286,12 @@ export const EditOrderPage = () => {
                       if (!cartItems.includes(item._id)) {
                         return (
                           <MenuItem onClick={() => dispatch(addToCart({ id: item._id }))}>
-                            {item.name}
-                            <AddOutlinedIcon />
+                            <Box sx={editOrderClasses.listItem}>
+                              <Typography color='primary' sx={{ fontWeight: 'bold' }}>
+                                {item.name}
+                              </Typography>
+                              <AddOutlinedIcon />
+                            </Box>
                           </MenuItem>
                         );
                       }
@@ -233,92 +302,166 @@ export const EditOrderPage = () => {
             </PopupState>
           </Box>
 
-          {deliveryMethod === 'delivery' && (
-            <div>
-              {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
-                <p>
-                  Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
-                </p>
-              ) : (
-                <p>Taxa de entrega: {orderDeliveryFee}€</p>
-              )}
-            </div>
-          )}
+          <Box sx={editOrderClasses.formContainer}>
+            <Box sx={editOrderClasses.form}>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label='Contacto'
+                  type='text'
+                  variant='outlined'
+                  fullWidth
+                  required
+                  sx={editOrderClasses.formField}
+                  onChange={(e) => validateContact(e)}
+                  error={contactError}
+                  value={contact}
+                />
 
-          <div>
-            <p>Total: {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€</p>
-            <Button variant='outlined' onClick={() => dispatch(clearCart())}>
-              Limpar Carrinho
-            </Button>
-          </div>
+                <TextField
+                  label='Data & Hora de entrega'
+                  type='datetime-local'
+                  variant='outlined'
+                  fullWidth
+                  required
+                  sx={editOrderClasses.formField}
+                  onChange={(e) => setDeliveryDate(e.target.value)}
+                  error={contactError}
+                  value={deliveryDate}
+                  min={new Date().toISOString().slice(0, -8)}
+                />
 
-          <form onSubmit={handleSubmit}>
-            <p>
-              <b>Autor da encomenda:</b> {order.userId.username}
-            </p>
-            <div>
-              <label htmlFor='contact'>Contacto</label>
-              <div>
-                <input name='contact' type='text' required value={contact} onChange={(e) => validateContact(e)} placeholder='912345678' />
-              </div>
-            </div>
+                <FormControl sx={{ mb: 5 }} align='left' fullWidth={true}>
+                  <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
+                  <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
+                    <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
+                    <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
+                  </RadioGroup>
+                </FormControl>
 
-            <div>
-              <label htmlFor='deliveryDate'>Data & Hora de entrega</label>
+                {!isAddressNotVisible && (
+                  <TextField
+                    label='Morada'
+                    type='text'
+                    variant='outlined'
+                    fullWidth
+                    required={requiredInput}
+                    sx={editOrderClasses.formField}
+                    onChange={(e) => setFullAddress(e.target.value)}
+                    placeholder='Rua dos bolos n 7'
+                    error={contactError}
+                    value={fullAddress}
+                    ref={addressRef}
+                  />
+                )}
 
-              <div>
-                <input name='deliveryDate' type='datetime-local' required value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} min={new Date().toISOString().slice(0, -8)} />
-              </div>
-            </div>
+                {user._id !== order.userId._id && (
+                  <TextField
+                    id='outlined-read-only-input'
+                    label='Mensagem'
+                    defaultValue={message}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={editOrderClasses.formTextArea}
+                    multiline
+                    maxRows={4}
+                  />
+                )}
 
-            <fieldset>
-              <legend>Entrega ou Take Away?</legend>
-              <div>
-                <label htmlFor='delivery'>Com Entrega</label>
-                <input type='radio' name='delivery' value='delivery' checked={deliveryMethod === 'delivery'} onChange={handleRadioClick} />
-              </div>
-              <div>
-                <label htmlFor='takeAway'>Take Away</label>
-                <input type='radio' name='takeAway' value='takeAway' checked={deliveryMethod === 'takeAway'} onChange={handleRadioClick} />
-              </div>
-            </fieldset>
+                {user._id === order.userId._id && (
+                  <TextField
+                    id='outlined-multiline-flexible'
+                    label='Mensagem'
+                    multiline
+                    maxRows={4}
+                    sx={editOrderClasses.formTextArea}
+                    onChange={(e) => setMessage(e.target.value)}
+                    value={message}
+                    placeholder='Escreva aqui a sua mensagem...'
+                  />
+                )}
 
-            <div ref={addressRef} className={` ${isAddressNotVisible && 'order-form'}`}>
-              <label htmlFor='fullAddress'>Morada</label>
-              <div>
-                <input name='fullAddress' type='text' required={requiredInput} value={fullAddress} onChange={(e) => setFullAddress(e.target.value)} placeholder='Rua dos reis n 7' />
-              </div>
-            </div>
+                {errorMessage && <p>{errorMessage}</p>}
 
-            <div>
-              <label htmlFor='message'>Mensagem</label>
-              <div>
-                <textarea id='email-message' name='message' value={message} placeholder='Escreva aqui a sua mensagem...' onChange={(e) => setMessage(e.target.value)}></textarea>
-              </div>
-            </div>
+                <button type='submit' ref={submitForm} hidden>
+                  Actualizar
+                </button>
+              </form>
+            </Box>
+          </Box>
 
-            {errorMessage && <p>{errorMessage}</p>}
+          <Box sx={editOrderClasses.infoContainer}>
+            {user._id !== order.userId._id && (
+              <Box sx={editOrderClasses.infoField}>
+                <Typography variant='body1' color='#031D44' onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
+                  <b>Autor da encomenda:</b>
+                </Typography>
+                <Typography variant='body1' gutterBottom>
+                  {order.userId.username}
+                </Typography>
+              </Box>
+            )}
 
-            <button type='submit' ref={submitForm} hidden>
-              Actualizar
-            </button>
-          </form>
+            {deliveryMethod === 'delivery' && (
+              <Box>
+                {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
+                  <Box sx={editOrderClasses.infoField}>
+                    <Typography variant='body1' color='#031D44'>
+                      <b>Taxa de entrega:</b>
+                    </Typography>
+                    <Box sx={editOrderClasses.deliveryField}>
+                      <Typography variant='body1' gutterBottom sx={{ textDecoration: 'line-through', mr: 1 }}>
+                        {orderDeliveryFee}€
+                      </Typography>
+                      <Typography variant='body1' gutterBottom>
+                        0€
+                      </Typography>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box sx={editOrderClasses.infoField}>
+                    <Typography variant='body1' color='#031D44'>
+                      <b>Taxa de entrega:</b>
+                    </Typography>
+                    <Typography variant='body1' gutterBottom>
+                      {orderDeliveryFee}€
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+            )}
+
+            <Box sx={editOrderClasses.infoField}>
+              <Typography variant='body1' color='#031D44'>
+                <b>Total:</b>
+              </Typography>
+              <Typography variant='body1' gutterBottom>
+                {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+              </Typography>
+            </Box>
+          </Box>
         </>
       )}
 
-      {successMessage && <p>{successMessage}</p>}
+      {successMessage && (
+        <Typography paragraph sx={{ my: '25px' }}>
+          {successMessage}
+        </Typography>
+      )}
 
       <div>
-        <span onClick={clearInputsAndGoBack}>Voltar</span>
+        <Button sx={{ mr: 1 }} onClick={clearInputsAndGoBack}>
+          Voltar
+        </Button>
 
         {!successMessage && (
           <>
-            <button type='button' onClick={handleDeleteOrder}>
+            <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleDeleteOrder}>
               Apagar
-            </button>
-            <button type='button' onClick={() => submitForm.current.click()}>
+            </Button>
+            <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
               Actualizar
-            </button>
+            </Button>
           </>
         )}
       </div>
