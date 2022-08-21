@@ -141,7 +141,7 @@ export const CartPage = () => {
 
   return (
     <div>
-      <p>Carrinho</p>
+      <p>CARRINHO</p>
       {!successMessage && (
         <>
           {cartItems.length > 0 ? (

@@ -80,7 +80,7 @@ export const OrdersPage = () => {
     <Box>
       <Box>
         <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-          Pedidos
+          PEDIDOS
         </Typography>
       </Box>
 

@@ -32,7 +32,7 @@ export const ProfilePage = () => {
     <div>
       {profileOwner && shopOrders && (
         <>
-          <h2>Perfil</h2>
+          <h2>PERFIL</h2>
 
           <div>
             <div>

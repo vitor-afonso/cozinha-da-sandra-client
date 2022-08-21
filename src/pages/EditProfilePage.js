@@ -7,6 +7,26 @@ import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
 
+import { Box, Button, TextField, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import * as React from 'react';
+import Modal from '@mui/material/Modal';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+
 export const EditProfilePage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
@@ -17,9 +37,12 @@ export const EditProfilePage = () => {
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [profileOwner, setProfileOwner] = useState(null);
   const [username, setUsername] = useState('');
+  const [usernameError, setUsernameError] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
   const [contact, setContact] = useState('');
   const [info, setInfo] = useState('');
   const [disabledInput, setDisabledInput] = useState(false);
@@ -27,6 +50,40 @@ export const EditProfilePage = () => {
   const submitFormButton = useRef();
   const { userId } = useParams();
   const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const editProfileClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    formContainer: {
+      marginTop: 0,
+    },
+    form: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+    nameField: {
+      marginTop: 0,
+      marginBottom: 2,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
+      marginBottom: 5,
+    },
+  };
 
   useEffect(() => {
     if (userId) {
@@ -80,8 +137,6 @@ export const EditProfilePage = () => {
     }
   };
   const handleDeleteUser = async () => {
-    // showDeleteModal() - on click apagar
-    // delete user - on confirm delete
     try {
       let response = await deleteUser(userId);
 
@@ -96,10 +151,26 @@ export const EditProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!username) {
+      setUsernameError(true);
+      setErrorMessage('Por favor introduza username.');
+      return;
+    }
+    setUsernameError(false);
+
+    if (!email) {
+      setEmailError(true);
+      setErrorMessage('Por favor introduza email.');
+      return;
+    }
+    setEmailError(false);
+
     if (newPassword && newPassword !== newPassword2) {
+      setPasswordError(true);
       setErrorMessage('Por favor insira a mesma password nos 2 campos.');
       return;
     }
+    setPasswordError(false);
 
     try {
       const passwordBody = { password: newPassword };
@@ -142,114 +213,166 @@ export const EditProfilePage = () => {
   };
 
   return (
-    <div>
-      <h2>Editar perfil</h2>
+    <Box sx={editProfileClasses.container}>
+      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        EDITAR
+      </Typography>
+
       {!successMessage && profileOwner && (
-        <>
-          <form onSubmit={handleSubmit}>
-            <figure>{tempImageUrl && <img src={tempImageUrl} alt={user.username} style={{ width: '150px', height: 'auto' }} />}</figure>
+        <Box sx={editProfileClasses.formContainer}>
+          <Box sx={editProfileClasses.form}>
+            <form onSubmit={handleSubmit} noValidate>
+              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-            <div>
-              <label htmlFor='Username'>Username</label>
-              <div>
-                <input name='Username' type='text' required disabled={disabledInput} value={username} onChange={(e) => setUsername(e.target.value)} placeholder={username} />
-              </div>
-            </div>
+              <TextField
+                label='Username'
+                type='text'
+                variant='outlined'
+                fullWidth
+                required
+                sx={editProfileClasses.nameField}
+                onChange={(e) => setUsername(e.target.value)}
+                error={usernameError}
+                value={username}
+                disabled={disabledInput}
+              />
 
-            <div>
-              <label htmlFor='email'>Email address</label>
-              <div>
-                <input id='email' name='email' type='email' disabled={disabledInput} autoComplete='email' value={email} onChange={(e) => setEmail(e.target.value)} required />
-              </div>
-            </div>
+              <TextField
+                label='Email'
+                type='email'
+                variant='outlined'
+                fullWidth
+                required
+                sx={editProfileClasses.nameField}
+                onChange={(e) => setEmail(e.target.value)}
+                error={emailError}
+                value={email}
+                disabled={disabledInput}
+              />
 
-            <div>
-              <label htmlFor='contact'>Contacto</label>
-              <div>
-                <input name='contact' type='text' disabled={disabledInput} value={contact} onChange={(e) => validateContact(e)} placeholder='912345678' />
-              </div>
-            </div>
+              <TextField
+                label='Contacto'
+                type='text'
+                variant='outlined'
+                fullWidth
+                sx={editProfileClasses.nameField}
+                onChange={validateContact}
+                value={contact}
+                disabled={disabledInput}
+                placeholder='912345678'
+              />
 
-            <div>
-              <label htmlFor='password'>Nova Password</label>
-              <div>
-                <input
-                  id='new-password'
-                  disabled={disabledInput}
-                  name='password'
-                  type='password'
-                  autoComplete='current-password'
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+              <TextField
+                label='Nova Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                sx={editProfileClasses.nameField}
+                onChange={(e) => setNewPassword(e.target.value)}
+                error={passwordError}
+                value={newPassword}
+                disabled={disabledInput}
+                placeholder='********'
+              />
+
+              <TextField
+                label='Repetir Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                sx={editProfileClasses.nameField}
+                onChange={(e) => setNewPassword2(e.target.value)}
+                error={passwordError}
+                value={newPassword2}
+                disabled={disabledInput}
+                placeholder='********'
+              />
+
+              {user.userType === 'admin' && (
+                <TextField
+                  id='outlined-multiline-flexible'
+                  label='Notas'
+                  multiline
+                  maxRows={4}
+                  sx={editProfileClasses.formTextArea}
+                  onChange={(e) => setInfo(e.target.value)}
+                  value={info}
+                  placeholder='Escreva aqui a descrição...'
                 />
-              </div>
-            </div>
+              )}
 
-            <div>
-              <label htmlFor='password'>Repita Nova Password</label>
+              {errorMessage && (
+                <Typography paragraph sx={{ mb: '25px' }} color='error'>
+                  {errorMessage}
+                </Typography>
+              )}
+
               <div>
-                <input
-                  id='new-password-2'
-                  name='password-2'
-                  disabled={disabledInput}
-                  type='password'
-                  autoComplete='current-password'
-                  value={newPassword2}
-                  onChange={(e) => setNewPassword2(e.target.value)}
-                />
+                <button type='submit' hidden ref={submitFormButton}>
+                  Actualizar
+                </button>
               </div>
-            </div>
-
-            {user.userType === 'admin' && (
-              <div>
-                <label htmlFor='user-info'>Info</label>
-                <div>
-                  <textarea id='add-item-description' name='user-info' value={info} placeholder='Informação de cliente.' onChange={(e) => setInfo(e.target.value)}></textarea>
-                </div>
-              </div>
-            )}
-
-            {errorMessage && <p>{errorMessage}</p>}
-
-            <div>
-              <button type='submit' hidden ref={submitFormButton}>
-                Actualizar
-              </button>
-            </div>
-          </form>
-        </>
+            </form>
+          </Box>
+        </Box>
       )}
 
-      {successMessage && <p>{successMessage}</p>}
+      {successMessage && (
+        <Typography paragraph sx={{ my: '25px' }}>
+          {successMessage}
+        </Typography>
+      )}
 
-      <div>
-        <span onClick={() => navigate(-1)}>Voltar</span>
+      <Box>
+        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+          Voltar
+        </Button>
 
         {!successMessage && (
           <>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
-            {profileOwner && !profileOwner.deleted && (
-              <button type='button' onClick={handleDeleteUser}>
+
+            {profileOwner && !profileOwner.deleted && profileOwner.userType === 'user' && (
+              <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
                 Apagar
-              </button>
+              </Button>
             )}
+
+            <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+              <Box sx={modalStyle}>
+                <Typography id='modal-modal-title' variant='h6' component='h2'>
+                  Apagar Item?
+                </Typography>
+                <Box sx={{ mt: 2 }}>
+                  <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                    Cancelar
+                  </Button>
+                  <Button type='button' color='error' variant='contained' onClick={handleDeleteUser}>
+                    Apagar
+                  </Button>
+                </Box>
+              </Box>
+            </Modal>
+
             {profileOwner && profileOwner.deleted && (
-              <button type='button' onClick={handleActivateUser}>
+              <Button sx={{ mr: 1 }} variant='outlined' color='success' type='button' onClick={handleActivateUser}>
                 Activar
-              </button>
+              </Button>
             )}
-            {user.userType === 'user' ||
-              (user._id === userId && (
-                <button type='button' onClick={() => inputFileUpload.current.click()}>
-                  Escolher Imagem
-                </button>
-              ))}
-            <button type='button' onClick={() => submitFormButton.current.click()}>
-              Actualizar
-            </button>
+            <>
+              {user.userType === 'user' ||
+                (user._id === userId && (
+                  <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                    Imagem
+                  </Button>
+                ))}
+              <Button type='button' variant='contained' onClick={() => submitFormButton.current.click()}>
+                Actualizar
+              </Button>
+            </>
           </>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

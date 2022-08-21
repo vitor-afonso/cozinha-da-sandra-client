@@ -268,7 +268,11 @@ export const EditItemPage = () => {
             </Box>
           )}
 
-          {successMessage && <p>{successMessage}</p>}
+          {successMessage && (
+            <Typography paragraph sx={{ my: '25px' }}>
+              {successMessage}
+            </Typography>
+          )}
 
           <Box>
             <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>

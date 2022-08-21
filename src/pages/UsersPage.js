@@ -93,7 +93,7 @@ export const UsersPage = () => {
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
         <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-          Utilizadores
+          UTILIZADORES
         </Typography>
 
         <TextField

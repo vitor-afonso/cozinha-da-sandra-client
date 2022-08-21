@@ -156,7 +156,7 @@ export const NewItemPage = () => {
   return (
     <Box sx={newItemClasses.container}>
       <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-        Criar item
+        CRIAR ITEM
       </Typography>
 
       {!successMessage && (
