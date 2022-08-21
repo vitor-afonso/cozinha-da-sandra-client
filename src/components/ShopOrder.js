@@ -84,10 +84,10 @@ export function ShopOrder({ order }) {
       let confirmationEmail = {
         from: 'cozinhadasandra22@gmail.com',
         to: order.userId.email,
-        subject: 'Encomenda confirmada',
+        subject: 'Pedido confirmado',
         message: `
-        A sua encomenda com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID da sua encomenda ao efectuar pagamento via MB WAY para o numero de telefone 9********.
-        Pode ver todos os detalhes da sua encomenda na sua pagina de perfil.
+        A sua pedido com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID da sua pedido ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+        Pode ver todos os detalhes da sua pedido na sua pagina de perfil.
     
         Com os melhores cumprimentos,
     

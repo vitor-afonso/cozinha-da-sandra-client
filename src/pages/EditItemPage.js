@@ -6,24 +6,63 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 
+import { Box, Button, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import AddIcon from '@mui/icons-material/Add';
+
 export const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [itemToEdit, setItemToEdit] = useState(null);
   const [name, setName] = useState('');
+  const [nameError, setNameError] = useState(false);
   const [category, setCategory] = useState('');
-  const [tempImageUrl, setTempImageUrl] = useState('');
-  const [objImageToUpload, setObjImageToUpload] = useState(null);
+  const [categoryError, setCategoryError] = useState(false);
   const [description, setDescription] = useState('');
+  const [descriptionError, setDescriptionError] = useState(false);
   const [ingredients, setIngredients] = useState('');
+  const [ingredientsError, setIngredientsError] = useState(false);
   const [price, setPrice] = useState('');
+  const [priceError, setPriceError] = useState(false);
+  const [objImageToUpload, setObjImageToUpload] = useState(null);
+  const [tempImageUrl, setTempImageUrl] = useState('');
   const inputFileUpload = useRef(null);
   const { itemId } = useParams();
   const effectRan = useRef(false);
   const submitFormButtom = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const editItemClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    formContainer: {
+      marginTop: 0,
+    },
+    form: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+    nameField: {
+      marginTop: 0,
+      marginBottom: 2,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
+      marginBottom: 5,
+    },
+  };
 
   useEffect(() => {
     if (effectRan.current === false && itemId) {
@@ -80,6 +119,46 @@ export const EditItemPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!name) {
+      setNameError(true);
+      setErrorMessage('Por favor introduza Titulo.');
+      return;
+    }
+    setNameError(false);
+
+    if (!category) {
+      setCategoryError(true);
+      setErrorMessage('Por favor escolha categoria.');
+      return;
+    }
+    setCategoryError(false);
+
+    if (!price) {
+      setPriceError(true);
+      setErrorMessage('Por favor introduza preço.');
+      return;
+    }
+    setPriceError(false);
+
+    if (!description) {
+      setDescriptionError(true);
+      setErrorMessage('Por favor introduza descrição.');
+      return;
+    }
+    setDescriptionError(false);
+
+    if (!ingredients) {
+      setIngredientsError(true);
+      setErrorMessage('Por favor introduza ingredientes.');
+      return;
+    }
+    setIngredientsError(false);
+
+    if (!objImageToUpload && !tempImageUrl) {
+      setErrorMessage('Por favor adicione imagem.');
+      return;
+    }
+
     try {
       if (objImageToUpload) {
         const uploadData = new FormData();
@@ -98,7 +177,7 @@ export const EditItemPage = () => {
 
         setTimeout(() => navigate('/'), 5000);
       } else {
-        const requestBody = { name, category, description, ingredients, price };
+        const requestBody = { name, category, description, ingredients, price: Number(price) };
 
         let { data } = await updateItem(requestBody, itemId);
 
@@ -114,93 +193,101 @@ export const EditItemPage = () => {
   };
 
   return (
-    <div>
+    <Box sx={editItemClasses.container}>
       {itemToEdit && (
         <>
-          <h2>Editar {itemToEdit.name} </h2>
+          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+            Editar Item
+          </Typography>
+
+          <Typography variant='h4' color='#031D44' sx={{ my: '25px' }}>
+            {name}
+          </Typography>
 
           {!successMessage && (
-            <form onSubmit={handleSubmit}>
-              <figure>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ width: '150px', height: 'auto' }} />}</figure>
-              <div>
-                <label htmlFor='name'>Nome</label>
-                <div>
-                  <input id='add-item-name' name='name' type='text' required value={name} onChange={(e) => setName(e.target.value)} />
-                </div>
-              </div>
+            <Box sx={editItemClasses.formContainer}>
+              <Box sx={editItemClasses.form}>
+                <form onSubmit={handleSubmit} noValidate>
+                  <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-              <div>
-                <label htmlFor='category'>Categoria</label>
-                <div>
-                  <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-                    <option value='' disabled></option>
-                    <option value='doces'>Doces</option>
-                    <option value='salgados'>Salgados</option>
-                  </select>
-                </div>
-              </div>
+                  <TextField label='Titulo' type='text' variant='outlined' fullWidth required sx={editItemClasses.nameField} onChange={(e) => setName(e.target.value)} error={nameError} value={name} />
 
-              <div>
-                <label htmlFor='price'>Preço</label>
-                <div>
-                  <input id='add-item-price' name='price' type='text' required value={price} onChange={handlePrice} />
-                </div>
-              </div>
+                  <Box>
+                    <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
+                      <FormLabel id='demo-row-radio-buttons-group-label'>Categoria</FormLabel>
+                      <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
+                        <FormControlLabel value='doces' control={<Radio />} label='Doces' checked={category === 'doces'} />
+                        <FormControlLabel value='salgados' control={<Radio />} label='Salgados' checked={category === 'salgados'} />
+                      </RadioGroup>
+                    </FormControl>
+                  </Box>
 
-              <div>
-                <label htmlFor='description'>Descrição</label>
-                <div>
-                  <textarea id='add-item-description' name='description' required value={description} placeholder='Adicione descrição.' onChange={(e) => setDescription(e.target.value)}></textarea>
-                </div>
-              </div>
+                  <TextField label='Preço' type='text' variant='outlined' fullWidth required sx={editItemClasses.formField} onChange={(e) => handlePrice(e)} error={priceError} value={price} />
 
-              <div>
-                <label htmlFor='ingredients'>Ingredientes</label>
-                <div>
-                  <textarea
-                    id='add-item-ingredients'
-                    name='ingredients'
+                  <TextField
+                    id='outlined-multiline-flexible'
+                    label='Descrição'
+                    multiline
+                    maxRows={4}
+                    sx={editItemClasses.formTextArea}
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description}
                     required
-                    value={ingredients}
-                    placeholder='Adicione ingredientes separados por virgula.'
+                    placeholder='Escreva aqui a descrição...'
+                    error={descriptionError}
+                  />
+
+                  <TextField
+                    id='outlined-multiline-flexible'
+                    label='Ingredientes'
+                    multiline
+                    maxRows={4}
+                    sx={editItemClasses.formTextArea}
                     onChange={(e) => setIngredients(e.target.value)}
-                  ></textarea>
-                </div>
-              </div>
+                    value={ingredients}
+                    required
+                    placeholder='Escreva aqui os ingredientes separados por virgula...'
+                    error={ingredientsError}
+                  />
 
-              {errorMessage && <p>{errorMessage}</p>}
+                  {errorMessage && (
+                    <Typography paragraph sx={{ mb: '25px' }} color='error'>
+                      {errorMessage}
+                    </Typography>
+                  )}
 
-              <div>
-                <div>
-                  <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
-                  <button type='button' onClick={() => inputFileUpload.current.click()}>
-                    Escolher Foto
-                  </button>
-                </div>
-                <button type='submit' ref={submitFormButtom} hidden>
-                  Actualizar Item
-                </button>
-              </div>
-            </form>
+                  <div>
+                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+
+                    <button type='submit' ref={submitFormButtom} hidden>
+                      Actualizar
+                    </button>
+                  </div>
+                </form>
+              </Box>
+            </Box>
           )}
 
           {successMessage && <p>{successMessage}</p>}
 
-          <div>
+          <Box>
+            <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+              Voltar
+            </Button>
+
             {!successMessage && (
               <>
-                <span onClick={() => navigate(-1)}>Voltar</span>
-                <button type='button' onClick={handleDeleteItem}>
-                  Apagar Item
-                </button>
-                <button type='button' onClick={() => submitFormButtom.current.click()}>
-                  Actualizar Item
-                </button>
+                <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                  Imagem
+                </Button>
+                <Button type='button' variant='contained' onClick={() => submitFormButtom.current.click()}>
+                  Actualizar
+                </Button>
               </>
             )}
-          </div>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 };

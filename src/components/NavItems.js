@@ -119,7 +119,7 @@ export const NavItems = () => {
                 <ListItemIcon sx={{ display: { md: 'none' } }}>
                   <ListAltOutlinedIcon color='primary' />
                 </ListItemIcon>
-                <ListItemText primary={'Encomendas'} />
+                <ListItemText primary={'Pedidos'} />
               </ListItemButton>
             </ListItem>
           )}

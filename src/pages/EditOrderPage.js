@@ -182,7 +182,7 @@ export const EditOrderPage = () => {
       await deleteOrder(orderId);
 
       dispatch(deleteShopOrder({ id: orderId }));
-      setSuccessMessage('Encomenda apagada com sucesso.');
+      setSuccessMessage('Pedido apagado com sucesso.');
       setTimeout(() => navigate('/orders'), 5000);
     } catch (error) {
       console.log(error.message);
@@ -222,10 +222,10 @@ export const EditOrderPage = () => {
 
       let { data } = await updateOrder(requestBody, orderId);
 
-      setSuccessMessage('Encomenda actualizada com sucesso.');
+      setSuccessMessage('Pedido actualizado com sucesso.');
 
       // this will update the state with the updated order
-      console.log('Encomenda actualizada com sucesso.', data);
+      console.log('Pedido actualizado com sucesso.', data);
       dispatch(updateShopOrder(data));
 
       clearInputs();
@@ -241,7 +241,7 @@ export const EditOrderPage = () => {
       {order && !successMessage && (
         <>
           <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-            EDITAR ENCOMENDA
+            EDITAR PEDIDO
           </Typography>
 
           <Grid container spacing={2}>
@@ -380,7 +380,7 @@ export const EditOrderPage = () => {
             {user._id !== order.userId._id && (
               <Box sx={editOrderClasses.infoField}>
                 <Typography variant='body1' color='#031D44' onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
-                  <b>Autor da encomenda:</b>
+                  <b>Autor de pedido:</b>
                 </Typography>
                 <Typography variant='body1' gutterBottom>
                   {order.userId.username}

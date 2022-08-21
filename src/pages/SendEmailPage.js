@@ -58,7 +58,7 @@ export const SendEmailPage = () => {
           let order = await getOneOrder(orderId);
           setOrder(order.data);
           setTo(order.data.userId.email);
-          setSubject(`Encomenda ${parseDateToShow(order.data.deliveryDate)}`);
+          setSubject(`Pedido ${parseDateToShow(order.data.deliveryDate)}`);
         })();
       } catch (error) {
         console.log(error.message);
@@ -106,7 +106,7 @@ export const SendEmailPage = () => {
         Enviar Email
       </Typography>
       <Typography variant='h4' color='#031D44' sx={{ my: '25px' }}>
-        Detalhes de encomenda
+        Detalhes de pedido
       </Typography>
 
       {order && <ShopOrder order={order} />}

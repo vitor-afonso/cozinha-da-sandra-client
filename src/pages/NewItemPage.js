@@ -19,13 +19,13 @@ export const NewItemPage = () => {
   const [category, setCategory] = useState('');
   const [categoryError, setCategoryError] = useState(false);
   const [tempImageUrl, setTempImageUrl] = useState('');
-  const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState(false);
   const [ingredients, setIngredients] = useState('');
   const [ingredientsError, setIngredientsError] = useState(false);
   const [price, setPrice] = useState('');
   const [priceError, setPriceError] = useState(false);
+  const [objImageToUpload, setObjImageToUpload] = useState(null);
   const inputFileUpload = useRef(null);
   const submitForm = useRef(null);
   const navigate = useNavigate();
@@ -106,7 +106,7 @@ export const NewItemPage = () => {
 
     if (!price) {
       setPriceError(true);
-      setErrorMessage('Por favor introduza um preço.');
+      setErrorMessage('Por favor introduza preço.');
       return;
     }
     setPriceError(false);

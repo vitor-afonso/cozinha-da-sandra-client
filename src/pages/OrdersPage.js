@@ -80,17 +80,17 @@ export const OrdersPage = () => {
     <Box>
       <Box>
         <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-          Encomendas
+          Pedidos
         </Typography>
       </Box>
 
       <Box>
         <FormControl sx={{ minWidth: 300 }} size='small'>
           <Select id='demo-simple-select-helper' value={filterOption} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={handleFilterSelect}>
-            <MenuItem value=''>Todas</MenuItem>
+            <MenuItem value=''>Todos</MenuItem>
             <MenuItem value='pending'>Pendentes</MenuItem>
-            <MenuItem value='confirmed'>Confirmadas</MenuItem>
-            <MenuItem value='paid'>Pagas</MenuItem>
+            <MenuItem value='confirmed'>Confirmados</MenuItem>
+            <MenuItem value='paid'>Pagos</MenuItem>
             <MenuItem value='delivery'>Para Entrega</MenuItem>
             <MenuItem value='takeAway'>Take Away</MenuItem>
             <MenuItem value='deliveryDate'>Data Entrega</MenuItem>
@@ -115,7 +115,7 @@ export const OrdersPage = () => {
             <Grid item xs={12}>
               {!isLoading && (
                 <Typography paragraph sx={{ mt: 4 }}>
-                  Nenhuma encomenda com o filtro seleccionado.
+                  Nenhum pedido com o filtro seleccionado.
                 </Typography>
               )}
             </Grid>

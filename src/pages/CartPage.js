@@ -129,7 +129,7 @@ export const CartPage = () => {
       let { data } = await createOrder(requestBody);
 
       setSuccessMessage(
-        'Encomenda criada com sucesso. Será contactado o mais brevemente possivel para confirmar a encomenda e receber os dados de pagamento. Encontre os detalhes da sua encomenda no seu perfil.'
+        'Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o pedido e receber os dados de pagamento. Encontre os detalhes do seu pedido no seu perfil.'
       );
 
       // here we do manual populate of the order.items and order.userId so that we can have all data avaiable dynamically in the shopOrders to be used in profilePage without having to make a API call

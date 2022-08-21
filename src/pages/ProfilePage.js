@@ -62,7 +62,7 @@ export const ProfilePage = () => {
 
           {userOrders.length > 0 && (
             <div>
-              <h3 onClick={showOrders}>Historico de encomendas</h3>
+              <h3 onClick={showOrders}>Historico de pedidos</h3>
               <div className={`${!isVisible && 'profile-orders'}`}>
                 {userOrders &&
                   userOrders.map((order) => {
