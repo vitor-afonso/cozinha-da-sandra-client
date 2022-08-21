@@ -6,9 +6,26 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 
+import * as React from 'react';
 import { Box, Button, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
+import Modal from '@mui/material/Modal';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
 export const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
@@ -33,6 +50,10 @@ export const EditItemPage = () => {
   const submitFormButtom = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const editItemClasses = {
     container: {
@@ -103,14 +124,11 @@ export const EditItemPage = () => {
   };
 
   const handleDeleteItem = async () => {
-    // showDeleteModal() - on click apagar
-    // delete item - on confirm delete
     try {
       await deleteItem(itemId);
 
       dispatch(removeShopItem({ id: itemId }));
       setSuccessMessage('Item apagado com sucesso.');
-      setTimeout(() => navigate('/'), 5000);
     } catch (error) {
       console.log(error.message);
     }
@@ -197,7 +215,7 @@ export const EditItemPage = () => {
       {itemToEdit && (
         <>
           <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-            Editar Item
+            EDITAR
           </Typography>
 
           <Typography variant='h4' color='#031D44' sx={{ my: '25px' }}>
@@ -275,16 +293,35 @@ export const EditItemPage = () => {
           )}
 
           <Box>
-            <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+            <Button sx={{ mr: 1, mt: 1 }} onClick={() => navigate(-1)}>
               Voltar
             </Button>
 
             {!successMessage && (
               <>
-                <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button sx={{ mr: 1, mt: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
+                  Apagar
+                </Button>
+
+                <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+                  <Box sx={modalStyle}>
+                    <Typography id='modal-modal-title' variant='h6' component='h2'>
+                      Apagar Item?
+                    </Typography>
+                    <Box sx={{ mt: 2 }}>
+                      <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                        Cancelar
+                      </Button>
+                      <Button type='button' color='error' variant='contained' onClick={handleDeleteItem}>
+                        Apagar
+                      </Button>
+                    </Box>
+                  </Box>
+                </Modal>
+                <Button sx={{ mr: 1, mt: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
-                <Button type='button' variant='contained' onClick={() => submitFormButtom.current.click()}>
+                <Button sx={{ mt: 1 }} type='button' variant='contained' onClick={() => submitFormButtom.current.click()}>
                   Actualizar
                 </Button>
               </>

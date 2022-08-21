@@ -104,9 +104,9 @@ export const OrdersPage = () => {
       <Box sx={{ padding: 3 }}>
         <Grid container spacing={2}>
           {filteredOrders.length > 0 ? (
-            filteredOrders.map((order, index) => {
+            filteredOrders.map((order) => {
               return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
                   <ShopOrder order={order} />
                 </Grid>
               );

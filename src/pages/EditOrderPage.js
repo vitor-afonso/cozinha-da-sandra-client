@@ -16,6 +16,22 @@ import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import Radio from '@mui/material/Radio';
+import Modal from '@mui/material/Modal';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
 export const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -36,9 +52,12 @@ export const EditOrderPage = () => {
   const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
-
   const { orderId } = useParams();
   const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const editOrderClasses = {
     container: {
@@ -176,14 +195,11 @@ export const EditOrderPage = () => {
   };
 
   const handleDeleteOrder = async () => {
-    // showDeleteModal() - on click apagar
-    // delete order - on confirm delete
     try {
       await deleteOrder(orderId);
 
       dispatch(deleteShopOrder({ id: orderId }));
       setSuccessMessage('Pedido apagado com sucesso.');
-      setTimeout(() => navigate('/orders'), 5000);
     } catch (error) {
       console.log(error.message);
     }
@@ -442,9 +458,26 @@ export const EditOrderPage = () => {
 
         {!successMessage && (
           <>
-            <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleDeleteOrder}>
+            <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
               Apagar
             </Button>
+
+            <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+              <Box sx={modalStyle}>
+                <Typography id='modal-modal-title' variant='h6' component='h2'>
+                  Apagar Pedido?
+                </Typography>
+                <Box sx={{ mt: 2 }}>
+                  <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                    Cancelar
+                  </Button>
+                  <Button type='button' color='error' variant='contained' onClick={handleDeleteOrder}>
+                    Apagar
+                  </Button>
+                </Box>
+              </Box>
+            </Modal>
+
             <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
               Actualizar
             </Button>

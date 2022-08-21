@@ -1,8 +1,9 @@
 // jshint esversion:9
 
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
 
@@ -14,6 +15,45 @@ export const ProfilePage = () => {
   const [userOrders, setUserOrders] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const { userId } = useParams();
+  const navigate = useNavigate();
+
+  const profileClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    formContainer: {
+      marginTop: 0,
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      mx: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 2,
+      display: 'block',
+    },
+    nameField: {
+      marginTop: 0,
+      marginBottom: 2,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
+      marginBottom: 5,
+    },
+    ordersNotVisible: {
+      display: 'none',
+    },
+    ordersVisible: {
+      //outline: '1px solid red',
+    },
+  };
 
   useEffect(() => {
     if (userId) {
@@ -29,55 +69,120 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div>
+    <Box sx={profileClasses.container}>
       {profileOwner && shopOrders && (
         <>
-          <h2>PERFIL</h2>
+          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+            PERFIL
+          </Typography>
 
-          <div>
-            <div>
-              <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ width: '150px', height: 'auto' }} />
-            </div>
-            <p>
-              <b>Username: </b>
-              {profileOwner.username}
-            </p>
-            <p>
-              <b>Email: </b>
-              {profileOwner.email}
-            </p>
-            <p>
-              <b>Password: </b>********
-            </p>
-            <p>
-              <b>Contacto: </b>
-              {profileOwner.contact}
-            </p>
-            {user.userType === 'admin' && (
-              <p>
-                <b>Info: </b> {profileOwner.info}
-              </p>
-            )}
-          </div>
+          <Box sx={profileClasses.formContainer}>
+            <Box sx={profileClasses.form}>
+              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>
+                <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
+              </Box>
 
-          {userOrders.length > 0 && (
-            <div>
-              <h3 onClick={showOrders}>Historico de pedidos</h3>
-              <div className={`${!isVisible && 'profile-orders'}`}>
-                {userOrders &&
-                  userOrders.map((order) => {
-                    return <ShopOrder key={order._id} order={order} />;
-                  })}
-              </div>
-            </div>
-          )}
+              <Box sx={{ width: '100%' }}>
+                <TextField
+                  id='outlined-read-only-input'
+                  type='text'
+                  label='Username'
+                  defaultValue={profileOwner.username}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={profileClasses.formField}
+                  fullWidth
+                  size='small'
+                />
 
-          <div>
-            {user._id === userId && <Link to={`/profile/edit/${userId}`}>Editar Perfil</Link>}
-            {user.userType === 'admin' && user._id !== userId && <Link to={`/profile/edit/${userId}`}>Editar Info</Link>}
-          </div>
+                <TextField
+                  id='outlined-read-only-input'
+                  type='text'
+                  label='Email'
+                  defaultValue={profileOwner.email}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={profileClasses.formField}
+                  fullWidth
+                  size='small'
+                />
+
+                <TextField
+                  id='outlined-read-only-input'
+                  type='text'
+                  label='Password'
+                  defaultValue={'********'}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={profileClasses.formField}
+                  fullWidth
+                  size='small'
+                />
+
+                <TextField
+                  id='outlined-read-only-input'
+                  type='text'
+                  label='Contacto'
+                  defaultValue={profileOwner.contact}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={profileClasses.formField}
+                  fullWidth
+                  size='small'
+                />
+
+                {user.userType === 'admin' && (
+                  <TextField
+                    id='outlined-read-only-input'
+                    type='text'
+                    label='Notas'
+                    defaultValue={profileOwner.info}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    sx={profileClasses.formField}
+                    fullWidth
+                    size='small'
+                    multiline
+                    rows={4}
+                  />
+                )}
+              </Box>
+              <Button sx={{ alignSelf: 'end' }} onClick={() => navigate(`/profile/edit/${userId}`)}>
+                Editar
+              </Button>
+            </Box>
+          </Box>
+
+          <Button sx={{ mt: '16px', mb: '25px' }} variant='outlined' onClick={showOrders}>
+            Histórico de pedidos
+          </Button>
+
+          <Box sx={!isVisible ? profileClasses.ordersNotVisible : profileClasses.ordersVisible}>
+            <Grid container spacing={2}>
+              {userOrders.length > 0 ? (
+                userOrders.map((order) => {
+                  return (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
+                      <ShopOrder order={order} />
+                    </Grid>
+                  );
+                })
+              ) : (
+                <Grid item xs={12}>
+                  <Typography paragraph sx={{ mt: 4 }}>
+                    Nenhum pedido encontrado
+                  </Typography>
+                </Grid>
+              )}
+            </Grid>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 };

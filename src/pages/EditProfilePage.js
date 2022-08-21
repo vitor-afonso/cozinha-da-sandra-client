@@ -131,7 +131,6 @@ export const EditProfilePage = () => {
 
       dispatch(updateShopUser(response.data.updatedUser));
       setSuccessMessage('Utilizador activado com sucesso.');
-      setTimeout(() => navigate('/users'), 5000);
     } catch (error) {
       console.log(error.message);
     }
@@ -142,7 +141,6 @@ export const EditProfilePage = () => {
 
       dispatch(deleteShopUser(response.data));
       setSuccessMessage('Utilizador "apagado" com sucesso.');
-      setTimeout(() => navigate('/users'), 5000);
     } catch (error) {
       console.log(error.message);
     }
@@ -204,7 +202,6 @@ export const EditProfilePage = () => {
       }
 
       setSuccessMessage('Perfil actualizado com sucesso.');
-      setTimeout(() => navigate(`/profile/${userId}`), 5000);
     } catch (error) {
       console.log('error in editProfile', error);
       const errorDescription = error.response.data.message;
@@ -341,7 +338,7 @@ export const EditProfilePage = () => {
             <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
               <Box sx={modalStyle}>
                 <Typography id='modal-modal-title' variant='h6' component='h2'>
-                  Apagar Item?
+                  Apagar Utilizador?
                 </Typography>
                 <Box sx={{ mt: 2 }}>
                   <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
