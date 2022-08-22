@@ -134,7 +134,7 @@ export const AboutPage = () => {
         </Typography>
         <Box sx={aboutClasses.socialContainer}>
           <Link href=''>
-            <FacebookOutlinedIcon fontSize='large' sx={{ mr: 2 }} />
+            <FacebookOutlinedIcon fontSize='large' sx={{ mr: 2 }} color='secondary' />
           </Link>
           <Link href=''>
             <img src={instagramImage} alt='Instagram' width='28px' height='auto' />
