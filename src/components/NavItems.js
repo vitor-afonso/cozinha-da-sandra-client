@@ -17,6 +17,7 @@ import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export const NavItems = () => {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
@@ -68,6 +69,15 @@ export const NavItems = () => {
                 <LoginOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary={'Entrar'} />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding onClick={() => navigate('/about')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ display: { md: 'none' } }}>
+                <InfoOutlinedIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary={'Sobre Nós'} sx={{ whiteSpace: 'nowrap' }} />
             </ListItemButton>
           </ListItem>
         </>
@@ -150,6 +160,15 @@ export const NavItems = () => {
                 <LogoutOutlinedIcon color='primary' />
               </ListItemIcon>
               <ListItemText primary='Sair' />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding onClick={() => navigate('/about')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ display: { md: 'none' } }}>
+                <InfoOutlinedIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary={'Sobre Nós'} sx={{ whiteSpace: 'nowrap' }} />
             </ListItemButton>
           </ListItem>
         </>
