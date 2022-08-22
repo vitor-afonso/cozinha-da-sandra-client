@@ -1,39 +1,82 @@
-import { OrderInfo } from './../components/OrderInfo';
 // jshint esversion:9
 
+import { AuthContext } from '../context/auth.context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
-import { AuthContext } from '../context/auth.context';
+import { CartOrderForm } from '../components/CartOrderForm';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
+import emptyCartImage from '../images/emptyCart.svg';
+
+import { Box, Button, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
-  const { shopOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [deliveryDate, setDeliveryDate] = useState('');
+  const [deliveryDateError, setDeliveryDateError] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState('');
+  const [deliveryMethodError, setDeliveryMethodError] = useState(false);
   const [contact, setContact] = useState('');
+  const [contactError, setContactError] = useState(false);
   const [addressStreet, setAddressStreet] = useState('');
+  const [addressStreetError, setAddressStreetError] = useState(false);
   const [addressCity, setAddressCity] = useState('');
+  const [addressCityError, setAddressCityError] = useState(false);
   const [addressCode, setAddressCode] = useState('');
+  const [addressCodeError, setAddressCodeError] = useState(false);
   const [message, setMessage] = useState('');
-
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
-
   const [requiredInput, setRequiredInput] = useState(false);
-
   const navigate = useNavigate();
   const formRef = useRef();
-  const addressRef = useRef();
+  const submitBtnRef = useRef();
+
+  const cartClasses = {
+    container: {
+      px: 3,
+      pb: 3,
+    },
+    itemsContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+    },
+
+    formContainer: {
+      marginTop: 0,
+      marginBottom: 5,
+    },
+    form: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      minWidth: 300,
+      maxWidth: 600,
+    },
+    formField: {
+      marginTop: 0,
+      marginBottom: 5,
+      display: 'block',
+    },
+    formTextArea: {
+      minWidth: '100%',
+    },
+
+    image: {
+      mx: 'auto',
+      minWidth: '200px',
+      maxWidth: '400px',
+    },
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -103,6 +146,51 @@ export const CartPage = () => {
   const submitOrder = async (e) => {
     e.preventDefault();
 
+    if (!user._id) {
+      return;
+    }
+    if (!contact) {
+      setContactError(true);
+      setErrorMessage('Por favor adicione contacto.');
+      return;
+    }
+    setContactError(false);
+
+    if (!deliveryDate) {
+      setDeliveryDateError(true);
+      setErrorMessage('Por favor escolha data de entrega.');
+      return;
+    }
+    setDeliveryDateError(false);
+
+    if (!deliveryMethod) {
+      setDeliveryMethodError(true);
+      setErrorMessage('Por favor escolha metodo de entrega.');
+      return;
+    }
+    setDeliveryMethodError(false);
+
+    if (deliveryMethod === 'delivery' && !addressStreet) {
+      setAddressStreetError(true);
+      setErrorMessage('Morada incompleta.');
+      return;
+    }
+    setAddressStreetError(false);
+
+    if (deliveryMethod === 'delivery' && !addressCode) {
+      setAddressCodeError(true);
+      setErrorMessage('Morada incompleta.');
+      return;
+    }
+    setAddressCodeError(false);
+
+    if (deliveryMethod === 'delivery' && !addressCity) {
+      setAddressCityError(true);
+      setErrorMessage('Morada incompleta.');
+      return;
+    }
+    setAddressCityError(false);
+
     try {
       let fullAddress;
 
@@ -128,9 +216,7 @@ export const CartPage = () => {
 
       let { data } = await createOrder(requestBody);
 
-      setSuccessMessage(
-        'Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o pedido e receber os dados de pagamento. Encontre os detalhes do seu pedido no seu perfil.'
-      );
+      setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Encontre os detalhes do seu pedido no seu perfil.');
 
       // here we do manual populate of the order.items and order.userId so that we can have all data avaiable dynamically in the shopOrders to be used in profilePage without having to make a API call
       updateStoreData(data);
@@ -140,39 +226,72 @@ export const CartPage = () => {
   };
 
   return (
-    <div>
-      <p>CARRINHO</p>
+    <Box sx={cartClasses.container}>
+      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        CARRINHO
+      </Typography>
       {!successMessage && (
         <>
           {cartItems.length > 0 ? (
             <>
-              <div>
+              <Box sx={cartClasses.itemsContainer}>
                 {shopItems.map((item) => {
                   if (cartItems.includes(item._id)) {
-                    return <ShopItem key={item._id} {...item} deliveryMethod={deliveryMethod} />;
+                    return (
+                      <Box key={item._id} sx={{ mb: 1, mr: 1, minWidth: 300 }}>
+                        <ShopItem {...item} deliveryMethod={deliveryMethod} />
+                      </Box>
+                    );
                   }
                 })}
-              </div>
+              </Box>
 
               {deliveryMethod === 'delivery' && (
-                <div>
+                <Box sx={{ mt: 4 }}>
                   {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
-                    <p>
-                      Taxa de entrega: <span style={{ textDecoration: 'line-through' }}>{orderDeliveryFee}€</span>
-                    </p>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                        Taxa de entrega:
+                      </Typography>
+                      <Typography variant='body1' color='#031D44' sx={{ textDecoration: 'line-through', mr: 1 }}>
+                        {orderDeliveryFee}€
+                      </Typography>
+                      <Typography variant='body1' color='#031D44'>
+                        0€
+                      </Typography>
+                    </Box>
                   ) : (
-                    <p>Taxa de entrega: {orderDeliveryFee}€</p>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                        Taxa de entrega:
+                      </Typography>
+                      <Typography variant='body1' color='#031D44'>
+                        {orderDeliveryFee}€
+                      </Typography>
+                    </Box>
                   )}
-                </div>
+                </Box>
               )}
 
-              <div>
-                <p>Total: {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€</p>
-                {isNotVisible && <button onClick={() => toggleForm()}>Encomendar</button>}
-                <button onClick={() => dispatch(clearCart())}>Limpar Carrinho</button>
-              </div>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2, fontWeight: 'bold', mr: 1 }}>
+                  Total:
+                </Typography>
+                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2 }}>
+                  {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+                </Typography>
+              </Box>
 
-              <OrderInfo
+              <Button sx={{ mr: 1 }} variant='outlined' endIcon={<DeleteIcon />} onClick={() => dispatch(clearCart())}>
+                Limpar
+              </Button>
+              {isNotVisible && (
+                <Button variant='contained' onClick={() => toggleForm()}>
+                  Continuar
+                </Button>
+              )}
+
+              <CartOrderForm
                 formRef={formRef}
                 isNotVisible={isNotVisible}
                 submitOrder={submitOrder}
@@ -182,7 +301,6 @@ export const CartPage = () => {
                 setDeliveryDate={setDeliveryDate}
                 deliveryMethod={deliveryMethod}
                 handleRadioClick={handleRadioClick}
-                addressRef={addressRef}
                 isAddressNotVisible={isAddressNotVisible}
                 requiredInput={requiredInput}
                 addressStreet={addressStreet}
@@ -195,14 +313,41 @@ export const CartPage = () => {
                 setMessage={setMessage}
                 errorMessage={errorMessage}
                 navigate={navigate}
+                contactError={contactError}
+                deliveryDateError={deliveryDateError}
+                deliveryMethodError={deliveryMethodError}
+                addressStreetError={addressStreetError}
+                addressCityError={addressCityError}
+                addressCodeError={addressCodeError}
+                submitBtnRef={submitBtnRef}
+                successMessage={successMessage}
               />
             </>
           ) : (
-            <p>Sem items no carrinho.</p>
+            <Box>
+              <Box sx={cartClasses.image}>
+                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
+              </Box>
+
+              <Typography paragraph sx={{ fontSize: 16 }}>
+                Carrinho vazio.
+              </Typography>
+            </Box>
           )}
         </>
       )}
-      {successMessage && <p>{successMessage}</p>}
-    </div>
+
+      {successMessage && (
+        <>
+          <Typography paragraph sx={{ my: '25px', maxWidth: '600px', mx: 'auto' }} color='#031D44'>
+            {successMessage}
+          </Typography>
+
+          <Button variant='outlined' onClick={() => navigate(`/profile/${user._id}`)}>
+            Perfil
+          </Button>
+        </>
+      )}
+    </Box>
   );
 };

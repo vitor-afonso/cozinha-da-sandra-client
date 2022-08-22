@@ -148,6 +148,7 @@ export const ProfilePage = () => {
                     fullWidth
                     size='small'
                     multiline
+                    placeholder='Clique "Editar" para adicionar notas...'
                     rows={4}
                   />
                 )}
