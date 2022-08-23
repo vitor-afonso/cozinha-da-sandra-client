@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
 
-export const ForgotPage = () => {
+const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState('');
@@ -105,3 +105,5 @@ export const ForgotPage = () => {
     </Box>
   );
 };
+
+export default ForgotPage;

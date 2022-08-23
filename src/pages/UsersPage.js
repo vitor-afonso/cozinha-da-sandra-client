@@ -8,7 +8,7 @@ import { AuthContext } from '../context/auth.context';
 import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, InputAdornment } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-export const UsersPage = () => {
+const UsersPage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers, isLoading } = useSelector((store) => store.users);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -144,3 +144,5 @@ export const UsersPage = () => {
     </Box>
   );
 };
+
+export default UsersPage;

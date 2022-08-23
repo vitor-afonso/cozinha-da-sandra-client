@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
-export const SalgadosPage = () => {
+const SalgadosPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
 
   const salgadosClasses = {
@@ -43,3 +43,5 @@ export const SalgadosPage = () => {
     </Box>
   );
 };
+
+export default SalgadosPage;

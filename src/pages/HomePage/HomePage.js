@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 
-export const HomePage = () => {
+const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
   const { isLoggedIn, user } = useContext(AuthContext);
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
+  const [smallHeroImg, setSmallHeroImg] = useState(null);
+  const [mediumHeroImg, setMediumHeroImg] = useState(null);
 
   const navigate = useNavigate();
 
@@ -123,8 +125,8 @@ export const HomePage = () => {
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
-      {shopItemsDoces.length > 0 && shopItemsSalgados.length > 0 && (
-        <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
+      <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
+        {shopItemsDoces.length > 0 && (
           <Box className='items-doces-container' sx={homeClasses.docesContainer} data-testid='items-container'>
             <Grid container spacing={2}>
               {shopItemsDoces.map((element) => {
@@ -142,7 +144,9 @@ export const HomePage = () => {
               Ver mais...
             </Button>
           </Box>
+        )}
 
+        {shopItemsSalgados.length > 0 && (
           <Box className='items-salgados-container' sx={homeClasses.salgadosContainer} data-testid='items-container'>
             <Grid container spacing={2}>
               {shopItemsSalgados.map((element) => {
@@ -159,8 +163,10 @@ export const HomePage = () => {
               Ver mais...
             </Button>
           </Box>
-        </Box>
-      )}
+        )}
+      </Box>
     </Box>
   );
 };
+
+export default HomePage;

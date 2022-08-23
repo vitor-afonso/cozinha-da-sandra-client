@@ -1,35 +1,38 @@
-// jshint esversion:9
+// jshint esversion:11
 
+import React, { lazy, Suspense } from 'react';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import { AppFooter } from './components/AppFooter';
-import { HomePage } from './pages/HomePage/HomePage';
-import { SignupPage } from './pages/SignupPage';
-import { LoginPage } from './pages/LoginPage';
-import { DocesPage } from './pages/DocesPage';
-import { SalgadosPage } from './pages/SalgadosPage';
-import { UsersPage } from './pages/UsersPage';
-import { OrdersPage } from './pages/OrdersPage';
-import { NewItemPage } from './pages/NewItemPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { EditItemPage } from './pages/EditItemPage';
-import { EditProfilePage } from './pages/EditProfilePage';
-import { ItemDetailsPage } from './pages/ItemDetailsPage';
-import { AboutPage } from './pages/AboutPage';
-import { CartPage } from './pages/CartPage';
-import { ForgotPage } from './pages/ForgotPage';
-import { ResetPage } from './pages/ResetPage';
 import { useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { getShopItems } from './redux/features/items/itemsSlice';
 import { getShopOrders } from './redux/features/orders/ordersSlice';
 import { AuthContext } from './context/auth.context';
-import { SendEmailPage } from './pages/SendEmailPage';
-import { EditOrderPage } from './pages/EditOrderPage';
 import { getShopUsers } from './redux/features/users/usersSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Layout } from './components/Layout';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
+import { IsAdmin } from './components/IsAdmin';
+import { IsUser } from './components/IsUser';
+
+const SignupPage = lazy(() => import('./pages/SignupPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const ForgotPage = lazy(() => import('./pages/ForgotPage'));
+const ResetPage = lazy(() => import('./pages/ResetPage'));
+const SendEmailPage = lazy(() => import('./pages/SendEmailPage'));
+const HomePage = lazy(() => import('./pages//HomePage/HomePage'));
+const DocesPage = lazy(() => import('./pages/DocesPage'));
+const SalgadosPage = lazy(() => import('./pages/SalgadosPage'));
+const ItemDetailsPage = lazy(() => import('./pages/ItemDetailsPage'));
+const NewItemPage = lazy(() => import('./pages/NewItemPage'));
+const EditItemPage = lazy(() => import('./pages/EditItemPage'));
+const UsersPage = lazy(() => import('./pages/UsersPage'));
+const OrdersPage = lazy(() => import('./pages/OrdersPage'));
+const EditOrderPage = lazy(() => import('./pages/EditOrderPage'));
+const ProfilePage = lazy(() => import('./pages/ProfilePage'));
+const EditProfilePage = lazy(() => import('./pages/EditProfilePage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 
 // to update mui default values
 const theme = createTheme({
@@ -80,26 +83,85 @@ function App() {
     <Box className='App'>
       <ThemeProvider theme={theme}>
         <Layout>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/signup' element={<SignupPage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/doces' element={<DocesPage />} />
-            <Route path='/salgados' element={<SalgadosPage />} />
-            <Route path='/users' element={<UsersPage />} />
-            <Route path='/orders' element={<OrdersPage />} />
-            <Route path='/orders/edit/:orderId' element={<EditOrderPage />} />
-            <Route path='/items/add' element={<NewItemPage />} />
-            <Route path='/items/:itemId' element={<ItemDetailsPage />} />
-            <Route path='/items/edit/:itemId' element={<EditItemPage />} />
-            <Route path='/profile/:userId' element={<ProfilePage />} />
-            <Route path='/profile/edit/:userId' element={<EditProfilePage />} />
-            <Route path='/cart' element={<CartPage />} />
-            <Route path='/about' element={<AboutPage />} />
-            <Route path='/forgot' element={<ForgotPage />} />
-            <Route path='/reset/:userId' element={<ResetPage />} />
-            <Route path='/send-email/orders/:orderId' element={<SendEmailPage />} />
-          </Routes>
+          <Suspense fallback={<CircularProgress sx={{ mt: 20 }} />}>
+            <Routes>
+              <Route path='/' element={<HomePage />} />
+              <Route path='/signup' element={<SignupPage />} />
+              <Route path='/login' element={<LoginPage />} />
+              <Route path='/doces' element={<DocesPage />} />
+              <Route path='/salgados' element={<SalgadosPage />} />
+
+              <Route
+                path='/users'
+                element={
+                  <IsAdmin>
+                    <UsersPage />
+                  </IsAdmin>
+                }
+              />
+              <Route
+                path='/orders'
+                element={
+                  <IsAdmin>
+                    <OrdersPage />
+                  </IsAdmin>
+                }
+              />
+              <Route
+                path='/orders/edit/:orderId'
+                element={
+                  <IsAdmin>
+                    <EditOrderPage />
+                  </IsAdmin>
+                }
+              />
+              <Route
+                path='/items/add'
+                element={
+                  <IsAdmin>
+                    <NewItemPage />
+                  </IsAdmin>
+                }
+              />
+              <Route path='/items/:itemId' element={<ItemDetailsPage />} />
+              <Route
+                path='/items/edit/:itemId'
+                element={
+                  <IsAdmin>
+                    <EditItemPage />
+                  </IsAdmin>
+                }
+              />
+              <Route
+                path='/profile/:userId'
+                element={
+                  <IsUser>
+                    <ProfilePage />
+                  </IsUser>
+                }
+              />
+              <Route
+                path='/profile/edit/:userId'
+                element={
+                  <IsUser>
+                    <EditProfilePage />
+                  </IsUser>
+                }
+              />
+              <Route path='/cart' element={<CartPage />} />
+              <Route path='/about' element={<AboutPage />} />
+              <Route path='/forgot' element={<ForgotPage />} />
+              <Route path='/reset/:userId' element={<ResetPage />} />
+              <Route
+                path='/send-email/orders/:orderId'
+                element={
+                  <IsAdmin>
+                    <SendEmailPage />
+                  </IsAdmin>
+                }
+              />
+            </Routes>
+          </Suspense>
         </Layout>
       </ThemeProvider>
     </Box>
@@ -107,3 +169,24 @@ function App() {
 }
 
 export default App;
+
+// to use in components
+{
+  /* 
+
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from './components/ErrorBoundary';
+
+<ErrorBoundary
+  FallbackComponent={ErrorFallback}
+  onReset={() => {
+    window.location.reload();
+  }}
+>
+  <Suspense fallback={<CircularProgress sx={{ mt: 20 }} />}>
+    <AboutPage />
+  </Suspense>
+</ErrorBoundary>;
+
+ */
+}

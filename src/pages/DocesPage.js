@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
-export const DocesPage = () => {
+const DocesPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
 
   const docesClasses = {
@@ -43,3 +43,5 @@ export const DocesPage = () => {
     </Box>
   );
 };
+
+export default DocesPage;

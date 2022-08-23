@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
+import convert from 'image-file-resize';
 
 import * as React from 'react';
 import { Box, Button, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
@@ -27,7 +28,7 @@ const modalStyle = {
   alignItems: 'center',
 };
 
-export const EditItemPage = () => {
+const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
@@ -116,7 +117,15 @@ export const EditItemPage = () => {
     try {
       if (e.target.files.lenght !== 0) {
         setTempImageUrl(URL.createObjectURL(e.target.files[0]));
-        setObjImageToUpload(e.target.files[0]);
+
+        let resizedImg = await convert({
+          file: e.target.files[0],
+          width: 300,
+          height: 225,
+          type: 'jpeg',
+        });
+
+        setObjImageToUpload(resizedImg);
       }
     } catch (error) {
       console.log('Error while uploading the file: ', error);
@@ -332,3 +341,5 @@ export const EditItemPage = () => {
     </Box>
   );
 };
+
+export default EditItemPage;

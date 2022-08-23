@@ -7,11 +7,13 @@ import { createItem, uploadImage } from '../api';
 import { addNewShopItem } from '../redux/features/items/itemsSlice';
 import itemImage from '../images/item.svg';
 
+import convert from 'image-file-resize';
+
 import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 
-export const NewItemPage = () => {
+const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [name, setName] = useState('');
@@ -80,7 +82,14 @@ export const NewItemPage = () => {
     try {
       if (e.target.files.lenght !== 0) {
         setTempImageUrl(URL.createObjectURL(e.target.files[0]));
-        setObjImageToUpload(e.target.files[0]);
+        let resizedImg = await convert({
+          file: e.target.files[0],
+          width: 300,
+          height: 225,
+          type: 'jpeg',
+        });
+
+        setObjImageToUpload(resizedImg);
       }
     } catch (error) {
       console.log('Error while uploading the file: ', error);
@@ -146,8 +155,6 @@ export const NewItemPage = () => {
       dispatch(addNewShopItem(data));
 
       setSuccessMessage('Item criado com sucesso.');
-
-      setTimeout(() => navigate('/'), 5000);
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -244,3 +251,5 @@ export const NewItemPage = () => {
     </Box>
   );
 };
+
+export default NewItemPage;

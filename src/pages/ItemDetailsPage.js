@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
-export const ItemDetailsPage = () => {
+const ItemDetailsPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
   const [oneItem, setOneItem] = useState(null);
   const { itemId } = useParams();
@@ -38,3 +38,5 @@ export const ItemDetailsPage = () => {
     </Box>
   );
 };
+
+export default ItemDetailsPage;

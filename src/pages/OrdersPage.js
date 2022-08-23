@@ -7,7 +7,7 @@ import { ShopOrder } from './../components/ShopOrder';
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
-export const OrdersPage = () => {
+const OrdersPage = () => {
   const dispatch = useDispatch();
   const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -125,3 +125,5 @@ export const OrdersPage = () => {
     </Box>
   );
 };
+
+export default OrdersPage;

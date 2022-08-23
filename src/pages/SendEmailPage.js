@@ -7,7 +7,7 @@ import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
 import { parseDateToShow } from '../utils/app.utils';
 
-export const SendEmailPage = () => {
+const SendEmailPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const from = 'cozinhadasandra22@gmail.com';
@@ -186,3 +186,5 @@ export const SendEmailPage = () => {
     </Box>
   );
 };
+
+export default SendEmailPage;

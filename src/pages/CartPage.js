@@ -15,7 +15,7 @@ import emptyCartImage from '../images/emptyCart.svg';
 import { Box, Button, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export const CartPage = () => {
+const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
@@ -351,3 +351,5 @@ export const CartPage = () => {
     </Box>
   );
 };
+
+export default CartPage;

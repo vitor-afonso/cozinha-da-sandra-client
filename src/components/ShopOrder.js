@@ -8,8 +8,22 @@ import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
-import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Modal, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
@@ -20,6 +34,10 @@ export function ShopOrder({ order }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const orderClasses = {
     container: {
@@ -85,18 +103,18 @@ export function ShopOrder({ order }) {
         from: 'cozinhadasandra22@gmail.com',
         to: order.userId.email,
         subject: 'Pedido confirmado',
-        message: `
-        A sua pedido com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID da sua pedido ao efectuar pagamento via MB WAY para o numero de telefone 9********.
-        Pode ver todos os detalhes da sua pedido na sua pagina de perfil.
+        message: `O seu pedido com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID do seu pedido ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+        Encontre os detalhes do seu pedido na sua pagina de perfil.
     
         Com os melhores cumprimentos,
     
-        A Cozinha da Sandra
+        A Cozinha da Sandra 👩🏾‍🍳
         `,
       };
 
       await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
       dispatch(confirmOrder({ id: order._id }));
+      handleClose();
     } catch (error) {
       console.log(error.message);
     }
@@ -277,11 +295,27 @@ export function ShopOrder({ order }) {
           <Typography>
             {translateStatus(order.orderStatus)}
             {order.orderStatus === 'pending' && checkDeliveryDate() && user.userType === 'admin' && (
-              <Button size='small' onClick={handleConfirmOrder}>
+              <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>
             )}
           </Typography>
+
+          <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+            <Box sx={modalStyle}>
+              <Typography id='modal-modal-title' variant='h6' component='h2'>
+                Confirmar pedido?
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                  Cancelar
+                </Button>
+                <Button type='button' variant='contained' onClick={handleConfirmOrder}>
+                  Confirmar
+                </Button>
+              </Box>
+            </Box>
+          </Modal>
         </Box>
 
         <Box sx={orderClasses.infoField}>

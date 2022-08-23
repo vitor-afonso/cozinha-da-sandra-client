@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
   const { shopOrders } = useSelector((store) => store.orders);
@@ -187,3 +187,5 @@ export const ProfilePage = () => {
     </Box>
   );
 };
+
+export default ProfilePage;

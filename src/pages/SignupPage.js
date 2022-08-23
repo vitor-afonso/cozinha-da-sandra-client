@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
 
-export const SignupPage = () => {
+const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -107,3 +107,5 @@ export const SignupPage = () => {
     </Box>
   );
 };
+
+export default SignupPage;

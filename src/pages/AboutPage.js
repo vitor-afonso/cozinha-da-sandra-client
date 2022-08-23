@@ -6,7 +6,7 @@ import instagramImage from '../images/instagram.svg';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import EmailIcon from '@mui/icons-material/Email';
 
-export const AboutPage = () => {
+const AboutPage = () => {
   const aboutClasses = {
     container: {
       display: 'flex',
@@ -94,7 +94,6 @@ export const AboutPage = () => {
       textAlign: 'left',
     },
   };
-
   return (
     <Box sx={aboutClasses.container}>
       <Grid container spacing={0} sx={aboutClasses.hero}>
@@ -147,3 +146,5 @@ export const AboutPage = () => {
     </Box>
   );
 };
+
+export default AboutPage;

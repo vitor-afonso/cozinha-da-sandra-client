@@ -35,7 +35,7 @@ const modalStyle = {
   alignItems: 'center',
 };
 
-export const EditOrderPage = () => {
+const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const dispatch = useDispatch();
@@ -428,3 +428,5 @@ export const EditOrderPage = () => {
     </Box>
   );
 };
+
+export default EditOrderPage;

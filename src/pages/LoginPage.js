@@ -8,7 +8,7 @@ import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [password, setPassword] = useState('');
@@ -108,3 +108,5 @@ export const LoginPage = () => {
     </Box>
   );
 };
+
+export default LoginPage;

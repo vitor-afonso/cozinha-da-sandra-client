@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
 import resetImage from '../images/reset.svg';
 
-export const ResetPage = () => {
+const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [newPassword, setNewPassword] = useState('');
@@ -119,3 +119,5 @@ export const ResetPage = () => {
     </Box>
   );
 };
+
+export default ResetPage;
