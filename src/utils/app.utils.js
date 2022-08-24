@@ -106,7 +106,8 @@ const getItemsAmount = (orderItems) => {
 
   return items;
 };
-const getItemsAmountArr = (orderItems) => {
+
+/* const getItemsAmountArr = (orderItems) => {
   const items = {};
   // convert to object of items => {item: amount, item: amount}
   orderItems.forEach((item) => {
@@ -117,10 +118,12 @@ const getItemsAmountArr = (orderItems) => {
   let itemsArray = Object.entries(items).map((item) => ({ [item[0]]: item[1] }));
 
   return itemsArray;
-};
+}; */
 
-exports.parseDateToShow = parseDateToShow;
+/* exports.parseDateToShow = parseDateToShow;
 exports.parseDateToEdit = parseDateToEdit;
 exports.getItemsQuantity = getItemsQuantity;
 exports.getItemsPrice = getItemsPrice;
-exports.getItemsAmount = getItemsAmount;
+exports.getItemsAmount = getItemsAmount; */
+
+export { parseDateToShow, parseDateToEdit, getItemsQuantity, getItemsPrice, getItemsAmount };
