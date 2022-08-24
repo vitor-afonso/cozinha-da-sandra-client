@@ -163,7 +163,7 @@ const NewItemPage = () => {
   return (
     <Box sx={newItemClasses.container}>
       <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-        CRIAR ITEM
+        CRIAR
       </Typography>
 
       {!successMessage && (

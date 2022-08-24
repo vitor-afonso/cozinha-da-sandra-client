@@ -2,6 +2,7 @@
 
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
+import Masonry from 'react-masonry-css';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
@@ -52,6 +53,12 @@ const ProfilePage = () => {
     },
     ordersVisible: {
       //outline: '1px solid red',
+    },
+    breakpoints: {
+      default: 4,
+      1600: 3,
+      1100: 2,
+      700: 1,
     },
   };
 
@@ -164,23 +171,23 @@ const ProfilePage = () => {
           </Button>
 
           <Box sx={!isVisible ? profileClasses.ordersNotVisible : profileClasses.ordersVisible}>
-            <Grid container spacing={2}>
-              {userOrders.length > 0 ? (
+            <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
+              {userOrders.length > 0 &&
                 userOrders.map((order) => {
                   return (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
+                    <div key={order._id}>
                       <ShopOrder order={order} />
-                    </Grid>
+                    </div>
                   );
-                })
-              ) : (
-                <Grid item xs={12}>
-                  <Typography paragraph sx={{ mt: 4 }}>
-                    Nenhum pedido encontrado
-                  </Typography>
-                </Grid>
-              )}
-            </Grid>
+                })}
+            </Masonry>
+            {userOrders.length === 0 && (
+              <div>
+                <Typography paragraph sx={{ mt: 4 }}>
+                  Nenhum pedido encontrado.
+                </Typography>
+              </div>
+            )}
           </Box>
         </>
       )}

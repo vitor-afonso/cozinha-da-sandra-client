@@ -12,3 +12,25 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 export default ErrorFallback;
+
+//=> to use when lazy loading components
+{
+  /* 
+  import React, { lazy, Suspense } from 'react';
+  import { ErrorBoundary } from 'react-error-boundary';
+  import ErrorFallback from './components/ErrorBoundary';
+
+  
+  <ErrorBoundary
+    FallbackComponent={ErrorFallback}
+    onReset={() => {
+      window.location.reload();
+    }}
+  >
+    <Suspense fallback={<CircularProgress sx={{ mt: 20 }} />}>
+      <AboutPage /> // <= component to lazy load
+    </Suspense>
+  </ErrorBoundary>;
+  
+   */
+}

@@ -13,8 +13,6 @@ const HomePage = () => {
   const { isLoggedIn, user } = useContext(AuthContext);
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
-  const [smallHeroImg, setSmallHeroImg] = useState(null);
-  const [mediumHeroImg, setMediumHeroImg] = useState(null);
 
   const navigate = useNavigate();
 

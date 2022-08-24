@@ -169,24 +169,3 @@ function App() {
 }
 
 export default App;
-
-// to use in components
-{
-  /* 
-
-import { ErrorBoundary } from 'react-error-boundary';
-import ErrorFallback from './components/ErrorBoundary';
-
-<ErrorBoundary
-  FallbackComponent={ErrorFallback}
-  onReset={() => {
-    window.location.reload();
-  }}
->
-  <Suspense fallback={<CircularProgress sx={{ mt: 20 }} />}>
-    <AboutPage />
-  </Suspense>
-</ErrorBoundary>;
-
- */
-}

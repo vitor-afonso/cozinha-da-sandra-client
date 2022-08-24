@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShopOrder } from './../components/ShopOrder';
 
+import Masonry from 'react-masonry-css';
+
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
@@ -13,6 +15,15 @@ const OrdersPage = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
   const userEffectRan = useRef(false);
+
+  const ordersClasses = {
+    breakpoints: {
+      default: 4,
+      1600: 3,
+      1100: 2,
+      700: 1,
+    },
+  };
 
   useEffect(() => {
     if (userEffectRan.current === false) {
@@ -102,25 +113,25 @@ const OrdersPage = () => {
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
       <Box sx={{ padding: 3 }}>
-        <Grid container spacing={2}>
-          {filteredOrders.length > 0 ? (
+        <Masonry breakpointCols={ordersClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
+          {filteredOrders.length > 0 &&
             filteredOrders.map((order) => {
               return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
+                <div key={order._id}>
                   <ShopOrder order={order} />
-                </Grid>
+                </div>
               );
-            })
-          ) : (
-            <Grid item xs={12}>
-              {!isLoading && (
-                <Typography paragraph sx={{ mt: 4 }}>
-                  Nenhum pedido com o filtro seleccionado.
-                </Typography>
-              )}
-            </Grid>
-          )}
-        </Grid>
+            })}
+        </Masonry>
+        {filteredOrders.length === 0 && (
+          <div>
+            {!isLoading && (
+              <Typography paragraph sx={{ mt: 4 }}>
+                Nenhum pedido com o filtro seleccionado.
+              </Typography>
+            )}
+          </div>
+        )}
       </Box>
     </Box>
   );

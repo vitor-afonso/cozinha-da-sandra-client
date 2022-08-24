@@ -92,7 +92,7 @@ const UsersPage = () => {
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        <Typography variant='h2' color='primary' sx={{ my: '25px', fontSize: { xs: '40px' } }}>
           UTILIZADORES
         </Typography>
 
