@@ -12,12 +12,11 @@ import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 
-import { Typography, Box, Button, Grid, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel } from '@mui/material';
+import { Typography, Box, Button, Grid } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import Radio from '@mui/material/Radio';
 import Modal from '@mui/material/Modal';
 
 const modalStyle = {

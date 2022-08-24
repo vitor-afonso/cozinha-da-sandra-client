@@ -43,7 +43,6 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
   const [ingredientsList, setIngredientsList] = useState([]);
-  const [sharpedImg, setSharpedImg] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 

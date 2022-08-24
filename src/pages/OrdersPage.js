@@ -6,7 +6,7 @@ import { ShopOrder } from './../components/ShopOrder';
 
 import Masonry from 'react-masonry-css';
 
-import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, Grid, CircularProgress } from '@mui/material';
+import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 const OrdersPage = () => {

@@ -1,10 +1,10 @@
 // jshint esversion:9
 
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
 
