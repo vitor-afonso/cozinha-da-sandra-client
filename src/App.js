@@ -90,6 +90,7 @@ function App() {
               <Route path='/login' element={<LoginPage />} />
               <Route path='/doces' element={<DocesPage />} />
               <Route path='/salgados' element={<SalgadosPage />} />
+              <Route path='/items/:itemId' element={<ItemDetailsPage />} />
 
               <Route
                 path='/users'
@@ -123,7 +124,6 @@ function App() {
                   </IsAdmin>
                 }
               />
-              <Route path='/items/:itemId' element={<ItemDetailsPage />} />
               <Route
                 path='/items/edit/:itemId'
                 element={

@@ -54,7 +54,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
         handleExpandClick();
       }
     }
-  }, [ingredients]);
+  }, [ingredients, _id]);
 
   const formatIngredients = (list) => {
     let filteredList = list.split(',').filter((element) => element.length > 0);
@@ -185,10 +185,10 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
           <RWebShare
             data={{
               text: name,
-              url: location.pathname,
+              url: `https://acozinhadasandra.netlify.app/items/${_id}`,
               title: 'Share',
             }}
-            onClick={() => console.log('shared successfully!')}
+            onClick={() => console.log('Shared successfully!')}
           >
             <IconButton aria-label='share'>
               <ShareIcon color='neutral' />
