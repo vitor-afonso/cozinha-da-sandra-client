@@ -131,8 +131,8 @@ export function ShopOrder({ order }) {
     return order.total;
   };
 
-  const checkUserType = () => {
-    if (order.orderStatus === 'pending' || user.userType === 'admin') {
+  const isAdmin = () => {
+    if (order.orderStatus === 'pending' && user.userType === 'admin') {
       return true;
     }
   };
@@ -339,19 +339,17 @@ export function ShopOrder({ order }) {
         </Box>
       </CardContent>
 
-      {checkUserType() && (
+      {isAdmin() && (
         <CardActions sx={orderClasses.actions}>
-          {user.userType === 'admin' && location.pathname === '/orders' && (
+          {location.pathname === '/orders' && (
             <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
               Contactar
             </Button>
           )}
 
-          {user.userType === 'admin' && (
-            <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
-              Editar
-            </Button>
-          )}
+          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            Editar
+          </Button>
         </CardActions>
       )}
     </Card>
