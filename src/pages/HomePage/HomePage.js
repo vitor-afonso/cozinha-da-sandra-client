@@ -82,7 +82,7 @@ const HomePage = () => {
     let docesCount = 0;
     let salgadosCount = 0;
 
-    if (shopItems.length > 0 && shopItems[0] !== undefined) {
+    if (shopItems.length > 0) {
       const filteredDoces = shopItems.filter((item) => {
         if (docesCount < 3 && item.category === 'doces') {
           docesCount++;
