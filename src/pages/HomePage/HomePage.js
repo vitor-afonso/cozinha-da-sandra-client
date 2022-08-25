@@ -82,23 +82,23 @@ const HomePage = () => {
     let docesCount = 0;
     let salgadosCount = 0;
 
-    if (shopItems.length > 0) {
+    /* if (shopItems.length > 0) {
       const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 4 && item.category === 'doces') {
+        if (docesCount < 3 && item.category === 'doces') {
           docesCount++;
           return item;
         }
       });
 
       const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 4 && item.category === 'salgados') {
+        if (salgadosCount < 3 && item.category === 'salgados') {
           salgadosCount++;
           return item;
         }
       });
       setShopItemsDoces(filteredDoces);
       setShopItemsSalgados(filteredSalgados);
-    }
+    } */
   }, [shopItems]);
 
   return (
@@ -123,7 +123,7 @@ const HomePage = () => {
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
-      <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
+      {/* <Box className='shop-items-container' sx={homeClasses.itemsContainer} data-testid='shop-items-container'>
         {shopItemsDoces.length > 0 && (
           <Box className='items-doces-container' sx={homeClasses.docesContainer} data-testid='items-container'>
             <Grid container spacing={2}>
@@ -162,7 +162,7 @@ const HomePage = () => {
             </Button>
           </Box>
         )}
-      </Box>
+      </Box> */}
     </Box>
   );
 };
