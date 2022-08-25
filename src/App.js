@@ -49,7 +49,12 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontSize: 12,
+    fontSize: 14,
+    fontFamily: 'Signika',
+    fontWeightLight: 400,
+    fontWeightRegular: 500,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
   },
 });
 

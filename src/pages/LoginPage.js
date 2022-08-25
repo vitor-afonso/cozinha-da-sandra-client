@@ -75,17 +75,21 @@ const LoginPage = () => {
           <img src={loginImage} alt='Login' className='auth-images' />
         </Box>
         <div>
-          <Typography variant='h4' sx={{ marginTop: '25px' }}>
+          <Typography variant='h4' sx={{ marginTop: '25px' }} color='#031D44'>
             Login
           </Typography>
-          <p>
-            Novo na Cozinha da Sandra?
-            <Link to='/signup'> Registra-te </Link>
-            <br />
-            <small>
-              <Link to='/forgot'>Esqueceu password?</Link>
-            </small>
-          </p>
+
+          <Box>
+            <Box sx={{ display: 'flex', marginTop: '25px', alignItems: 'center' }}>
+              <Typography sx={{ mb: '3px' }} color='#031D44'>
+                Novo na Cozinha da Sandra?
+              </Typography>
+
+              <Button onClick={() => navigate('/signup')}>Registra-te </Button>
+            </Box>
+
+            <Button onClick={() => navigate('/forgot')}>Esqueceu password?</Button>
+          </Box>
         </div>
       </Box>
       <Box sx={loginClasses.form}>
