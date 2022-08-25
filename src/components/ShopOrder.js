@@ -347,9 +347,11 @@ export function ShopOrder({ order }) {
             </Button>
           )}
 
-          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
-            Editar
-          </Button>
+          {user.userType === 'admin' && (
+            <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+              Editar
+            </Button>
+          )}
         </CardActions>
       )}
     </Card>
