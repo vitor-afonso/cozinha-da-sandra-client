@@ -30,7 +30,7 @@ const modalStyle = {
 };
 
 const EditProfilePage = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logOutUser } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
   const dispatch = useDispatch();
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -149,6 +149,7 @@ const EditProfilePage = () => {
 
       dispatch(deleteShopUser(response.data));
       setSuccessMessage('Utilizador "apagado" com sucesso.');
+      logOutUser();
     } catch (error) {
       console.log(error.message);
     }
