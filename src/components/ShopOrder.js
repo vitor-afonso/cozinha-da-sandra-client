@@ -2,13 +2,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
 
-import { Box, Button, Card, CardActions, CardContent, Modal, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Modal, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 const modalStyle = {
   position: 'absolute',
@@ -31,13 +31,18 @@ export function ShopOrder({ order }) {
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
   const [itemsPrice, setItemsPrice] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const [paidBtnLoading, setPaidBtnLoading] = useState(false);
   const dispatch = useDispatch();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [openPaid, setOpenPaid] = React.useState(false);
+  const handleOpenPaid = () => setOpenPaid(true);
+  const handleClosePaid = () => setOpenPaid(false);
 
   const orderClasses = {
     container: {
@@ -96,6 +101,7 @@ export function ShopOrder({ order }) {
   };
 
   const handleConfirmOrder = async () => {
+    setBtnLoading(true);
     try {
       let requestBody = { orderStatus: 'confirmed' };
 
@@ -117,6 +123,23 @@ export function ShopOrder({ order }) {
       handleClose();
     } catch (error) {
       console.log(error.message);
+      setBtnLoading(false);
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    setPaidBtnLoading(true);
+
+    try {
+      let requestBody = { paid: true };
+
+      await updateOrder(requestBody, order._id);
+
+      dispatch(confirmPayment({ id: order._id }));
+      handleClosePaid();
+    } catch (error) {
+      console.log(error.message);
+      setPaidBtnLoading(false);
     }
   };
 
@@ -134,17 +157,6 @@ export function ShopOrder({ order }) {
   const isPending = () => {
     if (order.orderStatus === 'pending' && checkDeliveryDate()) {
       return true;
-    }
-  };
-  const handleConfirmPayment = async () => {
-    try {
-      let requestBody = { paid: true };
-
-      await updateOrder(requestBody, order._id);
-
-      dispatch(confirmPayment({ id: order._id }));
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
@@ -303,16 +315,21 @@ export function ShopOrder({ order }) {
 
           <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
             <Box sx={modalStyle}>
-              <Typography id='modal-modal-title' variant='h6' component='h2'>
-                Confirmar pedido?
+              <Typography id='modal-modal-title' variant='body1' sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
+                Enviar email de confirmação?
               </Typography>
               <Box sx={{ mt: 2 }}>
-                <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                  Cancelar
-                </Button>
-                <Button type='button' variant='contained' onClick={handleConfirmOrder}>
-                  Confirmar
-                </Button>
+                {!btnLoading && (
+                  <>
+                    <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                      Cancelar
+                    </Button>
+                    <Button type='button' variant='contained' onClick={handleConfirmOrder}>
+                      Confirmar
+                    </Button>
+                  </>
+                )}
+                {btnLoading && <CircularProgress size='20px' />}
               </Box>
             </Box>
           </Modal>
@@ -325,11 +342,44 @@ export function ShopOrder({ order }) {
           <Typography>
             {order.paid ? 'Sim' : 'Não'}
             {!order.paid && user.userType === 'admin' && (
-              <Button size='small' onClick={() => handleConfirmPayment(order._id)}>
+              <Button size='small' onClick={handleOpenPaid}>
                 Confirmar
               </Button>
             )}
           </Typography>
+          <Modal open={openPaid} onClose={handleClosePaid} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+            <Box sx={modalStyle}>
+              {order.orderStatus === 'pending' ? (
+                <>
+                  <Typography id='modal-modal-title' variant='body1' sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
+                    Confirme status do pedido antes.
+                  </Typography>
+                  <Button variant='outlined' onClick={handleClosePaid}>
+                    Voltar
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Typography id='modal-modal-title' variant='h6' component='h2'>
+                    Confirmar pago?
+                  </Typography>
+                  <Box sx={{ mt: 2 }}>
+                    {!paidBtnLoading && (
+                      <>
+                        <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClosePaid}>
+                          Cancelar
+                        </Button>
+                        <Button type='button' variant='contained' onClick={handleConfirmPayment}>
+                          Confirmar
+                        </Button>
+                      </>
+                    )}
+                    {paidBtnLoading && <CircularProgress size='20px' />}
+                  </Box>
+                </>
+              )}
+            </Box>
+          </Modal>
         </Box>
         <Box sx={orderClasses.infoField}>
           <Typography variant='body1' color='#031D44'>
