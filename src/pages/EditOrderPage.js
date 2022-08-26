@@ -12,7 +12,7 @@ import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 
-import { Typography, Box, Button, Grid } from '@mui/material';
+import { Typography, Box, Button, Grid, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -51,6 +51,7 @@ const EditOrderPage = () => {
   const [deliveryDateError, setDeliveryDateError] = useState(false);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
@@ -234,6 +235,8 @@ const EditOrderPage = () => {
       return;
     }
 
+    setBtnLoading(true);
+
     try {
       let requestBody = {
         deliveryDate: new Date(deliveryDate),
@@ -251,6 +254,8 @@ const EditOrderPage = () => {
 
       setSuccessMessage('Pedido actualizado com sucesso.');
 
+      setBtnLoading(false);
+
       // this will update the state with the updated order
       dispatch(updateShopOrder(data));
 
@@ -258,6 +263,7 @@ const EditOrderPage = () => {
       dispatch(clearCart());
     } catch (error) {
       setErrorMessage(error.message);
+      setBtnLoading(false);
     }
   };
 
@@ -391,11 +397,13 @@ const EditOrderPage = () => {
       )}
 
       <div>
-        <Button sx={{ mr: 1 }} onClick={clearInputsAndGoBack}>
-          Voltar
-        </Button>
+        {!btnLoading && (
+          <Button sx={{ mr: 1 }} onClick={clearInputsAndGoBack}>
+            Voltar
+          </Button>
+        )}
 
-        {!successMessage && (
+        {!successMessage && !btnLoading && (
           <>
             <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
               Apagar
@@ -422,6 +430,7 @@ const EditOrderPage = () => {
             </Button>
           </>
         )}
+        {btnLoading && !successMessage && <CircularProgress size='20px' />}
       </div>
     </Box>
   );

@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button, CircularProgress } from '@mui/material';
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
@@ -10,6 +10,7 @@ const ForgotPage = () => {
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const forgotClasses = {
     container: {
@@ -47,7 +48,7 @@ const ForgotPage = () => {
       setEmailError(true);
       return;
     }
-
+    setBtnLoading(true);
     try {
       const requestBody = { email };
 
@@ -58,6 +59,7 @@ const ForgotPage = () => {
       console.log('forgot error', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+      setBtnLoading(false);
     }
   };
   return (
@@ -85,9 +87,12 @@ const ForgotPage = () => {
                 </Typography>
               )}
 
-              <Button variant='contained' type='submit'>
-                Recuperar
-              </Button>
+              {!btnLoading && (
+                <Button variant='contained' type='submit'>
+                  Recuperar
+                </Button>
+              )}
+              {btnLoading && <CircularProgress size='20px' />}
             </form>
           </Box>
         </>

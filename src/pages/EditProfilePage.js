@@ -9,7 +9,7 @@ import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSli
 
 import convert from 'image-file-resize';
 
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import * as React from 'react';
 import Modal from '@mui/material/Modal';
@@ -48,6 +48,7 @@ const EditProfilePage = () => {
   const [contact, setContact] = useState('');
   const [info, setInfo] = useState('');
   const [disabledInput, setDisabledInput] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const inputFileUpload = useRef(null);
   const submitFormButton = useRef();
   const { userId } = useParams();
@@ -179,6 +180,8 @@ const EditProfilePage = () => {
     }
     setPasswordError(false);
 
+    setBtnLoading(true);
+
     try {
       const passwordBody = { password: newPassword };
 
@@ -215,6 +218,7 @@ const EditProfilePage = () => {
       console.log('error in editProfile', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+      setBtnLoading(false);
     }
   };
 
@@ -330,16 +334,15 @@ const EditProfilePage = () => {
       )}
 
       <Box>
-        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
-          Voltar
-        </Button>
-
-        {!successMessage && (
+        {!successMessage && !btnLoading && (
           <>
+            <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} onClick={() => navigate(-1)}>
+              Voltar
+            </Button>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
 
             {profileOwner && !profileOwner.deleted && profileOwner.userType === 'user' && (
-              <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
+              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' color='error' variant='outlined' onClick={handleOpen}>
                 Apagar
               </Button>
             )}
@@ -361,22 +364,24 @@ const EditProfilePage = () => {
             </Modal>
 
             {profileOwner && profileOwner.deleted && (
-              <Button sx={{ mr: 1 }} variant='outlined' color='success' type='button' onClick={handleActivateUser}>
+              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} variant='outlined' color='success' type='button' onClick={handleActivateUser}>
                 Activar
               </Button>
             )}
             <>
               {user._id === userId && (
-                <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
               )}
-              <Button type='button' variant='contained' sx={{ mt: 1 }} onClick={() => submitFormButton.current.click()}>
+
+              <Button type='button' variant='contained' sx={{ mt: { xs: 1, sm: 0 } }} onClick={() => submitFormButton.current.click()}>
                 Actualizar
               </Button>
             </>
           </>
         )}
+        {btnLoading && <CircularProgress size='20px' />}
       </Box>
     </Box>
   );

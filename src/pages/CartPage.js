@@ -52,7 +52,7 @@ const CartPage = () => {
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
@@ -211,7 +211,7 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
-    setShowLoading(true);
+    setBtnLoading(true);
 
     try {
       let fullAddress;
@@ -244,7 +244,7 @@ const CartPage = () => {
       updateStoreData(data);
     } catch (error) {
       setErrorMessage(error.message);
-      setShowLoading(false);
+      setBtnLoading(false);
     }
   };
 
@@ -361,7 +361,7 @@ const CartPage = () => {
                 addressCodeError={addressCodeError}
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
-                showLoading={showLoading}
+                btnLoading={btnLoading}
               />
             </>
           ) : (

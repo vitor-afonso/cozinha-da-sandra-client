@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signup } from '../api';
@@ -15,6 +15,7 @@ const SignupPage = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -57,7 +58,7 @@ const SignupPage = () => {
       setPasswordError(true);
       return;
     }
-
+    setBtnLoading(true);
     try {
       const requestBody = { email, password, username };
       await signup(requestBody);
@@ -65,6 +66,7 @@ const SignupPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+      setBtnLoading(false);
     }
   };
 
@@ -107,9 +109,12 @@ const SignupPage = () => {
             </Typography>
           )}
 
-          <Button variant='contained' type='submit'>
-            Registrar
-          </Button>
+          {!btnLoading && (
+            <Button variant='contained' type='submit'>
+              Registrar
+            </Button>
+          )}
+          {btnLoading && <CircularProgress size='20px' />}
         </form>
       </Box>
     </Box>

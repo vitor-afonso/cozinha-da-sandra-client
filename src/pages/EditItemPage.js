@@ -8,7 +8,7 @@ import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSli
 import convert from 'image-file-resize';
 
 import * as React from 'react';
-import { Box, Button, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
@@ -46,6 +46,7 @@ const EditItemPage = () => {
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [tempImageUrl, setTempImageUrl] = useState('');
   const inputFileUpload = useRef(null);
+  const [btnLoading, setBtnLoading] = useState(false);
   const { itemId } = useParams();
   const effectRan = useRef(false);
   const submitFormButtom = useRef(null);
@@ -186,6 +187,7 @@ const EditItemPage = () => {
       return;
     }
 
+    setBtnLoading(true);
     try {
       if (objImageToUpload) {
         const uploadData = new FormData();
@@ -202,6 +204,8 @@ const EditItemPage = () => {
 
         setSuccessMessage('Item actualizado com sucesso.');
 
+        setBtnLoading(false);
+
         setTimeout(() => navigate('/'), 5000);
       } else {
         const requestBody = { name, category, description, ingredients, price: Number(price) };
@@ -216,6 +220,7 @@ const EditItemPage = () => {
       }
     } catch (error) {
       setErrorMessage(error.message);
+      setBtnLoading(false);
     }
   };
 
@@ -302,11 +307,13 @@ const EditItemPage = () => {
           )}
 
           <Box>
-            <Button sx={{ mr: 1, mt: 1 }} onClick={() => navigate(-1)}>
-              Voltar
-            </Button>
+            {!btnLoading && (
+              <Button sx={{ mr: 1, mt: 1 }} onClick={() => navigate(-1)}>
+                Voltar
+              </Button>
+            )}
 
-            {!successMessage && (
+            {!successMessage && !btnLoading && (
               <>
                 <Button sx={{ mr: 1, mt: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
                   Apagar
@@ -335,6 +342,7 @@ const EditItemPage = () => {
                 </Button>
               </>
             )}
+            {btnLoading && !successMessage && <CircularProgress size='20px' />}
           </Box>
         </>
       )}

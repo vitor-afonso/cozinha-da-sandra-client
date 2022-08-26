@@ -9,7 +9,7 @@ import itemImage from '../images/item.svg';
 
 import convert from 'image-file-resize';
 
-import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button } from '@mui/material';
+import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button, CircularProgress } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -29,6 +29,7 @@ const NewItemPage = () => {
   const [priceError, setPriceError] = useState(false);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const inputFileUpload = useRef(null);
+  const [btnLoading, setBtnLoading] = useState(false);
   const submitForm = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -139,6 +140,8 @@ const NewItemPage = () => {
       return;
     }
 
+    setBtnLoading(true);
+
     try {
       const uploadData = new FormData();
 
@@ -155,8 +158,11 @@ const NewItemPage = () => {
       dispatch(addNewShopItem(data));
 
       setSuccessMessage('Item criado com sucesso.');
+
+      setBtnLoading(false);
     } catch (error) {
       setErrorMessage(error.message);
+      setBtnLoading(false);
     }
   };
 
@@ -233,11 +239,13 @@ const NewItemPage = () => {
       {successMessage && <p>{successMessage}</p>}
 
       <Box>
-        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
-          Voltar
-        </Button>
+        {!btnLoading && (
+          <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+            Voltar
+          </Button>
+        )}
 
-        {!successMessage && (
+        {!successMessage && !btnLoading && (
           <>
             <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
               Imagem
@@ -247,6 +255,7 @@ const NewItemPage = () => {
             </Button>
           </>
         )}
+        {btnLoading && !successMessage && <CircularProgress size='20px' />}
       </Box>
     </Box>
   );

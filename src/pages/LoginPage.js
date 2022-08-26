@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
 
   const loginClasses = {
@@ -48,6 +49,8 @@ const LoginPage = () => {
     email === '' ? setEmailError(true) : setEmailError(false);
     password === '' ? setPasswordError(true) : setPasswordError(false);
 
+    setBtnLoading(true);
+
     try {
       const requestBody = { email, password };
 
@@ -65,6 +68,7 @@ const LoginPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+      setBtnLoading(false);
     }
   };
 
@@ -108,9 +112,13 @@ const LoginPage = () => {
             </Typography>
           )}
 
-          <Button variant='contained' type='submit'>
-            Entrar
-          </Button>
+          {!btnLoading && (
+            <Button variant='contained' type='submit'>
+              Entrar
+            </Button>
+          )}
+
+          {btnLoading && <CircularProgress size='20px' />}
         </form>
       </Box>
     </Box>

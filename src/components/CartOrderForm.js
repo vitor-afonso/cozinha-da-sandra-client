@@ -34,7 +34,7 @@ export const CartOrderForm = ({
   addressCityError,
   submitBtnRef,
   successMessage,
-  showLoading,
+  btnLoading,
 }) => {
   // ms converts days to milliseconds
   // then i can use it to define the date that the user can book
@@ -171,19 +171,18 @@ export const CartOrderForm = ({
         </form>
       </Box>
 
-      <div>
-        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
-          Voltar
-        </Button>
+      {!successMessage && !btnLoading && (
+        <Box>
+          <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+            Voltar
+          </Button>
 
-        {!successMessage && !showLoading && (
           <Button type='button' variant='contained' onClick={() => submitBtnRef.current.click()}>
             Encomendar
           </Button>
-        )}
-
-        {showLoading && <CircularProgress />}
-      </div>
+        </Box>
+      )}
+      {btnLoading && <CircularProgress size='20px' />}
     </Box>
   );
 };
