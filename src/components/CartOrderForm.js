@@ -77,7 +77,7 @@ export const CartOrderForm = ({
           <TextField label='Contacto' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           <TextField
-            label=''
+            label='Data & Hora de entrega'
             type='datetime-local'
             variant='outlined'
             fullWidth
