@@ -57,6 +57,7 @@ const CartPage = () => {
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
+  const orderAddressRef = useRef(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -106,6 +107,21 @@ const CartPage = () => {
 
   const toggleForm = () => {
     setIsNotVisible(!isNotVisible);
+    setTimeout(() => scrollToOrderInfo(formRef), 300);
+  };
+
+  const scrollToOrderInfo = (elemRef) => {
+    window.scrollTo({
+      top: elemRef.current.offsetTop - 80,
+      behavior: 'smooth',
+    });
+  };
+
+  const scrollToOrderAddress = (elemRef) => {
+    window.scrollTo({
+      top: elemRef.current.offsetTop - 80,
+      behavior: 'smooth',
+    });
   };
 
   const validateContact = (e) => {
@@ -131,6 +147,7 @@ const CartPage = () => {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
       dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      setTimeout(() => scrollToOrderAddress(formRef), 300);
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
@@ -335,6 +352,7 @@ const CartPage = () => {
 
               <CartOrderForm
                 formRef={formRef}
+                orderAddressRef={orderAddressRef}
                 isNotVisible={isNotVisible}
                 submitOrder={submitOrder}
                 contact={contact}

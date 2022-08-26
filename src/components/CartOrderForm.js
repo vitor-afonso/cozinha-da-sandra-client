@@ -6,6 +6,7 @@ import Radio from '@mui/material/Radio';
 
 export const CartOrderForm = ({
   formRef,
+  orderAddressRef,
   isNotVisible,
   submitOrder,
   contact,
@@ -98,7 +99,7 @@ export const CartOrderForm = ({
             </RadioGroup>
           </FormControl>
 
-          <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null}>
+          <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
             <Typography variant='h4' color='#031D44' sx={{ mb: 2 }}>
               Morada
             </Typography>
