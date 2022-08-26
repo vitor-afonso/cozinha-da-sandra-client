@@ -366,13 +366,12 @@ const EditProfilePage = () => {
               </Button>
             )}
             <>
-              {user.userType === 'user' ||
-                (user._id === userId && (
-                  <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
-                    Imagem
-                  </Button>
-                ))}
-              <Button type='button' variant='contained' onClick={() => submitFormButton.current.click()}>
+              {user._id === userId && (
+                <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                  Imagem
+                </Button>
+              )}
+              <Button type='button' variant='contained' sx={{ mt: 1 }} onClick={() => submitFormButton.current.click()}>
                 Actualizar
               </Button>
             </>

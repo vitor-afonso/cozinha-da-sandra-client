@@ -1,5 +1,5 @@
 // jshint esversion:9
-
+import * as React from 'react';
 import { AuthContext } from '../context/auth.context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,8 +12,23 @@ import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Modal, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
@@ -40,6 +55,10 @@ const CartPage = () => {
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const cartClasses = {
     container: {
@@ -282,9 +301,25 @@ const CartPage = () => {
                 </Typography>
               </Box>
 
-              <Button sx={{ mr: 1 }} variant='outlined' endIcon={<DeleteIcon />} onClick={() => dispatch(clearCart())}>
+              <Button sx={{ mr: 1 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
                 Limpar
               </Button>
+
+              <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+                <Box sx={modalStyle}>
+                  <Typography id='modal-modal-title' variant='h6' component='h2'>
+                    Limpar carrinho?
+                  </Typography>
+                  <Box sx={{ mt: 2 }}>
+                    <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                      Cancelar
+                    </Button>
+                    <Button type='button' color='error' variant='contained' onClick={() => dispatch(clearCart())}>
+                      Limpar
+                    </Button>
+                  </Box>
+                </Box>
+              </Modal>
               {isNotVisible && (
                 <Button variant='contained' onClick={() => toggleForm()}>
                   Continuar
