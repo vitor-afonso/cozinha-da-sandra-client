@@ -10,7 +10,7 @@ import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 
 const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
 

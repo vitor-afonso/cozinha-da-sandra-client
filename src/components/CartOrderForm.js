@@ -1,7 +1,7 @@
 // jshint esversion:9
 import ms from 'ms';
 
-import { Box, Button, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 
 export const CartOrderForm = ({
@@ -34,6 +34,7 @@ export const CartOrderForm = ({
   addressCityError,
   submitBtnRef,
   successMessage,
+  showLoading,
 }) => {
   // ms converts days to milliseconds
   // then i can use it to define the date that the user can book
@@ -175,11 +176,13 @@ export const CartOrderForm = ({
           Voltar
         </Button>
 
-        {!successMessage && (
+        {!successMessage && !showLoading && (
           <Button type='button' variant='contained' onClick={() => submitBtnRef.current.click()}>
             Encomendar
           </Button>
         )}
+
+        {showLoading && <CircularProgress />}
       </div>
     </Box>
   );

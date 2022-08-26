@@ -52,6 +52,7 @@ const CartPage = () => {
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
@@ -210,6 +211,8 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
+    setShowLoading(true);
+
     try {
       let fullAddress;
 
@@ -241,6 +244,7 @@ const CartPage = () => {
       updateStoreData(data);
     } catch (error) {
       setErrorMessage(error.message);
+      setShowLoading(false);
     }
   };
 
@@ -320,6 +324,7 @@ const CartPage = () => {
                   </Box>
                 </Box>
               </Modal>
+
               {isNotVisible && (
                 <Button variant='contained' onClick={() => toggleForm()}>
                   Continuar
@@ -356,6 +361,7 @@ const CartPage = () => {
                 addressCodeError={addressCodeError}
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
+                showLoading={showLoading}
               />
             </>
           ) : (
