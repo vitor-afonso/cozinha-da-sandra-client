@@ -116,9 +116,9 @@ function App() {
               <Route
                 path='/orders/edit/:orderId'
                 element={
-                  <IsAdmin>
+                  <IsUser>
                     <EditOrderPage />
-                  </IsAdmin>
+                  </IsUser>
                 }
               />
               <Route

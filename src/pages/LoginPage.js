@@ -3,7 +3,7 @@
 import { Button, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
@@ -22,7 +22,7 @@ const LoginPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginTop: '25px',
+      py: 5,
     },
     top: {
       display: 'flex',
@@ -81,14 +81,18 @@ const LoginPage = () => {
 
           <Box>
             <Box sx={{ display: 'flex', marginTop: '25px', alignItems: 'center' }}>
-              <Typography sx={{ mb: '3px' }} color='#031D44'>
+              <Typography sx={{ mb: '2px' }} color='#031D44'>
                 Novo na Cozinha da Sandra?
               </Typography>
 
-              <Button onClick={() => navigate('/signup')}>Registra-te </Button>
+              <Button size='small' onClick={() => navigate('/signup')}>
+                Registra-te
+              </Button>
             </Box>
 
-            <Button onClick={() => navigate('/forgot')}>Esqueceu password?</Button>
+            <Button size='small' onClick={() => navigate('/forgot')}>
+              Esqueceu password?
+            </Button>
           </Box>
         </div>
       </Box>

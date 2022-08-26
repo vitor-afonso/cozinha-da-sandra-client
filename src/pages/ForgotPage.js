@@ -2,7 +2,6 @@
 
 import { Box, TextField, Typography, Button } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
 
@@ -11,14 +10,14 @@ const ForgotPage = () => {
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
-  const navigate = useNavigate();
 
   const forgotClasses = {
     container: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginTop: '25px',
+      py: 5,
+      //outline: '1px solid red',
     },
     top: {
       display: 'flex',
@@ -70,12 +69,11 @@ const ForgotPage = () => {
               <img src={forgotImage} alt='Forgot password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ marginTop: '25px' }}>
-              Esqueceu password
+            <Typography variant='h4' sx={{ my: 4 }} color='#031D44'>
+              Esqueceu password?
             </Typography>
-            <Typography variant='p' sx={{ marginTop: '25px' }}>
-              Por favor digite o seu email.
-            </Typography>
+
+            <Typography color='#031D44'>Digite o seu email.</Typography>
           </Box>
           <Box sx={forgotClasses.form}>
             <form noValidate autoComplete='off' onSubmit={handleForgotSubmit}>

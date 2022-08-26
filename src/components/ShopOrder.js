@@ -131,8 +131,8 @@ export function ShopOrder({ order }) {
     return order.total;
   };
 
-  const isAdmin = () => {
-    if (order.orderStatus === 'pending' && user.userType === 'admin') {
+  const isPending = () => {
+    if (order.orderStatus === 'pending' && checkDeliveryDate()) {
       return true;
     }
   };
@@ -272,7 +272,7 @@ export function ShopOrder({ order }) {
                 <Box variant='body1'>
                   <Typography sx={{ textDecoration: 'line-through' }} gutterBottom>
                     {order.deliveryFee}€
-                  </Typography>{' '}
+                  </Typography>
                   0€
                 </Box>
               </Box>
@@ -339,14 +339,18 @@ export function ShopOrder({ order }) {
         </Box>
       </CardContent>
 
-      {isAdmin() && (
+      {isPending() && user.userType === 'user' && (
         <CardActions sx={orderClasses.actions}>
-          {location.pathname === '/orders' && (
-            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
-              Contactar
-            </Button>
-          )}
-
+          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            Editar
+          </Button>
+        </CardActions>
+      )}
+      {user.userType === 'admin' && (
+        <CardActions sx={orderClasses.actions}>
+          <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+            Contactar
+          </Button>
           <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
             Editar
           </Button>

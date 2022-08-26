@@ -1,22 +1,25 @@
 // jshint esversion:9
 
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
+import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
   const { shopOrders } = useSelector((store) => store.orders);
+  const dispatch = useDispatch();
   const [profileOwner, setProfileOwner] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
+  const userEffectRan = useRef(false);
 
   const profileClasses = {
     container: {
@@ -61,6 +64,16 @@ const ProfilePage = () => {
       700: 1,
     },
   };
+
+  useEffect(() => {
+    if (userEffectRan.current === false) {
+      dispatch(getShopOrders());
+
+      return () => {
+        userEffectRan.current = true;
+      };
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (userId) {

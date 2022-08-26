@@ -92,7 +92,7 @@ const getItemsPrice = (order) => {
 
   // creates a string from each property in the object to be added to the array
   for (let i in items) {
-    itemsArray.push(`${i}: ${items[i]}`);
+    itemsArray.push(`${i}: ${items[i].toFixed(2)}`);
   }
   return itemsArray;
 };

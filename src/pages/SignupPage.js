@@ -23,7 +23,8 @@ const SignupPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginTop: '25px',
+      py: 5,
+      //outline: '1px solid red',
     },
     top: {
       display: 'flex',
@@ -74,13 +75,20 @@ const SignupPage = () => {
           <img src={signupImage} alt='Signup' className='auth-images' />
         </Box>
         <div>
-          <Typography variant='h4' sx={{ marginTop: '15px' }}>
+          <Typography variant='h4' sx={{ marginTop: '25px' }} color='#031D44'>
             Registrar
           </Typography>
-          <p>
-            Já tens conta? <br />
-            Faz <Link to='/login'>login</Link>.
-          </p>
+
+          <Box>
+            <Box sx={{ display: 'flex', my: 4, alignItems: 'center' }}>
+              <Typography sx={{ mb: '3px' }} color='#031D44'>
+                Já tens conta?
+              </Typography>
+              <Button onClick={() => navigate('/login')} size='small'>
+                Faz Login.
+              </Button>
+            </Box>
+          </Box>
         </div>
       </Box>
       <Box sx={signupClasses.form}>

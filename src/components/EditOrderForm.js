@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth.context';
+import ms from 'ms';
 
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -26,6 +27,7 @@ export function EditOrderForm({
   deliveryDateError,
 }) {
   const { user } = useContext(AuthContext);
+  const minDay = ms('2d');
 
   const editOrderClasses = {
     formContainer: {
@@ -46,7 +48,10 @@ export function EditOrderForm({
     formTextArea: {
       minWidth: '100%',
     },
-    dateProps: {
+    datePropsUser: {
+      min: new Date(+new Date() + minDay).toISOString().slice(0, -8),
+    },
+    datePropsAdmin: {
       min: new Date().toISOString().slice(0, -8),
     },
   };
@@ -56,18 +61,35 @@ export function EditOrderForm({
         <form onSubmit={handleSubmit}>
           <TextField label='Contacto' type='text' variant='outlined' fullWidth required sx={editOrderClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
-          <TextField
-            label='Data & Hora de entrega'
-            type='datetime-local'
-            variant='outlined'
-            fullWidth
-            required
-            sx={editOrderClasses.formField}
-            onChange={(e) => setDeliveryDate(e.target.value)}
-            error={deliveryDateError}
-            value={deliveryDate}
-            inputProps={editOrderClasses.dateProps}
-          />
+          {user.userType === 'user' && (
+            <TextField
+              label='Data & Hora de entrega'
+              type='datetime-local'
+              variant='outlined'
+              fullWidth
+              required
+              sx={editOrderClasses.formField}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+              error={deliveryDateError}
+              value={deliveryDate}
+              inputProps={editOrderClasses.datePropsUser}
+            />
+          )}
+
+          {user.userType === 'admin' && (
+            <TextField
+              label='Data & Hora de entrega'
+              type='datetime-local'
+              variant='outlined'
+              fullWidth
+              required
+              sx={editOrderClasses.formField}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+              error={deliveryDateError}
+              value={deliveryDate}
+              inputProps={editOrderClasses.datePropsAdmin}
+            />
+          )}
 
           <FormControl
             sx={{

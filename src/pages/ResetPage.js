@@ -20,7 +20,7 @@ const ResetPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      marginTop: '25px',
+      py: 5,
     },
     top: {
       display: 'flex',
@@ -73,11 +73,12 @@ const ResetPage = () => {
               <img src={resetImage} alt='Reset password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ marginTop: '25px' }}>
+            <Typography variant='h4' sx={{ my: 4 }} color='#031D44'>
               Repor password
             </Typography>
-            <Typography variant='p' sx={{ marginTop: '25px', marginBottom: '25px' }}>
-              Por favor digite a sua nova password
+
+            <Typography color='#031D44' sx={{ mb: 4 }}>
+              Digite a sua nova password.
             </Typography>
           </Box>
           <Box sx={resetClasses.form}>

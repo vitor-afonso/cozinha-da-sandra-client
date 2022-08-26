@@ -212,7 +212,7 @@ const EditOrderPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user._id || user.userType !== 'admin') {
+    if (!user._id) {
       return;
     }
     if (!contact) {
@@ -256,7 +256,6 @@ const EditOrderPage = () => {
 
       clearInputs();
       dispatch(clearCart());
-      setTimeout(() => navigate('/orders'), 5000);
     } catch (error) {
       setErrorMessage(error.message);
     }
