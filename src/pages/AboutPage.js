@@ -2,6 +2,7 @@
 
 import { Box, Grid, Typography, Link } from '@mui/material';
 import sandraImage from '../images/aboutSandra.png';
+import mapImage from '../images/aboutMap.png';
 import instagramImage from '../images/instagram.svg';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import EmailIcon from '@mui/icons-material/Email';
@@ -13,7 +14,7 @@ const AboutPage = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'space-between',
-      minHeight: '95vh',
+      minHeight: '90vh',
     },
     hero: {
       width: '100%',
@@ -75,9 +76,18 @@ const AboutPage = () => {
       mx: 'auto',
       textAlign: 'left',
     },
+    mapImg: {
+      width: '100%',
+      height: '400px',
+
+      backgroundImage: `url(${mapImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    },
     social: {
       width: '100%',
-      p: 3,
+      py: 1,
+      px: 3,
       backgroundImage: 'linear-gradient(to bottom right, #b2dfdb, #fff)',
       alignSelf: 'flex-end',
     },
@@ -127,12 +137,13 @@ const AboutPage = () => {
           </Typography>
         </Box>
       </Box>
+      <Box sx={aboutClasses.mapImg}></Box>
       <Box sx={aboutClasses.social}>
         <Typography variant='h6' sx={aboutClasses.socialTitle}>
           Contactos
         </Typography>
         <Box sx={aboutClasses.socialContainer}>
-          <Link href=''>
+          <Link href='https://www.facebook.com/A-Cozinha-da-Sandra-104480682299126/'>
             <FacebookOutlinedIcon fontSize='large' sx={{ mr: 2 }} color='secondary' />
           </Link>
           <Link href=''>

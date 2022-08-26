@@ -9,9 +9,9 @@ import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSli
 
 import convert from 'image-file-resize';
 
+import * as React from 'react';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import * as React from 'react';
 import Modal from '@mui/material/Modal';
 
 const modalStyle = {
@@ -201,6 +201,7 @@ const EditProfilePage = () => {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
         }
+        setBtnLoading(false);
       } else {
         const requestBody = { username, email, contact, info };
 
@@ -211,6 +212,7 @@ const EditProfilePage = () => {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
         }
+        setBtnLoading(false);
       }
 
       setSuccessMessage('Perfil actualizado com sucesso.');
@@ -334,11 +336,14 @@ const EditProfilePage = () => {
       )}
 
       <Box>
+        {!btnLoading && (
+          <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} onClick={() => navigate(-1)}>
+            Voltar
+          </Button>
+        )}
+
         {!successMessage && !btnLoading && (
           <>
-            <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} onClick={() => navigate(-1)}>
-              Voltar
-            </Button>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
 
             {profileOwner && !profileOwner.deleted && profileOwner.userType === 'user' && (
@@ -381,7 +386,7 @@ const EditProfilePage = () => {
             </>
           </>
         )}
-        {btnLoading && <CircularProgress size='20px' />}
+        {btnLoading && !successMessage && <CircularProgress size='20px' />}
       </Box>
     </Box>
   );

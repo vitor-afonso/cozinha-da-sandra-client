@@ -1,4 +1,5 @@
 // jshint esversion:9
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth.context';
@@ -18,10 +19,30 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { Box, Button, Modal, Typography } from '@mui/material';
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
 
 export const NavItems = () => {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <List sx={{ display: { md: 'flex', flexGrow: 1 } }}>
@@ -154,7 +175,7 @@ export const NavItems = () => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding onClick={() => logOutUser()}>
+          <ListItem disablePadding onClick={handleOpen}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
                 <LogoutOutlinedIcon color='primary' />
@@ -162,6 +183,22 @@ export const NavItems = () => {
               <ListItemText primary='Sair' />
             </ListItemButton>
           </ListItem>
+
+          <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+            <Box sx={modalStyle}>
+              <Typography id='modal-modal-title' variant='h6' component='h2'>
+                Sair?
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+                  Cancelar
+                </Button>
+                <Button type='button' color='error' variant='contained' onClick={() => logOutUser()}>
+                  Sair
+                </Button>
+              </Box>
+            </Box>
+          </Modal>
 
           <ListItem disablePadding onClick={() => navigate('/about')}>
             <ListItemButton>
