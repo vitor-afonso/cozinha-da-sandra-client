@@ -110,11 +110,11 @@ export function ShopOrder({ order }) {
         from: 'cozinhadasandra22@gmail.com',
         to: order.userId.email,
         subject: 'Pedido confirmado',
-        message: `O seu pedido com o ID: ${order._id} foi confirmada para o dia ${deliveredAt}. Por favor indique o ID do seu pedido ao efectuar pagamento via MB WAY para o numero de telefone 9********.
+        message: `O seu pedido com o Nº: ${order.orderNumber} foi confirmado para o dia ${deliveredAt}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
+
         Encontre os detalhes do seu pedido na sua pagina de perfil.
-    
+        
         Com os melhores cumprimentos,
-    
         A Cozinha da Sandra 👩🏾‍🍳
         `,
       };
