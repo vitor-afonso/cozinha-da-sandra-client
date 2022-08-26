@@ -32,6 +32,7 @@ const modalStyle = {
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
+  const { shopOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -221,6 +222,7 @@ const CartPage = () => {
       }
 
       let requestBody = {
+        orderNumber: shopOrders.length + 1,
         deliveryDate: new Date(deliveryDate),
         contact,
         address: fullAddress ? fullAddress.join(' ') : '',

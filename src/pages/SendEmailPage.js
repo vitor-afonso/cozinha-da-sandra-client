@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
@@ -18,6 +18,7 @@ const SendEmailPage = () => {
   const [message, setMessage] = useState('');
   const [messageError, setMessageError] = useState(false);
   const [order, setOrder] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(false);
   const submitForm = useRef();
   const navigate = useNavigate();
   const { orderId } = useParams();
@@ -89,14 +90,16 @@ const SendEmailPage = () => {
       return;
     }
     setMessageError(false);
-
+    setBtnLoading(true);
     try {
       const requestBody = { from, to, subject, message };
       await sendEmail(requestBody);
       setSuccessMessage('Email enviado com sucesso.');
+      setBtnLoading(false);
     } catch (error) {
       console.log(error.message);
       setErrorMessage(error.message);
+      setBtnLoading(false);
     }
   };
 
@@ -110,6 +113,8 @@ const SendEmailPage = () => {
       </Typography>
 
       {order && <ShopOrder order={order} />}
+
+      {!order && <CircularProgress sx={{ my: '25px' }} />}
 
       {!successMessage && order && (
         <Box sx={sendEmailClasses.formContainer}>
@@ -173,15 +178,18 @@ const SendEmailPage = () => {
       )}
 
       <div>
-        <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
-          Voltar
-        </Button>
+        {!btnLoading && (
+          <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
+            Voltar
+          </Button>
+        )}
 
-        {!successMessage && (
+        {!successMessage && !btnLoading && order && (
           <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
             Enviar
           </Button>
         )}
+        {btnLoading && !successMessage && <CircularProgress size='20px' />}
       </div>
     </Box>
   );

@@ -2,7 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
@@ -35,6 +35,7 @@ export function ShopOrder({ order }) {
   const [paidBtnLoading, setPaidBtnLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -165,10 +166,10 @@ export function ShopOrder({ order }) {
       <CardContent>
         <Box sx={orderClasses.infoField}>
           <Typography variant='body1' color='#031D44'>
-            <b>ID:</b>
+            <b>Nº:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
-            {order._id}
+            {order.orderNumber}
           </Typography>
         </Box>
 
@@ -398,9 +399,11 @@ export function ShopOrder({ order }) {
       )}
       {user.userType === 'admin' && (
         <CardActions sx={orderClasses.actions}>
-          <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
-            Contactar
-          </Button>
+          {!location.pathname.includes('send-email') && (
+            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+              Contactar
+            </Button>
+          )}
           <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
             Editar
           </Button>
