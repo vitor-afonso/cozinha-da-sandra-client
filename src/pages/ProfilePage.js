@@ -20,6 +20,7 @@ const ProfilePage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const userEffectRan = useRef(false);
+  const ordersRef = useRef(null);
 
   const profileClasses = {
     container: {
@@ -86,6 +87,15 @@ const ProfilePage = () => {
 
   const showOrders = () => {
     setIsVisible(!isVisible);
+    setTimeout(() => scrollToOrders(ordersRef), 300);
+    //scrollToOrders(ordersRef);
+  };
+
+  const scrollToOrders = (elemRef) => {
+    window.scrollTo({
+      top: elemRef.current.offsetTop - 80,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -183,7 +193,7 @@ const ProfilePage = () => {
             Histórico de pedidos
           </Button>
 
-          <Box sx={!isVisible ? profileClasses.ordersNotVisible : profileClasses.ordersVisible}>
+          <Box sx={!isVisible ? profileClasses.ordersNotVisible : profileClasses.ordersVisible} ref={ordersRef}>
             <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
               {userOrders.length > 0 &&
                 userOrders.map((order) => {
