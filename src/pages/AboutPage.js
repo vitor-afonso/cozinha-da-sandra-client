@@ -1,7 +1,7 @@
 // jshint esversion:9
 
 import { Box, Grid, Typography, Link } from '@mui/material';
-import sandraImage from '../images/aboutSandra.png';
+import sandraImage from '../images/aboutSandra.jpg';
 import mapImage from '../images/aboutMap.png';
 import instagramImage from '../images/instagram.svg';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
