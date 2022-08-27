@@ -115,7 +115,7 @@ const HomePage = () => {
               {user ? `Bem-vindo ${user.username}!` : 'Bem-vindo!'}
             </Typography>
             <Typography variant='body1' sx={homeClasses.heroDescription}>
-              Escolha os seus snacks preferidos e faça a sua encomenda. Com serviço de entrega em casa ou take-away. Conveniência e sabor, à distância de um clique. 👩🏾‍🍳
+              Escolha os seus snacks preferidos e faça a sua encomenda. Serviço de entrega e take-away. Conveniência e snacks deliciosos, à distância de um clique. 👩🏾‍🍳
             </Typography>
           </Box>
         </Grid>
