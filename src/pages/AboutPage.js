@@ -134,6 +134,9 @@ const AboutPage = () => {
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
             Cozinhar bem não chega! O nosso objectivo é a cada dia melhorar e inovar na criação dos nossos produtos, com intuito de entregar algo verdadeiramente único e delicioso.
           </Typography>
+          <Typography variant='body1' sx={aboutClasses.bottomDescription}>
+            Com Tavira como ponto de partida, efectuamos entregas até Faro. Para outras zonas por favor entre em contacto através das nossas redes sociais ou email.
+          </Typography>
         </Box>
       </Box>
       <Box sx={aboutClasses.mapImg}></Box>
@@ -152,9 +155,6 @@ const AboutPage = () => {
             <EmailIcon fontSize='large' sx={{ mt: '2px', ml: 2 }} />
           </Link>
         </Box>
-        <Typography variant='body2' align='left'>
-          * Zonas de entrega sob consulta.
-        </Typography>
       </Box>
     </Box>
   );
