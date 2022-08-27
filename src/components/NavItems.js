@@ -45,8 +45,8 @@ export const NavItems = () => {
   const handleClose = () => setOpen(false);
 
   const handleLogout = () => {
-    logOutUser();
     handleClose();
+    logOutUser();
   };
 
   return (
