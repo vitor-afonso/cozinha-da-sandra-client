@@ -76,7 +76,7 @@ export const CartOrderForm = ({
       </Typography>
       <Box sx={cartFormClasses.form}>
         <form onSubmit={submitOrder} noValidate>
-          <TextField label='Contacto' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
+          <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           <TextField
             label='Data & Hora de entrega'

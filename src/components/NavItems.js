@@ -44,6 +44,11 @@ export const NavItems = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleLogout = () => {
+    logOutUser();
+    handleClose();
+  };
+
   return (
     <List sx={{ display: { md: 'flex', flexGrow: 1 } }}>
       {!isLoggedIn && (
@@ -193,7 +198,7 @@ export const NavItems = () => {
                 <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
                   Cancelar
                 </Button>
-                <Button type='button' color='error' variant='contained' onClick={() => logOutUser()}>
+                <Button type='button' color='error' variant='contained' onClick={handleLogout}>
                   Sair
                 </Button>
               </Box>

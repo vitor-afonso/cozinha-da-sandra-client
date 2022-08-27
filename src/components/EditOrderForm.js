@@ -59,7 +59,7 @@ export function EditOrderForm({
     <Box sx={editOrderClasses.formContainer}>
       <Box sx={editOrderClasses.form}>
         <form onSubmit={handleSubmit}>
-          <TextField label='Contacto' type='text' variant='outlined' fullWidth required sx={editOrderClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
+          <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={editOrderClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           {user.userType === 'user' && (
             <TextField
