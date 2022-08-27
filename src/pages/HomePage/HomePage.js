@@ -44,7 +44,7 @@ const HomePage = () => {
       //whiteSpace: 'nowrap',
     },
     heroDescription: {
-      fontSize: '16px',
+      fontSize: '18px',
       color: '#031D44',
       maxWidth: '600px',
     },
@@ -115,7 +115,7 @@ const HomePage = () => {
               {user ? `Bem-vindo ${user.username}!` : 'Bem-vindo!'}
             </Typography>
             <Typography variant='body1' sx={homeClasses.heroDescription}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus.
+              Escolha os seus snacks preferidos e faça a sua encomenda. Com serviço de entrega em casa ou take-away. Conveniência e sabor, à distância de um clique. 👩🏾‍🍳
             </Typography>
           </Box>
         </Grid>

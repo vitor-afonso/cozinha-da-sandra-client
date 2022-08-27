@@ -116,7 +116,7 @@ const AboutPage = () => {
               A dona da cozinha!
             </Typography>
             <Typography variant='body1' sx={aboutClasses.heroDescription}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis lorem ut libero malesuada feugiat. Pellentesque in ipsum id orci porta dapibus.
+              <i>Sandra</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
             </Typography>
           </Box>
         </Grid>
@@ -128,12 +128,11 @@ const AboutPage = () => {
             Cozinhar com gosto
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
-            Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Vestibulum ac diam sit amet quam vehicula elementum sed sit
-            amet dui.
+            Cozinhar com gosto. É essa a nossa especialidade. Por trás de tudo o que fazemos está sempre a preocupação de criar algo que seja reflexo da nossa dedicação e paixão pela arte de cozinhar.
+            De A a Z, tudo n<em>A Cozinha da Sandra</em> é comida de verdade.
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
-            Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vestibulum ac diam sit amet quam vehicula elementum sed
-            sit amet dui. Vivamus suscipit tortor eget felis porttitor volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Cozinhar bem não chega! O nosso objectivo é a cada dia melhorar e inovar na criação dos nossos produtos, com intuito de entregar algo verdadeiramente único e delicioso.
           </Typography>
         </Box>
       </Box>
