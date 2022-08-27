@@ -125,7 +125,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
     <Card sx={cardClasses.container}>
       <CardHeader
         avatar={
-          <Avatar sx={cardClasses.avatar} aria-label='recipe' onClick={() => navigate(`/doces`)}>
+          <Avatar sx={cardClasses.avatar} aria-label='recipe' onClick={() => navigate(`/${category}`)}>
             <Typography color='primary' sx={cardClasses.avatarLetter}>
               {category[0].toUpperCase()}
             </Typography>

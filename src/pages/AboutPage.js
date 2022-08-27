@@ -128,8 +128,8 @@ const AboutPage = () => {
             Cozinhar com gosto
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
-            Cozinhar com gosto. É essa a nossa especialidade. Por trás de tudo o que fazemos está sempre a preocupação de criar algo que seja reflexo da nossa dedicação e paixão pela arte de cozinhar.
-            De A a Z, tudo n<em>A Cozinha da Sandra</em> é comida de verdade.
+            É essa a nossa especialidade. Por trás de tudo o que fazemos está sempre a preocupação de criar algo que seja reflexo da nossa dedicação e paixão pela arte de cozinhar. De A a Z, tudo n
+            <em>A Cozinha da Sandra</em> é comida de verdade.
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
             Cozinhar bem não chega! O nosso objectivo é a cada dia melhorar e inovar na criação dos nossos produtos, com intuito de entregar algo verdadeiramente único e delicioso.
