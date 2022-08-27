@@ -165,22 +165,6 @@ const CartPage = () => {
     return false;
   };
 
-  const updateStoreData = (data) => {
-    let orderItems = [];
-    shopItems.forEach((item) => {
-      if (data.orderResponse.items.includes(item._id)) {
-        for (let i = 0; i < item.amount; i++) {
-          orderItems.push(item);
-        }
-      }
-    });
-    let newOrder = { ...data.orderResponse, items: orderItems, userId: data.updatedUser };
-
-    dispatch(addNewShopOrder(newOrder));
-    dispatch(updateShopUser(data.updatedUser));
-    dispatch(clearCart());
-  };
-
   const submitOrder = async (e) => {
     e.preventDefault();
 
@@ -257,10 +241,7 @@ const CartPage = () => {
 
       let { data } = await createOrder(requestBody);
 
-      setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Encontre os detalhes do seu pedido no seu perfil.');
-
-      // here we do manual populate of the order.items and order.userId so that we can have all data avaiable dynamically in the shopOrders to be used in profilePage without having to make a API call
-      updateStoreData(data);
+      setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
     } catch (error) {
       setErrorMessage(error.message);
       setBtnLoading(false);

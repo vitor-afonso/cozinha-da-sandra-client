@@ -152,6 +152,9 @@ const AboutPage = () => {
             <EmailIcon fontSize='large' sx={{ mt: '2px', ml: 2 }} />
           </Link>
         </Box>
+        <Typography variant='body2' align='left'>
+          * Zonas de entregas sob consulta.
+        </Typography>
       </Box>
     </Box>
   );
