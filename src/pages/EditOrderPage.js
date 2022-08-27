@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
-import { deleteShopOrder, updateShopOrder } from '../redux/features/orders/ordersSlice';
+import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
 import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
@@ -255,9 +255,6 @@ const EditOrderPage = () => {
       setSuccessMessage('Pedido actualizado com sucesso.');
 
       setBtnLoading(false);
-
-      // this will update the state with the updated order
-      dispatch(updateShopOrder(data));
 
       clearInputs();
       dispatch(clearCart());
