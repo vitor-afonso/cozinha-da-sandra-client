@@ -153,7 +153,7 @@ const AboutPage = () => {
           </Link>
         </Box>
         <Typography variant='body2' align='left'>
-          * Zonas de entregas sob consulta.
+          * Zonas de entrega sob consulta.
         </Typography>
       </Box>
     </Box>
