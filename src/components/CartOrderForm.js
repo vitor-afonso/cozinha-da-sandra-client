@@ -89,6 +89,8 @@ export const CartOrderForm = ({
             error={deliveryDateError}
             value={deliveryDate}
             inputProps={cartFormClasses.dateProps}
+            min={new Date(+new Date() + minDay).toISOString().slice(0, -8)}
+            max={new Date(+new Date() + maxDay).toISOString().slice(0, -8)}
           />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
