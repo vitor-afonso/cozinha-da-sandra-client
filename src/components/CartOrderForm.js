@@ -1,24 +1,7 @@
 // jshint esversion:9
-import ms from 'ms';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
-
-const ValidationTextField = styled(TextField)({
-  '& input:valid + fieldset': {
-    borderColor: 'green',
-    borderWidth: 1,
-  },
-  '& input:invalid + fieldset': {
-    //borderColor: 'red',
-    borderWidth: 2,
-  },
-  '& input:valid:focus + fieldset': {
-    borderLeftWidth: 6,
-    padding: '4px !important', // override inline-style
-  },
-});
 
 export const CartOrderForm = ({
   formRef,
@@ -52,12 +35,10 @@ export const CartOrderForm = ({
   submitBtnRef,
   successMessage,
   btnLoading,
+  minDay,
+  maxDay,
+  user,
 }) => {
-  // ms converts days to milliseconds
-  // then i can use it to define the date that the user can book
-  const minDay = ms('2d');
-  const maxDay = ms('60d');
-
   const cartFormClasses = {
     form: {
       display: 'flex',
@@ -72,11 +53,7 @@ export const CartOrderForm = ({
       marginTop: 0,
       marginBottom: 2,
     },
-    formFieldDate: {
-      marginTop: 0,
-      marginBottom: 2,
-      width: '100%',
-    },
+
     formTextArea: {
       minWidth: '100%',
       marginBottom: 5,
@@ -99,29 +76,34 @@ export const CartOrderForm = ({
         <form onSubmit={submitOrder} noValidate>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
-          {/* <TextField
-            label='Data & Hora de entrega'
-            type='datetime-local'
-            variant='outlined'
-            fullWidth
-            required
-            sx={cartFormClasses.formField}
-            onChange={(e) => setDeliveryDate(e.target.value)}
-            error={deliveryDateError}
-            value={deliveryDate}
-            inputProps={cartFormClasses.dateProps}
-          /> */}
+          {user.userType === 'user' && (
+            <TextField
+              label='Data & Hora de entrega'
+              type='datetime-local'
+              variant='outlined'
+              fullWidth
+              required
+              sx={cartFormClasses.formField}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+              error={deliveryDateError}
+              value={deliveryDate}
+              inputProps={cartFormClasses.dateProps}
+            />
+          )}
 
-          <ValidationTextField
-            label='Data & Hora de entrega'
-            type='datetime-local'
-            required
-            variant='outlined'
-            defaultValue={deliveryDate}
-            id='validation-outlined-input'
-            inputProps={cartFormClasses.dateProps}
-            sx={cartFormClasses.formFieldDate}
-          />
+          {user.userType === 'admin' && (
+            <TextField
+              label='Data & Hora de entrega'
+              type='datetime-local'
+              variant='outlined'
+              fullWidth
+              required
+              sx={cartFormClasses.formField}
+              onChange={(e) => setDeliveryDate(e.target.value)}
+              error={deliveryDateError}
+              value={deliveryDate}
+            />
+          )}
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
             <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>

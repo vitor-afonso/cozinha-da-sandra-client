@@ -8,7 +8,10 @@ import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
+import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
+
+import ms from 'ms';
 
 import { Box, Button, Modal, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -60,6 +63,11 @@ const CartPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // ms converts days to milliseconds
+  // then i can use it to define the date that the user can book
+  const minDay = ms('2d');
+  const maxDay = ms('60d');
 
   const cartClasses = {
     container: {
@@ -131,6 +139,13 @@ const CartPage = () => {
     }
   };
 
+  const checkDeliveryDate = () => {
+    //delivery date must be min 2 days from actual date
+    const minDate = new Date(+new Date() + minDay).toISOString().slice(0, -8);
+
+    return new Date(deliveryDate) > new Date(minDate) ? true : false;
+  };
+
   const validateAddressCode = (e) => {
     const re = /^[0-9]{0,4}(?:-[0-9]{0,3})?$/;
 
@@ -171,7 +186,7 @@ const CartPage = () => {
     }
     if (!contact) {
       setContactError(true);
-      setErrorMessage('Por favor adicione contacto.');
+      setErrorMessage('Por favor adicione telefone.');
       return;
     }
     setContactError(false);
@@ -179,6 +194,13 @@ const CartPage = () => {
     if (!deliveryDate) {
       setDeliveryDateError(true);
       setErrorMessage('Por favor escolha data de entrega.');
+      return;
+    }
+    setDeliveryDateError(false);
+
+    if (!checkDeliveryDate() && user.userType === 'user') {
+      setDeliveryDateError(true);
+      setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
       return;
     }
     setDeliveryDateError(false);
@@ -237,9 +259,15 @@ const CartPage = () => {
 
       //console.log('requestBody to create order: ', requestBody);
 
-      await createOrder(requestBody);
+      let { data } = await createOrder(requestBody);
+
+      console.log('created order data', data);
+
+      dispatch(updateShopUser(data.updatedUser));
 
       setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
+
+      dispatch(clearCart());
     } catch (error) {
       setErrorMessage(error.message);
       setBtnLoading(false);
@@ -361,6 +389,9 @@ const CartPage = () => {
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
                 btnLoading={btnLoading}
+                minDay={minDay}
+                maxDay={maxDay}
+                user={user}
               />
             </>
           ) : (

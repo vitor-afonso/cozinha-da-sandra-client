@@ -12,6 +12,8 @@ import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 
+import ms from 'ms';
+
 import { Typography, Box, Button, Grid, CircularProgress } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -61,6 +63,11 @@ const EditOrderPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // ms converts days to milliseconds
+  // then i can use it to define the date that the user can book
+  const minDay = ms('2d');
+  const maxDay = ms('60d');
 
   const editOrderClasses = {
     container: {
@@ -172,6 +179,13 @@ const EditOrderPage = () => {
     }
   };
 
+  const checkDeliveryDate = () => {
+    //delivery date must be min 2 days from actual date
+    const minDate = new Date(+new Date() + minDay).toISOString().slice(0, -8);
+
+    return new Date(deliveryDate) > new Date(minDate) ? true : false;
+  };
+
   const handleRadioClick = (e) => {
     setDeliveryMethod(e.target.value);
     if (e.target.value === 'delivery') {
@@ -230,6 +244,13 @@ const EditOrderPage = () => {
     }
     setDeliveryDateError(false);
 
+    if (!checkDeliveryDate() && user.userType === 'user') {
+      setDeliveryDateError(true);
+      setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
+      return;
+    }
+    setDeliveryDateError(false);
+
     if (deliveryMethod === 'delivery' && !fullAddress) {
       setErrorMessage('Por favor adicione morada para entrega.');
       return;
@@ -250,7 +271,7 @@ const EditOrderPage = () => {
         total: cartTotal.toFixed(2),
       };
 
-      let { data } = await updateOrder(requestBody, orderId);
+      await updateOrder(requestBody, orderId);
 
       setSuccessMessage('Pedido actualizado com sucesso.');
 
