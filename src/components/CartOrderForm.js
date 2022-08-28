@@ -1,7 +1,7 @@
 // jshint esversion:9
 import ms from 'ms';
 
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Input, Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 
 export const CartOrderForm = ({
@@ -78,7 +78,7 @@ export const CartOrderForm = ({
         <form onSubmit={submitOrder} noValidate>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
-          <TextField
+          {/* <TextField
             label='Data & Hora de entrega'
             type='datetime-local'
             variant='outlined'
@@ -89,9 +89,9 @@ export const CartOrderForm = ({
             error={deliveryDateError}
             value={deliveryDate}
             inputProps={cartFormClasses.dateProps}
-            min={new Date(+new Date() + minDay).toISOString().slice(0, -8)}
-            max={new Date(+new Date() + maxDay).toISOString().slice(0, -8)}
-          />
+          /> */}
+
+          <Input type='datetime-local' onChange={(e) => setDeliveryDate(e.target.value)} inputProps={cartFormClasses.dateProps} />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
             <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>

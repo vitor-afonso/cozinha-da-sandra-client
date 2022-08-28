@@ -8,8 +8,6 @@ import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
-import { addNewShopOrder } from '../redux/features/orders/ordersSlice';
-import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
 
 import { Box, Button, Modal, Typography } from '@mui/material';
@@ -239,7 +237,7 @@ const CartPage = () => {
 
       //console.log('requestBody to create order: ', requestBody);
 
-      let { data } = await createOrder(requestBody);
+      await createOrder(requestBody);
 
       setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
     } catch (error) {
