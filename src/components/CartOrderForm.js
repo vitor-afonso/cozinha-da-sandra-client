@@ -1,8 +1,24 @@
 // jshint esversion:9
 import ms from 'ms';
 
-import { Input, Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
+
+const ValidationTextField = styled(TextField)({
+  '& input:valid + fieldset': {
+    borderColor: 'green',
+    borderWidth: 1,
+  },
+  '& input:invalid + fieldset': {
+    //borderColor: 'red',
+    borderWidth: 2,
+  },
+  '& input:valid:focus + fieldset': {
+    borderLeftWidth: 6,
+    padding: '4px !important', // override inline-style
+  },
+});
 
 export const CartOrderForm = ({
   formRef,
@@ -56,6 +72,11 @@ export const CartOrderForm = ({
       marginTop: 0,
       marginBottom: 2,
     },
+    formFieldDate: {
+      marginTop: 0,
+      marginBottom: 2,
+      width: '100%',
+    },
     formTextArea: {
       minWidth: '100%',
       marginBottom: 5,
@@ -91,7 +112,16 @@ export const CartOrderForm = ({
             inputProps={cartFormClasses.dateProps}
           /> */}
 
-          <Input type='datetime-local' onChange={(e) => setDeliveryDate(e.target.value)} inputProps={cartFormClasses.dateProps} />
+          <ValidationTextField
+            label='Data & Hora de entrega'
+            type='datetime-local'
+            required
+            variant='outlined'
+            defaultValue={deliveryDate}
+            id='validation-outlined-input'
+            inputProps={cartFormClasses.dateProps}
+            sx={cartFormClasses.formFieldDate}
+          />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
             <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
