@@ -23,7 +23,7 @@ const UsersPage = () => {
       flexDirection: 'column',
       alignItems: 'center',
       px: 3,
-      pb: 3,
+      pb: 6,
     },
 
     top: {
