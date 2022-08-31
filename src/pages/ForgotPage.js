@@ -102,7 +102,7 @@ const ForgotPage = () => {
           <Box sx={forgotClasses.image}>
             <img src={forgotImage} alt='Forgot password' className='auth-images' />
           </Box>
-          <Typography sx={{ marginTop: '25px' }}>{successMessage}</Typography>
+          <Typography sx={{ mt: '25px', mx: 3 }}>{successMessage}</Typography>
         </Box>
       )}
     </Box>
