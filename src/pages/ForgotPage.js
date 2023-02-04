@@ -56,7 +56,7 @@ const ForgotPage = () => {
 
       setSuccessMessage(`Verifique caixa de correio de ${email}, e siga instruções para repor password.`);
     } catch (error) {
-      console.log('forgot error', error);
+      //console.log('forgot error', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
       setBtnLoading(false);

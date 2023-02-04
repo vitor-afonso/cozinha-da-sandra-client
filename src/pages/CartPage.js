@@ -261,7 +261,7 @@ const CartPage = () => {
 
       let { data } = await createOrder(requestBody);
 
-      console.log('created order data', data);
+      //console.log('created order data', data);
 
       dispatch(updateShopUser(data.updatedUser));
 

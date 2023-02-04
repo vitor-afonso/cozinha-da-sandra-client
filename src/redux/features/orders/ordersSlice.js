@@ -17,7 +17,7 @@ export const getShopOrders = createAsyncThunk('items/getShopOrders', async (data
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = await getAllOrders();
-    console.log('getShopOrders data in ordersSlice', data);
+    //console.log('getShopOrders data in ordersSlice', data);
     return data; // we return a promise that is being handled by extraReducers in ordersSlice
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopOrders.rejected in ordersSlice
@@ -33,7 +33,7 @@ const ordersSlice = createSlice({
       oneOrder.orderStatus = 'confirmed';
 
       //we have to use current if want to see the current state or it returns [PROXY]
-      console.log('current shop orders  =>', current(state).shopOrders);
+      //console.log('current shop orders  =>', current(state).shopOrders);
     },
     confirmPayment: (state, { payload }) => {
       const oneOrder = state.shopOrders.find((order) => order._id === payload.id);
@@ -56,7 +56,7 @@ const ordersSlice = createSlice({
     updateShopOrder: (state, { payload }) => {
       state.shopOrders = state.shopOrders.filter((item) => item._id !== payload._id);
       state.shopOrders.push(payload);
-      console.log('current shop orders in updateShopOrder   =>', current(state).shopOrders);
+      //console.log('current shop orders in updateShopOrder   =>', current(state).shopOrders);
     },
   },
   extraReducers: {
