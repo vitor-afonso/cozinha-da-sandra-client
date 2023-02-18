@@ -1,6 +1,6 @@
 # A Cozinha da Sandra
 
-This project is an online food store made using ReactJS. This online food store allows users to browse through different food items, add them to their cart, and place an order. The app have both client and admin interface.
+This project is an online food store made using ReactJS. Users can browse through different food items, add them to their cart, and place an order. The app have both client and admin interface.
 
 ### Main features as client:
 
