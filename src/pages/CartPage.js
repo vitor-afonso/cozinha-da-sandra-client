@@ -15,6 +15,7 @@ import ms from 'ms';
 
 import { Box, Button, Modal, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
 const modalStyle = {
   position: 'absolute',
@@ -59,6 +60,7 @@ const CartPage = () => {
   const formRef = useRef();
   const submitBtnRef = useRef();
   const orderAddressRef = useRef(null);
+  const effectRan = useRef(false);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -110,6 +112,16 @@ const CartPage = () => {
     window.scrollTo(0, 0);
     setIsAddressNotVisible(true);
   }, []);
+
+  useEffect(() => {
+    if (effectRan.current === false) {
+      dispatch(getShopOrders());
+
+      return () => {
+        effectRan.current = true;
+      };
+    }
+  }, [dispatch]);
 
   const toggleForm = () => {
     setIsNotVisible(!isNotVisible);
@@ -292,6 +304,7 @@ const CartPage = () => {
                       </Box>
                     );
                   }
+                  return null;
                 })}
               </Box>
 
