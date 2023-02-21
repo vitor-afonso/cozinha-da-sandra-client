@@ -300,7 +300,7 @@ const CartPage = () => {
                   if (cartItems.includes(item._id)) {
                     return (
                       <Box key={item._id} sx={{ mb: 1, mr: 1, minWidth: 300 }}>
-                        <ShopItem {...item} deliveryMethod={deliveryMethod} />
+                        <ShopItem {...item} />
                       </Box>
                     );
                   }

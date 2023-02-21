@@ -38,7 +38,7 @@ const ExpandMore = styled((props) => {
 }));
 /****************************************************/
 
-export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deliveryMethod, category, ingredients }) => {
+export const ShopItem = ({ name, _id, imageUrl, price, amount, description, category, ingredients }) => {
   const { isLoggedIn, user } = useContext(AuthContext);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((store) => store.items);
@@ -113,7 +113,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, deli
       dispatch(removeFromCart({ id: _id }));
       return;
     }
-    dispatch(decreaseItemAmount({ id: _id, deliveryMethod }));
+    dispatch(decreaseItemAmount({ id: _id }));
   };
 
   const handleIncrease = () => {
