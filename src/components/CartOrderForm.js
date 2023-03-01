@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+import { useState } from 'react';
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 
@@ -39,6 +40,7 @@ export const CartOrderForm = ({
   maxDay,
   user,
 }) => {
+  const [inputType, setInputType] = useState('text');
   const cartFormClasses = {
     form: {
       display: 'flex',
@@ -76,34 +78,20 @@ export const CartOrderForm = ({
         <form onSubmit={submitOrder} noValidate>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
-          {user.userType === 'user' && (
-            <TextField
-              label='Data & Hora de entrega'
-              type='datetime-local'
-              variant='outlined'
-              fullWidth
-              required
-              sx={cartFormClasses.formField}
-              onChange={(e) => setDeliveryDate(e.target.value)}
-              error={deliveryDateError}
-              value={deliveryDate}
-              inputProps={cartFormClasses.dateProps}
-            />
-          )}
-
-          {user.userType === 'admin' && (
-            <TextField
-              label='Data & Hora de entrega'
-              type='datetime-local'
-              variant='outlined'
-              fullWidth
-              required
-              sx={cartFormClasses.formField}
-              onChange={(e) => setDeliveryDate(e.target.value)}
-              error={deliveryDateError}
-              value={deliveryDate}
-            />
-          )}
+          <TextField
+            label='Data & Hora de entrega'
+            type={inputType}
+            variant='outlined'
+            fullWidth
+            required
+            sx={cartFormClasses.formField}
+            onChange={(e) => setDeliveryDate(e.target.value)}
+            onFocus={() => setInputType('datetime-local')}
+            onBlur={() => !deliveryDate && setInputType('text')}
+            error={deliveryDateError}
+            value={deliveryDate}
+            inputProps={user.userType === 'user' && cartFormClasses.dateProps}
+          />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
             <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
