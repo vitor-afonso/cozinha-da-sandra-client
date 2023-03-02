@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
@@ -28,6 +28,9 @@ export function EditOrderForm({
   maxDays,
 }) {
   const { user } = useContext(AuthContext);
+  const [inputType, setInputType] = useState('datetime-local');
+  const minDay = ms('2d');
+
 
   const editOrderClasses = {
     formContainer: {
@@ -65,7 +68,7 @@ export function EditOrderForm({
 
           <TextField
             label='Data & Hora de entrega'
-            type='datetime-local'
+            type={inputType}
             variant='outlined'
             fullWidth
             required
@@ -74,6 +77,9 @@ export function EditOrderForm({
             error={deliveryDateError}
             value={deliveryDate}
             inputProps={user.userType === 'user' ? editOrderClasses.datePropsUser : editOrderClasses.datePropsAdmin}
+            onFocus={() => setInputType('datetime-local')}
+            onBlur={() => !deliveryDate && setInputType('text')}
+
           />
 
           <FormControl
