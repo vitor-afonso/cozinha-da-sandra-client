@@ -66,8 +66,8 @@ const EditOrderPage = () => {
 
   // ms converts days to milliseconds
   // then i can use it to define the date that the user can book
-  const minDay = ms('2d');
-  const maxDay = ms('60d');
+  const MIN_DAYS = ms('2d');
+  const MAX_DAYS = ms('60d');
 
   const editOrderClasses = {
     container: {
@@ -179,9 +179,9 @@ const EditOrderPage = () => {
     }
   };
 
-  const checkDeliveryDate = () => {
+  const isValidDeliveryDate = () => {
     //delivery date must be min 2 days from actual date
-    const minDate = new Date(+new Date() + minDay).toISOString().slice(0, -8);
+    const minDate = new Date(+new Date() + MIN_DAYS).toISOString().slice(0, -8);
 
     return new Date(deliveryDate) > new Date(minDate) ? true : false;
   };
@@ -224,6 +224,18 @@ const EditOrderPage = () => {
     }
   };
 
+  const calculateCartTotalToShow = () => {
+    return addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2);
+  };
+
+  const getDeliveryFee = () => {
+    if (order.deliveryFee > 0) {
+      return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
+    }
+
+    return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -244,7 +256,7 @@ const EditOrderPage = () => {
     }
     setDeliveryDateError(false);
 
-    if (!checkDeliveryDate() && user.userType === 'user') {
+    if (!isValidDeliveryDate() && user.userType === 'user') {
       setDeliveryDateError(true);
       setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
       return;
@@ -263,12 +275,12 @@ const EditOrderPage = () => {
         deliveryDate: new Date(deliveryDate),
         contact,
         address: deliveryMethod === 'delivery' ? fullAddress : '',
-        deliveryFee: deliveryMethod === 'delivery' ? orderDeliveryFee : 0,
-        deliveryDiscount: deliveryMethod === 'delivery' && order.total > order.amountForFreeDelivery ? true : false,
+        deliveryFee: getDeliveryFee(),
+        deliveryDiscount: deliveryMethod === 'delivery' && calculateCartTotalToShow() > order.amountForFreeDelivery ? true : false,
         message,
         deliveryMethod,
         items: cartItems,
-        total: cartTotal.toFixed(2),
+        total: cartTotal.toFixed(2), // only items price
       };
 
       await updateOrder(requestBody, orderId);
@@ -353,6 +365,8 @@ const EditOrderPage = () => {
             submitForm={submitForm}
             order={order}
             deliveryDateError={deliveryDateError}
+            minDays={MIN_DAYS}
+            maxDays={MAX_DAYS}
           />
 
           <Box sx={editOrderClasses.infoContainer}>
@@ -400,8 +414,9 @@ const EditOrderPage = () => {
               <Typography variant='body1' color='#031D44'>
                 <b>Total:</b>
               </Typography>
+
               <Typography variant='body1' gutterBottom>
-                {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+                {calculateCartTotalToShow()}€
               </Typography>
             </Box>
           </Box>

@@ -152,6 +152,7 @@ export function ShopOrder({ order }) {
     if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
       return order.total + order.deliveryFee;
     }
+
     return order.total;
   };
 
@@ -276,30 +277,17 @@ export function ShopOrder({ order }) {
         </Box>
 
         {order.deliveryMethod === 'delivery' && (
-          <>
-            {order.deliveryDiscount ? (
-              <Box sx={orderClasses.infoField}>
-                <Typography variant='body1' color='#031D44'>
-                  <b>Taxa de entrega:</b>
-                </Typography>
-                <Box variant='body1'>
-                  <Typography sx={{ textDecoration: 'line-through' }} gutterBottom>
-                    {order.deliveryFee}€
-                  </Typography>
-                  0€
-                </Box>
-              </Box>
-            ) : (
-              <Box sx={orderClasses.infoField}>
-                <Typography variant='body1' color='#031D44'>
-                  <b>Taxa de entrega:</b>
-                </Typography>
-                <Typography variant='body1' gutterBottom>
-                  {order.deliveryFee}€
-                </Typography>
-              </Box>
-            )}
-          </>
+          <Box sx={orderClasses.infoField}>
+            <Typography variant='body1' color='#031D44'>
+              <b>Taxa de entrega:</b>
+            </Typography>
+            <Box variant='body1'>
+              <Typography sx={{ textDecoration: order.deliveryDiscount ? 'line-through' : '' }} gutterBottom>
+                {order.deliveryFee}€
+              </Typography>
+              {order.deliveryDiscount && '0€'}
+            </Box>
+          </Box>
         )}
         <Box sx={orderClasses.infoField}>
           <Typography variant='body1' color='#031D44'>
