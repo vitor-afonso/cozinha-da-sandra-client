@@ -29,8 +29,6 @@ export function EditOrderForm({
 }) {
   const { user } = useContext(AuthContext);
   const [inputType, setInputType] = useState('datetime-local');
-  const minDay = ms('2d');
-
 
   const editOrderClasses = {
     formContainer: {
@@ -79,7 +77,6 @@ export function EditOrderForm({
             inputProps={user.userType === 'user' ? editOrderClasses.datePropsUser : editOrderClasses.datePropsAdmin}
             onFocus={() => setInputType('datetime-local')}
             onBlur={() => !deliveryDate && setInputType('text')}
-
           />
 
           <FormControl
