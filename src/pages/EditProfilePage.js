@@ -9,7 +9,6 @@ import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSli
 
 import convert from 'image-file-resize';
 
-import * as React from 'react';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
@@ -54,7 +53,7 @@ const EditProfilePage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -243,7 +242,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => user._id === userId && setUsername(e.target.value)}
                 error={usernameError}
                 value={username}
                 disabled={disabledInput}
@@ -256,7 +255,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => user._id === userId && setEmail(e.target.value)}
                 error={emailError}
                 value={email}
                 disabled={disabledInput}
@@ -268,37 +267,41 @@ const EditProfilePage = () => {
                 variant='outlined'
                 fullWidth
                 sx={editProfileClasses.nameField}
-                onChange={validateContact}
+                onChange={user._id === userId && validateContact}
                 value={contact}
                 disabled={disabledInput}
                 placeholder='912345678'
               />
 
-              <TextField
-                label='Nova Password'
-                type='password'
-                variant='outlined'
-                fullWidth
-                sx={editProfileClasses.nameField}
-                onChange={(e) => setNewPassword(e.target.value)}
-                error={passwordError}
-                value={newPassword}
-                disabled={disabledInput}
-                placeholder='********'
-              />
+              {user._id === userId && (
+                <>
+                  <TextField
+                    label='Nova Password'
+                    type='password'
+                    variant='outlined'
+                    fullWidth
+                    sx={editProfileClasses.nameField}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    error={passwordError}
+                    value={newPassword}
+                    disabled={disabledInput}
+                    placeholder='********'
+                  />
 
-              <TextField
-                label='Repetir Password'
-                type='password'
-                variant='outlined'
-                fullWidth
-                sx={editProfileClasses.nameField}
-                onChange={(e) => setNewPassword2(e.target.value)}
-                error={passwordError}
-                value={newPassword2}
-                disabled={disabledInput}
-                placeholder='********'
-              />
+                  <TextField
+                    label='Repetir Password'
+                    type='password'
+                    variant='outlined'
+                    fullWidth
+                    sx={editProfileClasses.nameField}
+                    onChange={(e) => setNewPassword2(e.target.value)}
+                    error={passwordError}
+                    value={newPassword2}
+                    disabled={disabledInput}
+                    placeholder='********'
+                  />
+                </>
+              )}
 
               {user.userType === 'admin' && (
                 <TextField
