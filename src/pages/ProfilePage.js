@@ -88,7 +88,6 @@ const ProfilePage = () => {
   const showOrders = () => {
     setIsVisible(!isVisible);
     setTimeout(() => scrollToOrders(ordersRef), 300);
-    //scrollToOrders(ordersRef);
   };
 
   const scrollToOrders = (elemRef) => {
@@ -117,7 +116,7 @@ const ProfilePage = () => {
                   id='outlined-read-only-input'
                   type='text'
                   label='Username'
-                  defaultValue={profileOwner.username}
+                  value={profileOwner.username}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -130,7 +129,7 @@ const ProfilePage = () => {
                   id='outlined-read-only-input'
                   type='text'
                   label='Email'
-                  defaultValue={profileOwner.email}
+                  value={profileOwner.email}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -143,7 +142,7 @@ const ProfilePage = () => {
                   id='outlined-read-only-input'
                   type='text'
                   label='Password'
-                  defaultValue={'********'}
+                  value={'********'}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -156,7 +155,8 @@ const ProfilePage = () => {
                   id='outlined-read-only-input'
                   type='text'
                   label='Contacto'
-                  defaultValue={profileOwner.contact}
+                  value={profileOwner.contact}
+                  defaultValue={'Sem número'}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -170,7 +170,7 @@ const ProfilePage = () => {
                     id='outlined-read-only-input'
                     type='text'
                     label='Notas'
-                    defaultValue={profileOwner.info}
+                    value={profileOwner.info}
                     InputProps={{
                       readOnly: true,
                     }}
@@ -178,7 +178,7 @@ const ProfilePage = () => {
                     fullWidth
                     size='small'
                     multiline
-                    placeholder='Clique "Editar" para adicionar notas...'
+                    placeholder='Clique "Editar" para adicionar nota'
                     rows={4}
                   />
                 )}
