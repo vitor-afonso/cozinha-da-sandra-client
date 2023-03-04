@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createItem, uploadImage } from '../api';
 import { addNewShopItem } from '../redux/features/items/itemsSlice';
-import itemImage from '../images/item.svg';
+import defaultProductImage from '../images/item.svg';
 
 import convert from 'image-file-resize';
 
@@ -33,12 +33,6 @@ const NewItemPage = () => {
   const submitForm = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (itemImage) {
-      setTempImageUrl(itemImage);
-    }
-  }, [itemImage]);
 
   const newItemClasses = {
     container: {
@@ -69,6 +63,10 @@ const NewItemPage = () => {
       marginBottom: 5,
     },
   };
+
+  useEffect(() => {
+    setTempImageUrl(defaultProductImage);
+  }, []);
 
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
