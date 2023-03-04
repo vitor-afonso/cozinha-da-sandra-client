@@ -155,6 +155,10 @@ const EditProfilePage = () => {
     }
   };
 
+  const isProfileOwner = () => {
+    return user._id === userId;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -242,7 +246,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => user._id === userId && setUsername(e.target.value)}
+                onChange={(e) => isProfileOwner() && setUsername(e.target.value)}
                 error={usernameError}
                 value={username}
                 disabled={disabledInput}
@@ -255,7 +259,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => user._id === userId && setEmail(e.target.value)}
+                onChange={(e) => isProfileOwner() && setEmail(e.target.value)}
                 error={emailError}
                 value={email}
                 disabled={disabledInput}
@@ -267,13 +271,13 @@ const EditProfilePage = () => {
                 variant='outlined'
                 fullWidth
                 sx={editProfileClasses.nameField}
-                onChange={user._id === userId && validateContact}
+                onChange={isProfileOwner() && validateContact}
                 value={contact}
                 disabled={disabledInput}
                 placeholder='912345678'
               />
 
-              {user._id === userId && (
+              {isProfileOwner() && (
                 <>
                   <TextField
                     label='Nova Password'
@@ -377,7 +381,7 @@ const EditProfilePage = () => {
               </Button>
             )}
             <>
-              {user._id === userId && (
+              {isProfileOwner() && (
                 <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
