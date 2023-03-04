@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createItem, uploadImage } from '../api';
@@ -20,7 +20,7 @@ const NewItemPage = () => {
   const [nameError, setNameError] = useState(false);
   const [category, setCategory] = useState('');
   const [categoryError, setCategoryError] = useState(false);
-  const [tempImageUrl, setTempImageUrl] = useState('');
+  const [tempImageUrl, setTempImageUrl] = useState(itemImage);
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState(false);
   const [ingredients, setIngredients] = useState('');
@@ -33,12 +33,6 @@ const NewItemPage = () => {
   const submitForm = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (itemImage) {
-      setTempImageUrl(itemImage);
-    }
-  }, [itemImage]);
 
   const newItemClasses = {
     container: {
