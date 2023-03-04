@@ -1,11 +1,11 @@
 // jshint esversion:9
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createItem, uploadImage } from '../api';
 import { addNewShopItem } from '../redux/features/items/itemsSlice';
-import itemImage from '../images/item.svg';
+import defaultProductImage from '../images/item.svg';
 
 import convert from 'image-file-resize';
 
@@ -20,7 +20,7 @@ const NewItemPage = () => {
   const [nameError, setNameError] = useState(false);
   const [category, setCategory] = useState('');
   const [categoryError, setCategoryError] = useState(false);
-  const [tempImageUrl, setTempImageUrl] = useState(itemImage);
+  const [tempImageUrl, setTempImageUrl] = useState('');
   const [description, setDescription] = useState('');
   const [descriptionError, setDescriptionError] = useState(false);
   const [ingredients, setIngredients] = useState('');
@@ -63,6 +63,10 @@ const NewItemPage = () => {
       marginBottom: 5,
     },
   };
+
+  useEffect(() => {
+    setTempImageUrl(defaultProductImage);
+  }, []);
 
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
