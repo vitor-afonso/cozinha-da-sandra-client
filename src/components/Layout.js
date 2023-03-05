@@ -1,5 +1,5 @@
 // jshint esversion:9
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -72,8 +72,8 @@ export const Layout = (props) => {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <ElevationScroll {...props}>
-          <AppBar component='nav'>
-            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <AppBar component='nav' sx={{ height: '64px', display: 'flex', justifyContent: 'center' }}>
+            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box>
                 <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
                   <MenuIcon fontSize='large' />

@@ -20,8 +20,10 @@ const LoginPage = () => {
 
   const loginClasses = {
     container: {
+      height: 'calc(100vh - 64px)',
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: { xs: 'column', md: 'row' },
+      justifyContent: 'center',
       alignItems: 'center',
       py: 5,
     },
@@ -29,9 +31,13 @@ const LoginPage = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      marginRight: { md: 4 },
     },
     image: {
       maxWidth: { xs: '250px', md: '450px' },
+      transform: 'scaleX(-1)',
+      order: { xs: 0, md: 1 },
+      marginBottom: { xs: 4 },
     },
     form: {
       width: { xs: '300px', md: '500px' },
@@ -78,15 +84,15 @@ const LoginPage = () => {
         <Box sx={loginClasses.image}>
           <img src={loginImage} alt='Login' className='auth-images' />
         </Box>
-        <div>
-          <Typography variant='h4' sx={{ marginTop: '25px' }} color='#031D44'>
+        <Box sx={{ alignSelf: { xs: 'start' } }}>
+          <Typography variant='h4' color='#031D44'>
             Login
           </Typography>
 
-          <Box>
-            <Box sx={{ display: 'flex', marginTop: '25px', alignItems: 'center' }}>
+          <Box sx={{ marginBottom: { md: 4 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography sx={{ mb: '2px' }} color='#031D44'>
-                Novo na Cozinha da Sandra?
+                Novo/a na Cozinha da Sandra?
               </Typography>
 
               <Button size='small' onClick={() => navigate('/signup')}>
@@ -95,10 +101,10 @@ const LoginPage = () => {
             </Box>
 
             <Button size='small' onClick={() => navigate('/forgot')}>
-              Esqueceu password?
+              Recuperar password
             </Button>
           </Box>
-        </div>
+        </Box>
       </Box>
       <Box sx={loginClasses.form}>
         <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
