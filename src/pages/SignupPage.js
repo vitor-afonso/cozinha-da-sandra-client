@@ -2,7 +2,7 @@
 
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
 
@@ -21,19 +21,23 @@ const SignupPage = () => {
 
   const signupClasses = {
     container: {
+      height: 'calc(100vh - 64px)',
       display: 'flex',
-      flexDirection: 'column',
+      flexDirection: { xs: 'column', md: 'row' },
+      justifyContent: 'center',
       alignItems: 'center',
       py: 5,
-      //outline: '1px solid red',
     },
     top: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      marginRight: { md: 4 },
+      marginBottom: { md: 6 },
     },
     image: {
       maxWidth: { xs: '250px', md: '450px' },
+      order: { xs: 0, md: 1 },
     },
     form: {
       width: { xs: '300px', md: '500px' },
@@ -76,22 +80,22 @@ const SignupPage = () => {
         <Box sx={signupClasses.image}>
           <img src={signupImage} alt='Signup' className='auth-images' />
         </Box>
-        <div>
-          <Typography variant='h4' sx={{ marginTop: '25px' }} color='#031D44'>
+        <Box sx={{ alignSelf: { xs: 'start' }, ml: { xs: 6 } }}>
+          <Typography variant='h4' sx={{ marginTop: { xs: 4 } }} color='#031D44'>
             Registrar
           </Typography>
 
           <Box>
-            <Box sx={{ display: 'flex', my: 4, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', mb: 4, alignItems: 'center' }}>
               <Typography sx={{ mb: '3px' }} color='#031D44'>
                 Já tens conta?
               </Typography>
               <Button onClick={() => navigate('/login')} size='small'>
-                Faz Login.
+                Faz Login
               </Button>
             </Box>
           </Box>
-        </div>
+        </Box>
       </Box>
       <Box sx={signupClasses.form}>
         <form noValidate autoComplete='off' onSubmit={handleSignupSubmit}>
