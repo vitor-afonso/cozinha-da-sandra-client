@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const loginClasses = {
@@ -49,7 +49,7 @@ const LoginPage = () => {
     email === '' ? setEmailError(true) : setEmailError(false);
     password === '' ? setPasswordError(true) : setPasswordError(false);
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       const requestBody = { email, password };
@@ -68,7 +68,7 @@ const LoginPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
-      setBtnLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -102,9 +102,19 @@ const LoginPage = () => {
       </Box>
       <Box sx={loginClasses.form}>
         <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
-          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
+          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} disabled={isLoading} />
 
-          <TextField label='Password' type='password' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setPassword(e.target.value)} error={passwordError} />
+          <TextField
+            label='Password'
+            type='password'
+            variant='outlined'
+            fullWidth
+            required
+            sx={loginClasses.field}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
+            disabled={isLoading}
+          />
 
           {errorMessage && (
             <Typography sx={{ marginBottom: '25px' }} color='error'>
@@ -112,13 +122,13 @@ const LoginPage = () => {
             </Typography>
           )}
 
-          {!btnLoading && (
+          {!isLoading && (
             <Button variant='contained' type='submit'>
               Entrar
             </Button>
           )}
 
-          {btnLoading && <CircularProgress size='20px' />}
+          {isLoading && <CircularProgress size='20px' />}
         </form>
       </Box>
     </Box>
