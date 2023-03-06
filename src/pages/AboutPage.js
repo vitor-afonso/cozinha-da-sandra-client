@@ -1,11 +1,16 @@
 // jshint esversion:9
 
-import { Box, Grid, Typography, Link } from '@mui/material';
-import sandraImage from '../images/aboutChef.jpeg';
+import { capitalizeAppName, appEmail, ownerName } from '../utils/app.utils.js';
 import mapImage from '../images/aboutMap.png';
+import ownerImage from '../images/aboutChef.jpeg';
 import instagramImage from '../images/instagram.svg';
+
+import { Box, Grid, Typography, Link } from '@mui/material';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import EmailIcon from '@mui/icons-material/Email';
+
+const APP_NAME = capitalizeAppName();
+const MAIL_TO = `mailto:${appEmail}`;
 
 const AboutPage = () => {
   const aboutClasses = {
@@ -28,7 +33,7 @@ const AboutPage = () => {
       height: '300px',
       mx: 'auto',
       mt: { xs: 2, md: 0 },
-      backgroundImage: `url(${sandraImage})`,
+      backgroundImage: `url(${ownerImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
     },
@@ -104,6 +109,7 @@ const AboutPage = () => {
       textAlign: 'left',
     },
   };
+
   return (
     <Box sx={aboutClasses.container}>
       <Grid container spacing={0} sx={aboutClasses.hero}>
@@ -116,7 +122,7 @@ const AboutPage = () => {
               A dona da cozinha!
             </Typography>
             <Typography variant='body1' sx={aboutClasses.heroDescription}>
-              <i>Sandra</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
+              <i>{ownerName}</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
             </Typography>
           </Box>
         </Grid>
@@ -129,7 +135,7 @@ const AboutPage = () => {
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
             É essa a nossa especialidade. Por trás de tudo o que fazemos está sempre a preocupação de criar algo que seja reflexo da nossa dedicação e paixão pela arte de cozinhar. De A a Z, tudo n'
-            <em>A Cozinha da Sandra</em> é comida de verdade.
+            <em>{APP_NAME}</em> é comida de verdade.
           </Typography>
           <Typography variant='body1' sx={aboutClasses.bottomDescription}>
             Cozinhar bem não chega! O nosso objectivo é a cada dia melhorar e inovar na criação dos nossos produtos, com intuito de entregar algo verdadeiramente único e delicioso.
@@ -151,7 +157,7 @@ const AboutPage = () => {
           <Link href=''>
             <img src={instagramImage} alt='Instagram' width='28px' height='auto' />
           </Link>
-          <Link href='mailto:cozinhadasandra22@gmail.com'>
+          <Link href={MAIL_TO}>
             <EmailIcon fontSize='large' sx={{ mt: '2px', ml: 2 }} />
           </Link>
         </Box>

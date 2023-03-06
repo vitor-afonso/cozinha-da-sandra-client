@@ -141,6 +141,7 @@ const UsersPage = () => {
                 </Paper>
               );
             }
+            return null;
           })}
       </Stack>
     </Box>

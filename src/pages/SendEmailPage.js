@@ -5,12 +5,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
-import { parseDateToShow } from '../utils/app.utils';
+import { parseDateToShow, capitalizeAppName, appEmail } from '../utils/app.utils';
+
+const APP_NAME = capitalizeAppName();
 
 const SendEmailPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const from = 'cozinhadasandra22@gmail.com';
+  const from = { appEmail };
   const [to, setTo] = useState('');
   const [toError, setToError] = useState(false);
   const [subject, setSubject] = useState('');
@@ -123,7 +125,7 @@ const SendEmailPage = () => {
               <TextField
                 id='outlined-read-only-input'
                 label='De'
-                defaultValue={'A Cozinha da Sandra'}
+                defaultValue={APP_NAME}
                 InputProps={{
                   readOnly: true,
                 }}

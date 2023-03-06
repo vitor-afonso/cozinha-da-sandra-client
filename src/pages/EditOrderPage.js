@@ -314,6 +314,7 @@ const EditOrderPage = () => {
                   </Grid>
                 );
               }
+              return null;
             })}
           </Grid>
 
@@ -338,6 +339,7 @@ const EditOrderPage = () => {
                           </MenuItem>
                         );
                       }
+                      return null;
                     })}
                   </Menu>
                 </React.Fragment>

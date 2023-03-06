@@ -73,6 +73,7 @@ const SalgadosPage = () => {
                 </Grid>
               );
             }
+            return null;
           })}
         </Grid>
       )}

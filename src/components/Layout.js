@@ -1,7 +1,10 @@
 // jshint esversion:9
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+import { appName, capitalizeAppName } from '../utils/app.utils.js';
+import { NavItems } from './NavItems';
 
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -17,9 +20,10 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Avatar, Badge, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { NavItems } from './NavItems';
 
 const drawerWidth = 220;
+
+const APP_NAME = appName.toUpperCase();
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -63,6 +67,11 @@ export const Layout = (props) => {
     setMobileOpen(!mobileOpen);
   };
 
+  useEffect(() => {
+    //sets the index.html title tag to the name of the app
+    document.title = capitalizeAppName();
+  }, []);
+
   const getTotal = () => {
     return cartTotal.toFixed(2).replace('-', '').toString();
   };
@@ -79,7 +88,7 @@ export const Layout = (props) => {
                   <MenuIcon fontSize='large' />
                 </IconButton>
                 <Typography variant='h6' component='div' sx={{ display: { xs: 'none', md: 'block' }, textAlign: 'left' }}>
-                  A COZINHA DA SANDRA
+                  {APP_NAME}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -114,7 +123,7 @@ export const Layout = (props) => {
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
               <Typography variant='h6' sx={{ my: 2 }} color='primary'>
-                A COZINHA DA SANDRA
+                {APP_NAME}
               </Typography>
               <Divider />
               <NavItems />
