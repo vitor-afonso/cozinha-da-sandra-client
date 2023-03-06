@@ -1,6 +1,6 @@
 {
-  "name": "Online Food Store ",
-  "short_name": "Online Store",
+  "name": "A Cozinha da Sandra",
+  "short_name": "A Cozinha da Sandra",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,6 +13,7 @@
       "type": "image/png"
     }
   ],
+  "start_url": "/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone"

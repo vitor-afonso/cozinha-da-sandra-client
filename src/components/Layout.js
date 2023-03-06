@@ -1,9 +1,9 @@
 // jshint esversion:9
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { appName } from '../utils/app.utils.js';
+import { appName, capitalizeAppName } from '../utils/app.utils.js';
 import { NavItems } from './NavItems';
 
 import * as React from 'react';
@@ -66,6 +66,11 @@ export const Layout = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  useEffect(() => {
+    //sets the index.html title tag to the name of the app
+    document.title = capitalizeAppName();
+  }, []);
 
   const getTotal = () => {
     return cartTotal.toFixed(2).replace('-', '').toString();

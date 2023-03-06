@@ -1,4 +1,5 @@
 // jshint esversion:9
+// app name is also hardcoded in the manifest.json file
 export const appName = 'a cozinha da sandra';
 export const ownerName = 'Sandra';
 export const appEmail = 'cozinhadasandra22@gmail.com';
@@ -117,24 +118,5 @@ const getItemsAmount = (orderItems) => {
 
   return items;
 };
-
-/* const getItemsAmountArr = (orderItems) => {
-  const items = {};
-  // convert to object of items => {item: amount, item: amount}
-  orderItems.forEach((item) => {
-    items[item.name] = (items[item.name] || 0) + 1;
-  });
-
-  // convert to array of items => [{item: amount}, ...]
-  let itemsArray = Object.entries(items).map((item) => ({ [item[0]]: item[1] }));
-
-  return itemsArray;
-}; */
-
-/* exports.parseDateToShow = parseDateToShow;
-exports.parseDateToEdit = parseDateToEdit;
-exports.getItemsQuantity = getItemsQuantity;
-exports.getItemsPrice = getItemsPrice;
-exports.getItemsAmount = getItemsAmount; */
 
 export { parseDateToShow, parseDateToEdit, getItemsQuantity, getItemsPrice, getItemsAmount };
