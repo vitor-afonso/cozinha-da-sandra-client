@@ -8,7 +8,7 @@ const initialState = {
   cartItems: [],
   cartAmount: 0,
   cartTotal: 0,
-  orderDeliveryFee: 2.99,
+  orderDeliveryFee: 3.99,
   addedDeliveryFee: false,
   hasDeliveryDiscount: false, //<= change this to give discount or not to all new orders
   amountForFreeDelivery: 20,

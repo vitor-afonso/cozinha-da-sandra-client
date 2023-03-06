@@ -38,7 +38,7 @@ const modalStyle = {
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -141,6 +141,7 @@ const EditOrderPage = () => {
   useEffect(() => {
     if (order) {
       setOrderDetails(order);
+      console.log('order =>', order);
     }
   }, [order]);
 
@@ -224,8 +225,23 @@ const EditOrderPage = () => {
     }
   };
 
+  const wasTakeAwayOrder = () => {
+    return order.deliveryMethod === 'takeAway';
+  };
+
   const calculateCartTotalToShow = () => {
-    return addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2);
+    if (deliveryMethod === 'delivery') {
+      if (!wasTakeAwayOrder()) {
+        return cartTotal < order.amountForFreeDelivery && !order.deliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
+      }
+
+      return cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2);
+    }
+    return cartTotal.toFixed(2);
+  };
+
+  const isElegibleForFreeDelivery = () => {
+    return hasDeliveryDiscount || (order.deliveryDiscount && !wasTakeAwayOrder()) || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery');
   };
 
   const getDeliveryFee = () => {
@@ -234,6 +250,10 @@ const EditOrderPage = () => {
     }
 
     return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
+  };
+
+  const isElegibleForGlobalDiscount = () => {
+    return (hasDeliveryDiscount && deliveryMethod === 'delivery') || (!wasTakeAwayOrder() && order.deliveryDiscount) ? true : false;
   };
 
   const handleSubmit = async (e) => {
@@ -276,9 +296,10 @@ const EditOrderPage = () => {
         contact,
         address: deliveryMethod === 'delivery' ? fullAddress : '',
         deliveryFee: getDeliveryFee(),
-        deliveryDiscount: deliveryMethod === 'delivery' && calculateCartTotalToShow() > order.amountForFreeDelivery ? true : false,
+        deliveryDiscount: isElegibleForGlobalDiscount(),
         message,
         deliveryMethod,
+        amountForFreeDelivery: wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery,
         items: cartItems,
         total: cartTotal.toFixed(2), // only items price
       };
@@ -384,31 +405,20 @@ const EditOrderPage = () => {
             )}
 
             {deliveryMethod === 'delivery' && (
-              <Box>
-                {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
-                  <Box sx={editOrderClasses.infoField}>
-                    <Typography variant='body1' color='#031D44'>
-                      <b>Taxa de entrega:</b>
-                    </Typography>
-                    <Box sx={editOrderClasses.deliveryField}>
-                      <Typography variant='body1' gutterBottom sx={{ textDecoration: 'line-through', mr: 1 }}>
-                        {orderDeliveryFee}€
-                      </Typography>
-                      <Typography variant='body1' gutterBottom>
-                        0€
-                      </Typography>
-                    </Box>
-                  </Box>
-                ) : (
-                  <Box sx={editOrderClasses.infoField}>
-                    <Typography variant='body1' color='#031D44'>
-                      <b>Taxa de entrega:</b>
-                    </Typography>
+              <Box sx={editOrderClasses.infoField}>
+                <Typography variant='body1' color='#031D44'>
+                  <b>Taxa de entrega:</b>
+                </Typography>
+                <Box sx={editOrderClasses.deliveryField}>
+                  <Typography variant='body1' gutterBottom sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                    {wasTakeAwayOrder() ? orderDeliveryFee : order.deliveryFee}€
+                  </Typography>
+                  {isElegibleForFreeDelivery() && (
                     <Typography variant='body1' gutterBottom>
-                      {orderDeliveryFee}€
+                      0€
                     </Typography>
-                  </Box>
-                )}
+                  )}
+                </Box>
               </Box>
             )}
 
