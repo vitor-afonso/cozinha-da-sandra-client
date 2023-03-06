@@ -15,7 +15,7 @@ const SignupPage = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const SignupPage = () => {
       setPasswordError(true);
       return;
     }
-    setBtnLoading(true);
+    setIsLoading(true);
     try {
       const requestBody = { email, password, username };
       await signup(requestBody);
@@ -70,7 +70,7 @@ const SignupPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
-      setBtnLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -99,13 +99,43 @@ const SignupPage = () => {
       </Box>
       <Box sx={signupClasses.form}>
         <form noValidate autoComplete='off' onSubmit={handleSignupSubmit}>
-          <TextField label='Username' type='text' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setUsername(e.target.value)} error={usernameError} />
+          <TextField
+            label='Username'
+            type='text'
+            variant='outlined'
+            fullWidth
+            required
+            sx={signupClasses.field}
+            onChange={(e) => setUsername(e.target.value)}
+            error={usernameError}
+            disabled={isLoading}
+          />
 
-          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
+          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} disabled={isLoading} />
 
-          <TextField label='Password' type='password' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setPassword(e.target.value)} error={passwordError} />
+          <TextField
+            label='Password'
+            type='password'
+            variant='outlined'
+            fullWidth
+            required
+            sx={signupClasses.field}
+            onChange={(e) => setPassword(e.target.value)}
+            error={passwordError}
+            disabled={isLoading}
+          />
 
-          <TextField label='Repetir Password' type='password' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setPassword2(e.target.value)} error={passwordError} />
+          <TextField
+            label='Repetir Password'
+            type='password'
+            variant='outlined'
+            fullWidth
+            required
+            sx={signupClasses.field}
+            onChange={(e) => setPassword2(e.target.value)}
+            error={passwordError}
+            disabled={isLoading}
+          />
 
           {errorMessage && (
             <Typography sx={{ marginBottom: '20px' }} color='error'>
@@ -113,12 +143,12 @@ const SignupPage = () => {
             </Typography>
           )}
 
-          {!btnLoading && (
+          {!isLoading && (
             <Button variant='contained' type='submit'>
               Registrar
             </Button>
           )}
-          {btnLoading && <CircularProgress size='20px' />}
+          {isLoading && <CircularProgress size='20px' />}
         </form>
       </Box>
     </Box>
