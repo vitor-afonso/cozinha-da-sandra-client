@@ -92,7 +92,7 @@ const LoginPage = () => {
           <Box sx={{ marginBottom: { md: 4 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography sx={{ mb: '2px' }} color='#031D44'>
-                Novo/a na Cozinha da Sandra?
+                Ainda não tens conta?
               </Typography>
 
               <Button size='small' onClick={() => navigate('/signup')}>

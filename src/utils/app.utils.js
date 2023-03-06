@@ -1,4 +1,15 @@
 // jshint esversion:9
+export const appName = 'a cozinha da sandra';
+export const ownerName = 'Sandra';
+export const appEmail = 'cozinhadasandra22@gmail.com';
+
+export const capitalizeAppName = () => {
+  let capitalizedName = appName
+    .split(' ')
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(' ');
+  return capitalizedName;
+};
 
 const parseDateToShow = (dateToParse) => {
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];

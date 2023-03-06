@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { getItemsPrice, getItemsQuantity, parseDateToShow } from '../utils/app.utils';
+import { getItemsPrice, getItemsQuantity, parseDateToShow, capitalizeAppName, appEmail } from '../utils/app.utils';
 
 import { Box, Button, Card, CardActions, CardContent, CircularProgress, Modal, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
@@ -25,6 +25,7 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+const APP_NAME = capitalizeAppName();
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
@@ -107,7 +108,7 @@ export function ShopOrder({ order }) {
       let requestBody = { orderStatus: 'confirmed' };
 
       let confirmationEmail = {
-        from: 'cozinhadasandra22@gmail.com',
+        from: appEmail,
         to: order.userId.email,
         subject: 'Pedido confirmado',
         message: `O seu pedido com o Nº: ${order.orderNumber} foi confirmado para o dia ${deliveredAt}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
@@ -115,7 +116,7 @@ export function ShopOrder({ order }) {
         Encontre os detalhes do seu pedido na sua pagina de perfil.
         
         Com os melhores cumprimentos,
-        A Cozinha da Sandra 👩🏾‍🍳
+        ${APP_NAME} 👩🏾‍🍳
         `,
       };
 
