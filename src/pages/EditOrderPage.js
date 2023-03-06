@@ -141,7 +141,6 @@ const EditOrderPage = () => {
   useEffect(() => {
     if (order) {
       setOrderDetails(order);
-      console.log('order =>', order);
     }
   }, [order]);
 
