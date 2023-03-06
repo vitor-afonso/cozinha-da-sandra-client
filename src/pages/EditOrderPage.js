@@ -136,7 +136,7 @@ const EditOrderPage = () => {
         adminEffectRan.current = true;
       };
     }
-  }, [orderId, shopOrders, dispatch]);
+  }, [orderId, shopOrders]);
 
   useEffect(() => {
     if (order) {
@@ -154,7 +154,7 @@ const EditOrderPage = () => {
         dispatch(setItemAmount({ id: item._id, amount: itemsArr[item.name] }));
       });
     }
-  }, [order, dispatch]);
+  }, [order]);
 
   const setOrderDetails = (order) => {
     setContact(order.contact);
