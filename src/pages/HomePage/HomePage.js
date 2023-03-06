@@ -88,6 +88,7 @@ const HomePage = () => {
           docesCount++;
           return item;
         }
+        return null;
       });
 
       const filteredSalgados = shopItems.filter((item) => {
@@ -95,6 +96,7 @@ const HomePage = () => {
           salgadosCount++;
           return item;
         }
+        return null;
       });
       setShopItemsDoces(filteredDoces);
       setShopItemsSalgados(filteredSalgados);
@@ -135,6 +137,7 @@ const HomePage = () => {
                     </Grid>
                   );
                 }
+                return null;
               })}
             </Grid>
 
@@ -155,6 +158,7 @@ const HomePage = () => {
                     </Grid>
                   );
                 }
+                return null;
               })}
             </Grid>
             <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate('/salgados')}>
