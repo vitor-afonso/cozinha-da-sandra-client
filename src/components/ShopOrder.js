@@ -147,14 +147,14 @@ export function ShopOrder({ order }) {
 
   const getTotal = () => {
     if (order.deliveryDiscount) {
-      return order.total;
+      return order.total.toFixed(2);
     }
 
     if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
-      return order.total + order.deliveryFee;
+      return (order.total + order.deliveryFee).toFixed(2);
     }
 
-    return order.total;
+    return order.total.toFixed(2);
   };
 
   const isPending = () => {
