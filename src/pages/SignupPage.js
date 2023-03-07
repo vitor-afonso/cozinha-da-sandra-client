@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
+import { NAVBAR_HEIGHT } from '../utils/app.utils';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ const SignupPage = () => {
 
   const signupClasses = {
     container: {
-      height: 'calc(100vh - 64px)',
+      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       justifyContent: 'center',
@@ -36,21 +37,25 @@ const SignupPage = () => {
       marginBottom: { md: 6 },
     },
     image: {
-      maxWidth: { xs: '250px', md: '450px' },
+      maxWidth: { xs: '200px', md: '450px' },
       order: { xs: 0, md: 1 },
+      marginTop: { xs: 4 },
     },
     form: {
       width: { xs: '300px', md: '500px' },
+      marginBottom: 4,
     },
     field: {
       marginTop: 0,
-      marginBottom: 5,
+      marginBottom: 2,
       display: 'block',
     },
   };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     username === '' ? setUsernameError(true) : setUsernameError(false);
     email === '' ? setEmailError(true) : setEmailError(false);
@@ -80,13 +85,14 @@ const SignupPage = () => {
         <Box sx={signupClasses.image}>
           <img src={signupImage} alt='Signup' className='auth-images' />
         </Box>
-        <Box sx={{ alignSelf: { xs: 'start' }, ml: { xs: 6 } }}>
-          <Typography variant='h4' sx={{ marginTop: { xs: 4 } }} color='#031D44'>
+
+        <Box sx={{ alignSelf: { md: 'start' }, ml: { md: 6 } }}>
+          <Typography variant='h4' sx={{ marginTop: { xs: 2 } }} color='#031D44'>
             Registrar
           </Typography>
 
           <Box>
-            <Box sx={{ display: 'flex', mb: 4, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
               <Typography sx={{ mb: '3px' }} color='#031D44'>
                 Já tens conta?
               </Typography>
@@ -112,30 +118,33 @@ const SignupPage = () => {
           />
 
           <TextField label='Email' type='email' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} disabled={isLoading} />
+          {!isLoading && (
+            <Box>
+              <TextField
+                label='Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                sx={signupClasses.field}
+                onChange={(e) => setPassword(e.target.value)}
+                error={passwordError}
+                disabled={isLoading}
+              />
 
-          <TextField
-            label='Password'
-            type='password'
-            variant='outlined'
-            fullWidth
-            required
-            sx={signupClasses.field}
-            onChange={(e) => setPassword(e.target.value)}
-            error={passwordError}
-            disabled={isLoading}
-          />
-
-          <TextField
-            label='Repetir Password'
-            type='password'
-            variant='outlined'
-            fullWidth
-            required
-            sx={signupClasses.field}
-            onChange={(e) => setPassword2(e.target.value)}
-            error={passwordError}
-            disabled={isLoading}
-          />
+              <TextField
+                label='Repetir Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                sx={signupClasses.field}
+                onChange={(e) => setPassword2(e.target.value)}
+                error={passwordError}
+                disabled={isLoading}
+              />
+            </Box>
+          )}
 
           {errorMessage && (
             <Typography sx={{ marginBottom: '20px' }} color='error'>
@@ -148,7 +157,7 @@ const SignupPage = () => {
               Registrar
             </Button>
           )}
-          {isLoading && <CircularProgress size='20px' />}
+          {isLoading && <CircularProgress size='80px' sx={{ my: 2 }} />}
         </form>
       </Box>
     </Box>

@@ -3,6 +3,7 @@
 export const appName = 'a cozinha da sandra';
 export const ownerName = 'Sandra';
 export const appEmail = 'cozinhadasandra22@gmail.com';
+export const NAVBAR_HEIGHT = '64px';
 
 export const capitalizeAppName = () => {
   let capitalizedName = appName
