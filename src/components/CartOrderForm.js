@@ -4,6 +4,10 @@ import { useState } from 'react';
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 
+// When on mobile inputType is not being toggled
+// so we check if its mobile or not
+const IS_MOBILE = window.innerWidth < 600 ? true : false;
+
 export const CartOrderForm = ({
   formRef,
   orderAddressRef,
@@ -80,14 +84,14 @@ export const CartOrderForm = ({
 
           <TextField
             label='Data & Hora de entrega'
-            type={inputType}
+            type={IS_MOBILE ? 'datetime-local' : inputType}
             variant='outlined'
             fullWidth
             required
             sx={cartFormClasses.formField}
             onChange={(e) => setDeliveryDate(e.target.value)}
-            onFocus={() => setInputType('datetime-local')}
-            onBlur={() => !deliveryDate && setInputType('text')}
+            onFocus={() => !IS_MOBILE && setInputType('datetime-local')}
+            onBlur={() => !IS_MOBILE && !deliveryDate && setInputType('text')}
             error={deliveryDateError}
             value={deliveryDate}
             inputProps={user.userType === 'user' && cartFormClasses.dateProps}
