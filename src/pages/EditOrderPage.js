@@ -36,6 +36,11 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+// ms converts days to milliseconds
+// then i can use it to define the date that the user can book
+const MIN_DAYS = ms('2d');
+const MAX_DAYS = ms('60d');
+
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
@@ -63,11 +68,6 @@ const EditOrderPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  // ms converts days to milliseconds
-  // then i can use it to define the date that the user can book
-  const MIN_DAYS = ms('2d');
-  const MAX_DAYS = ms('60d');
 
   const editOrderClasses = {
     container: {
