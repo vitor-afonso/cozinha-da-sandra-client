@@ -94,7 +94,7 @@ export const CartOrderForm = ({
             onBlur={() => !IS_MOBILE && !deliveryDate && setInputType('text')}
             error={deliveryDateError}
             value={deliveryDate}
-            inputProps={user.userType === 'user' && cartFormClasses.dateProps}
+            inputProps={user.userType === 'user' ? cartFormClasses.dateProps : {}}
           />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
