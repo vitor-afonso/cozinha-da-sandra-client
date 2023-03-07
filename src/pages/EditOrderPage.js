@@ -156,6 +156,14 @@ const EditOrderPage = () => {
     }
   }, [order]);
 
+  useEffect(() => {
+    // only runs on unmount
+    return () => {
+      clearInputs();
+      dispatch(clearCart());
+    };
+  }, [dispatch]);
+
   const setOrderDetails = (order) => {
     setContact(order.contact);
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
@@ -205,12 +213,6 @@ const EditOrderPage = () => {
     setDeliveryMethod('');
     setFullAddress('');
     setMessage('');
-  };
-
-  const clearInputsAndGoBack = () => {
-    clearInputs();
-    dispatch(clearCart());
-    navigate(-1);
   };
 
   const handleDeleteOrder = async () => {
@@ -442,7 +444,7 @@ const EditOrderPage = () => {
 
       <div>
         {!btnLoading && (
-          <Button sx={{ mr: 1 }} onClick={clearInputsAndGoBack}>
+          <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
           </Button>
         )}
