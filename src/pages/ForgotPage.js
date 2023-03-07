@@ -4,13 +4,14 @@ import { Box, TextField, Typography, Button, CircularProgress } from '@mui/mater
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
+import { NAVBAR_HEIGHT } from '../utils/app.utils';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const forgotClasses = {
     container: {
@@ -18,7 +19,8 @@ const ForgotPage = () => {
       flexDirection: 'column',
       alignItems: 'center',
       py: 5,
-      //outline: '1px solid red',
+      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
+      justifyContent: 'center',
     },
     top: {
       display: 'flex',
@@ -26,20 +28,22 @@ const ForgotPage = () => {
       alignItems: 'center',
     },
     image: {
-      maxWidth: { xs: '250px', md: '450px' },
+      maxWidth: { xs: '200px', md: '350px' },
     },
     form: {
       width: { xs: '300px', md: '500px' },
     },
     field: {
-      marginTop: 5,
-      marginBottom: 5,
+      marginTop: 2,
+      marginBottom: 2,
       display: 'block',
     },
   };
 
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     email === '' ? setEmailError(true) : setEmailError(false);
 
@@ -48,7 +52,7 @@ const ForgotPage = () => {
       setEmailError(true);
       return;
     }
-    setBtnLoading(true);
+    setIsLoading(true);
     try {
       const requestBody = { email };
 
@@ -59,7 +63,7 @@ const ForgotPage = () => {
       //console.log('forgot error', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
-      setBtnLoading(false);
+      setIsLoading(false);
     }
   };
   return (
@@ -71,7 +75,7 @@ const ForgotPage = () => {
               <img src={forgotImage} alt='Forgot password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ my: 4 }} color='#031D44'>
+            <Typography variant='h4' sx={{ my: 2 }} color='#031D44'>
               Esqueceu password?
             </Typography>
 
@@ -82,17 +86,17 @@ const ForgotPage = () => {
               <TextField label='Email' type='email' variant='outlined' fullWidth required sx={forgotClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
 
               {errorMessage && (
-                <Typography sx={{ marginBottom: '25px' }} color='error'>
+                <Typography sx={{ marginBottom: 2 }} color='error'>
                   {errorMessage}
                 </Typography>
               )}
 
-              {!btnLoading && (
-                <Button variant='contained' type='submit'>
+              {!isLoading && (
+                <Button variant='contained' type='submit' sx={{ mb: 4 }}>
                   Recuperar
                 </Button>
               )}
-              {btnLoading && <CircularProgress size='20px' />}
+              {isLoading && <CircularProgress size='80px' sx={{ my: 2 }} />}
             </form>
           </Box>
         </>

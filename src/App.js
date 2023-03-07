@@ -88,7 +88,7 @@ function App() {
     <Box className='App'>
       <ThemeProvider theme={theme}>
         <Layout>
-          <Suspense fallback={<CircularProgress sx={{ mt: 20 }} />}>
+          <Suspense fallback={<CircularProgress sx={{ mt: 24 }} size='100px' />}>
             <Routes>
               <Route path='/' element={<HomePage />} />
               <Route path='/signup' element={<SignupPage />} />

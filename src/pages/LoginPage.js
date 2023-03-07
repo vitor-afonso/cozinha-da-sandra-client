@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
+import { NAVBAR_HEIGHT } from '../utils/app.utils';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
@@ -20,7 +21,7 @@ const LoginPage = () => {
 
   const loginClasses = {
     container: {
-      height: 'calc(100vh - 64px)',
+      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       justifyContent: 'center',
@@ -34,23 +35,26 @@ const LoginPage = () => {
       marginRight: { md: 4 },
     },
     image: {
-      maxWidth: { xs: '250px', md: '450px' },
+      maxWidth: { xs: '200px', md: '450px' },
       transform: 'scaleX(-1)',
       order: { xs: 0, md: 1 },
       marginBottom: { xs: 4 },
+      marginTop: { xs: 4 },
     },
     form: {
       width: { xs: '300px', md: '500px' },
     },
     field: {
-      marginTop: 5,
-      marginBottom: 5,
+      marginTop: 2,
+      marginBottom: 2,
       display: 'block',
     },
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     email === '' ? setEmailError(true) : setEmailError(false);
     password === '' ? setPasswordError(true) : setPasswordError(false);
@@ -123,7 +127,7 @@ const LoginPage = () => {
           />
 
           {errorMessage && (
-            <Typography sx={{ marginBottom: '25px' }} color='error'>
+            <Typography color='error' sx={{ mb: 2 }}>
               {errorMessage}
             </Typography>
           )}
@@ -134,7 +138,7 @@ const LoginPage = () => {
             </Button>
           )}
 
-          {isLoading && <CircularProgress size='20px' />}
+          {isLoading && <CircularProgress size='80px' sx={{ my: 2 }} />}
         </form>
       </Box>
     </Box>
