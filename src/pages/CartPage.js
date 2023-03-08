@@ -55,7 +55,7 @@ const CartPage = () => {
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
@@ -74,7 +74,7 @@ const CartPage = () => {
   const cartClasses = {
     container: {
       px: 3,
-      pb: 3,
+      pb: 8,
     },
     itemsContainer: {
       display: 'flex',
@@ -104,7 +104,8 @@ const CartPage = () => {
     image: {
       mx: 'auto',
       minWidth: '200px',
-      maxWidth: '400px',
+      maxWidth: '300px',
+      marginBottom: 4,
     },
   };
 
@@ -201,6 +202,8 @@ const CartPage = () => {
   const submitOrder = async (e) => {
     e.preventDefault();
 
+    setErrorMessage(undefined);
+
     if (!user._id) {
       return;
     }
@@ -253,7 +256,7 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       let fullAddress;
@@ -285,12 +288,12 @@ const CartPage = () => {
 
       dispatch(updateShopUser(data.updatedUser));
 
-      setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
+      setSuccessMessage('Pedido criado com sucesso. Será contactado/a em breve para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
 
       dispatch(clearCart());
     } catch (error) {
       setErrorMessage(error.message);
-      setBtnLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -316,50 +319,22 @@ const CartPage = () => {
                 })}
               </Box>
 
-              {deliveryMethod === 'delivery' && (
-                <Box sx={{ mt: 4 }}>
-                  {!isElegibleForFreeDelivery() && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                        Em falta para entrega grátis:
-                      </Typography>
-                      <Typography variant='body1' color='#031D44'>
-                        {getMissingAmountForFreeDelivery()}€
-                      </Typography>
-                    </Box>
-                  )}
-
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                      Taxa de entrega:
-                    </Typography>
-                    <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                      {orderDeliveryFee}€
-                    </Typography>
-                    {isElegibleForFreeDelivery() && (
-                      <Typography variant='body1' color='#031D44'>
-                        0€
-                      </Typography>
-                    )}
-                  </Box>
+              {deliveryMethod !== 'delivery' && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  <Typography variant='h4' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                    Total:
+                  </Typography>
+                  <Typography variant='h4' color='#031D44'>
+                    {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+                  </Typography>
                 </Box>
               )}
-
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
-                  Total:
-                </Typography>
-                <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
-                  {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
-                </Typography>
-              </Box>
-
-              <Button sx={{ mr: 1, maxWidth: '104px' }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
+              <Button sx={{ mt: 2 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
                 Limpar
               </Button>
 
               {isNotVisible && (
-                <Button variant='contained' onClick={() => toggleForm()}>
+                <Button variant='contained' sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
                   Continuar
                 </Button>
               )}
@@ -395,16 +370,18 @@ const CartPage = () => {
                 addressCodeError={addressCodeError}
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
-                btnLoading={btnLoading}
+                isLoading={isLoading}
                 minDay={minDay}
                 maxDay={maxDay}
                 user={user}
+                getMissingAmountForFreeDelivery={getMissingAmountForFreeDelivery}
+                isElegibleForFreeDelivery={isElegibleForFreeDelivery}
               />
             </>
           ) : (
             <Box>
               <Box sx={cartClasses.image}>
-                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
+                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto' }} />
               </Box>
 
               <Typography paragraph sx={{ fontSize: 16 }}>

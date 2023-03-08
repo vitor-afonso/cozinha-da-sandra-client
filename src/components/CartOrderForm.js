@@ -1,6 +1,8 @@
 // jshint esversion:9
 
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 
@@ -39,11 +41,14 @@ export const CartOrderForm = ({
   addressCityError,
   submitBtnRef,
   successMessage,
-  btnLoading,
+  isLoading,
   minDay,
   maxDay,
   user,
+  isElegibleForFreeDelivery,
+  getMissingAmountForFreeDelivery,
 }) => {
+  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const [inputType, setInputType] = useState('text');
   const cartFormClasses = {
     form: {
@@ -164,7 +169,7 @@ export const CartOrderForm = ({
             <Typography
               paragraph
               sx={{
-                my: '25px',
+                my: 4,
               }}
               color='error'
             >
@@ -176,9 +181,46 @@ export const CartOrderForm = ({
             Encomendar
           </button>
         </form>
+
+        {deliveryMethod === 'delivery' && (
+          <Box sx={{ mb: 2 }}>
+            {!isElegibleForFreeDelivery() && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                  Em falta para entrega grátis:
+                </Typography>
+                <Typography variant='body1' color='#031D44'>
+                  {getMissingAmountForFreeDelivery()}€
+                </Typography>
+              </Box>
+            )}
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                Taxa de entrega:
+              </Typography>
+              <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                {orderDeliveryFee}€
+              </Typography>
+              {isElegibleForFreeDelivery() && (
+                <Typography variant='body1' color='#031D44'>
+                  0€
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+                Total:
+              </Typography>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
+                {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Box>
 
-      {!successMessage && !btnLoading && (
+      {!successMessage && !isLoading && (
         <Box>
           <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
@@ -189,7 +231,7 @@ export const CartOrderForm = ({
           </Button>
         </Box>
       )}
-      {btnLoading && <CircularProgress size='20px' />}
+      {isLoading && <CircularProgress size='80px' sx={{ mb: 2 }} />}
     </Box>
   );
 };
