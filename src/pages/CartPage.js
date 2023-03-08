@@ -190,6 +190,14 @@ const CartPage = () => {
     return false;
   };
 
+  const getMissingAmountForFreeDelivery = () => {
+    return (amountForFreeDelivery - cartTotal).toFixed(2);
+  };
+
+  const isElegibleForFreeDelivery = () => {
+    return hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery');
+  };
+
   const submitOrder = async (e) => {
     e.preventDefault();
 
@@ -310,59 +318,45 @@ const CartPage = () => {
 
               {deliveryMethod === 'delivery' && (
                 <Box sx={{ mt: 4 }}>
-                  {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
+                  {!isElegibleForFreeDelivery() && (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                        Taxa de entrega:
-                      </Typography>
-                      <Typography variant='body1' color='#031D44' sx={{ textDecoration: 'line-through', mr: 1 }}>
-                        {orderDeliveryFee}€
+                        Em falta para entrega grátis:
                       </Typography>
                       <Typography variant='body1' color='#031D44'>
-                        0€
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                        Taxa de entrega:
-                      </Typography>
-                      <Typography variant='body1' color='#031D44'>
-                        {orderDeliveryFee}€
+                        {getMissingAmountForFreeDelivery()}€
                       </Typography>
                     </Box>
                   )}
+
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                      Taxa de entrega:
+                    </Typography>
+                    <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                      {orderDeliveryFee}€
+                    </Typography>
+                    {isElegibleForFreeDelivery() && (
+                      <Typography variant='body1' color='#031D44'>
+                        0€
+                      </Typography>
+                    )}
+                  </Box>
                 </Box>
               )}
 
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2, fontWeight: 'bold', mr: 1 }}>
+                <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
                   Total:
                 </Typography>
-                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2 }}>
+                <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
                   {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
                 </Typography>
               </Box>
 
-              <Button sx={{ mr: 1 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
+              <Button sx={{ mr: 1, maxWidth: '104px' }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
                 Limpar
               </Button>
-
-              <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-                <Box sx={modalStyle}>
-                  <Typography id='modal-modal-title' variant='h6' component='h2'>
-                    Limpar carrinho?
-                  </Typography>
-                  <Box sx={{ mt: 2 }}>
-                    <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                      Cancelar
-                    </Button>
-                    <Button type='button' color='error' variant='contained' onClick={() => dispatch(clearCart())}>
-                      Limpar
-                    </Button>
-                  </Box>
-                </Box>
-              </Modal>
 
               {isNotVisible && (
                 <Button variant='contained' onClick={() => toggleForm()}>
@@ -432,6 +426,21 @@ const CartPage = () => {
           </Button>
         </>
       )}
+      <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+        <Box sx={modalStyle}>
+          <Typography id='modal-modal-title' variant='h6' component='h2'>
+            Limpar carrinho?
+          </Typography>
+          <Box sx={{ mt: 2 }}>
+            <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
+              Cancelar
+            </Button>
+            <Button type='button' color='error' variant='contained' onClick={() => dispatch(clearCart())}>
+              Limpar
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };
