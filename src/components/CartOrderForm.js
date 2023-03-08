@@ -185,13 +185,13 @@ export const CartOrderForm = ({
         {deliveryMethod === 'delivery' && (
           <Box sx={{ mb: 2 }}>
             {!isElegibleForFreeDelivery() && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                  Em falta para entrega grátis:
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
+                <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
+                  Entrega grátis a partir de {amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
                 </Typography>
-                <Typography variant='body1' color='#031D44'>
+                {/* <Typography variant='body1' color='#031D44'>
                   {getMissingAmountForFreeDelivery()}€
-                </Typography>
+                </Typography> */}
               </Box>
             )}
 
