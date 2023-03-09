@@ -168,7 +168,7 @@ const EditOrderPage = () => {
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
-    if (order.deliveryMethod === 'delivery') {
+    if (!wasTakeAwayOrder()) {
       setIsAddressNotVisible(false);
       setFullAddress(order.address);
     }
@@ -225,9 +225,9 @@ const EditOrderPage = () => {
     }
   };
 
-  const wasTakeAwayOrder = () => {
+  function wasTakeAwayOrder() {
     return order.deliveryMethod === 'takeAway';
-  };
+  }
 
   const calculateCartTotalToShow = () => {
     if (deliveryMethod === 'delivery') {
@@ -257,6 +257,9 @@ const EditOrderPage = () => {
   };
 
   const getMissingAmountForFreeDelivery = () => {
+    if (!wasTakeAwayOrder()) {
+      return (order.amountForFreeDelivery - cartTotal).toFixed(2);
+    }
     return (amountForFreeDelivery - cartTotal).toFixed(2);
   };
 
@@ -415,7 +418,7 @@ const EditOrderPage = () => {
                 {!isElegibleForFreeDelivery() && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
                     <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
-                      Entrega grátis a partir de {amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
+                      Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
                     </Typography>
                   </Box>
                 )}
