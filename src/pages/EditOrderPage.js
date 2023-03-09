@@ -91,7 +91,6 @@ const EditOrderPage = () => {
       marginLeft: 'auto',
       marginRight: 'auto',
       maxWidth: 600,
-      my: 2,
     },
     infoField: {
       display: 'flex',
@@ -257,8 +256,14 @@ const EditOrderPage = () => {
     return (hasDeliveryDiscount && deliveryMethod === 'delivery') || (!wasTakeAwayOrder() && order.deliveryDiscount) ? true : false;
   };
 
+  const getMissingAmountForFreeDelivery = () => {
+    return (amountForFreeDelivery - cartTotal).toFixed(2);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     if (!user._id) {
       return;
@@ -406,29 +411,35 @@ const EditOrderPage = () => {
             )}
 
             {deliveryMethod === 'delivery' && (
-              <Box sx={editOrderClasses.infoField}>
-                <Typography variant='body1' color='#031D44'>
-                  <b>Taxa de entrega:</b>
-                </Typography>
-                <Box sx={editOrderClasses.deliveryField}>
-                  <Typography variant='body1' gutterBottom sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+              <>
+                {!isElegibleForFreeDelivery() && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
+                    <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
+                      Entrega grátis a partir de {amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
+                    </Typography>
+                  </Box>
+                )}
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                    Taxa de entrega:
+                  </Typography>
+                  <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
                     {wasTakeAwayOrder() ? orderDeliveryFee : order.deliveryFee}€
                   </Typography>
                   {isElegibleForFreeDelivery() && (
-                    <Typography variant='body1' gutterBottom>
+                    <Typography variant='body1' color='#031D44'>
                       0€
                     </Typography>
                   )}
                 </Box>
-              </Box>
+              </>
             )}
-
-            <Box sx={editOrderClasses.infoField}>
-              <Typography variant='body1' color='#031D44'>
-                <b>Total:</b>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+                Total:
               </Typography>
-
-              <Typography variant='body1' gutterBottom>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
                 {calculateCartTotalToShow()}€
               </Typography>
             </Box>
@@ -476,7 +487,7 @@ const EditOrderPage = () => {
             </Button>
           </>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='20px' />}
+        {btnLoading && !successMessage && <CircularProgress size='80px' sx={{ mt: 2, mb: 5 }} />}
       </div>
     </Box>
   );

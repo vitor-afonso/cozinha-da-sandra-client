@@ -189,9 +189,6 @@ export const CartOrderForm = ({
                 <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
                 </Typography>
-                {/* <Typography variant='body1' color='#031D44'>
-                  {getMissingAmountForFreeDelivery()}€
-                </Typography> */}
               </Box>
             )}
 
