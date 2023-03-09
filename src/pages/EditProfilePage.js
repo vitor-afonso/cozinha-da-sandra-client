@@ -47,7 +47,7 @@ const EditProfilePage = () => {
   const [contact, setContact] = useState('');
   const [info, setInfo] = useState('');
   const [disabledInput, setDisabledInput] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const inputFileUpload = useRef(null);
   const submitFormButton = useRef();
   const { userId } = useParams();
@@ -183,7 +183,7 @@ const EditProfilePage = () => {
     }
     setPasswordError(false);
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       const passwordBody = { password: newPassword };
@@ -204,7 +204,7 @@ const EditProfilePage = () => {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
         }
-        setBtnLoading(false);
+        setIsLoading(false);
       } else {
         const requestBody = { username, email, contact, info };
 
@@ -215,7 +215,7 @@ const EditProfilePage = () => {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
         }
-        setBtnLoading(false);
+        setIsLoading(false);
       }
 
       setSuccessMessage('Perfil actualizado com sucesso.');
@@ -223,7 +223,7 @@ const EditProfilePage = () => {
       console.log('error in editProfile', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
-      setBtnLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -277,7 +277,7 @@ const EditProfilePage = () => {
                 placeholder='912345678'
               />
 
-              {isProfileOwner() && (
+              {isProfileOwner() && !isLoading && (
                 <>
                   <TextField
                     label='Nova Password'
@@ -343,13 +343,13 @@ const EditProfilePage = () => {
       )}
 
       <Box>
-        {!btnLoading && (
+        {!isLoading && (
           <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} onClick={() => navigate(-1)}>
             Voltar
           </Button>
         )}
 
-        {!successMessage && !btnLoading && (
+        {!successMessage && !isLoading && (
           <>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
 
@@ -393,7 +393,7 @@ const EditProfilePage = () => {
             </>
           </>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='20px' />}
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 4 }} />}
       </Box>
     </Box>
   );
