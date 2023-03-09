@@ -155,8 +155,7 @@ const ProfilePage = () => {
                   id='outlined-read-only-input'
                   type='text'
                   label='Contacto'
-                  value={profileOwner.contact}
-                  defaultValue={'Sem número'}
+                  value={profileOwner.contact ? profileOwner.contact : 'Sem número'}
                   InputProps={{
                     readOnly: true,
                   }}
