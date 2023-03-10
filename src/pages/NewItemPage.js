@@ -13,6 +13,36 @@ import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, 
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 
+const newItemClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  formContainer: {
+    marginTop: 0,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 5,
+    display: 'block',
+  },
+  nameField: {
+    marginTop: 0,
+    marginBottom: 2,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+    marginBottom: 5,
+  },
+};
+
 const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
@@ -33,36 +63,6 @@ const NewItemPage = () => {
   const submitForm = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const newItemClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    formContainer: {
-      marginTop: 0,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    nameField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-      marginBottom: 5,
-    },
-  };
 
   useEffect(() => {
     setTempImageUrl(defaultProductImage);
@@ -253,7 +253,7 @@ const NewItemPage = () => {
             </Button>
           </>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='20px' />}
+        {btnLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
       </Box>
     </Box>
   );

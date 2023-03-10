@@ -28,6 +28,36 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+const editProfileClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  formContainer: {
+    marginTop: 0,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 5,
+    display: 'block',
+  },
+  nameField: {
+    marginTop: 0,
+    marginBottom: 2,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+    marginBottom: 5,
+  },
+};
+
 const EditProfilePage = () => {
   const { user, logOutUser } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
@@ -56,36 +86,6 @@ const EditProfilePage = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const editProfileClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    formContainer: {
-      marginTop: 0,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    nameField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-      marginBottom: 5,
-    },
-  };
 
   useEffect(() => {
     if (userId) {
@@ -393,7 +393,7 @@ const EditProfilePage = () => {
             </>
           </>
         )}
-        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 4 }} />}
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
       </Box>
     </Box>
   );

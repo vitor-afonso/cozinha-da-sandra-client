@@ -36,6 +36,60 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+const editOrderClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  list: {
+    //minWidth: 300,
+  },
+  listItem: {
+    width: '100%',
+    minWidth: 200,
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  gridItem: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  infoContainer: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    maxWidth: 600,
+  },
+  infoField: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  deliveryField: {
+    display: 'flex',
+  },
+  addressField: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  formContainer: {
+    marginTop: 0,
+    marginBottom: 5,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 5,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+  },
+};
+
 // ms converts days to milliseconds
 // then i can use it to define the date that the user can book
 const MIN_DAYS = ms('2d');
@@ -69,60 +123,6 @@ const EditOrderPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const editOrderClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    list: {
-      //minWidth: 300,
-    },
-    listItem: {
-      width: '100%',
-      minWidth: 200,
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    gridItem: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    infoContainer: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      maxWidth: 600,
-    },
-    infoField: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    deliveryField: {
-      display: 'flex',
-    },
-    addressField: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    formContainer: {
-      marginTop: 0,
-      marginBottom: 5,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-    },
-  };
 
   useEffect(() => {
     if (adminEffectRan.current === false && orderId) {
@@ -489,7 +489,7 @@ const EditOrderPage = () => {
             </Button>
           </>
         )}
-        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mt: 2, mb: 5 }} />}
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mt: 2, mb: 2 }} />}
       </div>
     </Box>
   );

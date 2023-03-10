@@ -28,6 +28,36 @@ const modalStyle = {
   alignItems: 'center',
 };
 
+const editItemClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  formContainer: {
+    marginTop: 0,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 5,
+    display: 'block',
+  },
+  nameField: {
+    marginTop: 0,
+    marginBottom: 2,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+    marginBottom: 5,
+  },
+};
+
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -56,36 +86,6 @@ const EditItemPage = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const editItemClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    formContainer: {
-      marginTop: 0,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    nameField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-      marginBottom: 5,
-    },
-  };
 
   useEffect(() => {
     if (effectRan.current === false && itemId) {
@@ -342,7 +342,7 @@ const EditItemPage = () => {
                 </Button>
               </>
             )}
-            {btnLoading && !successMessage && <CircularProgress size='20px' />}
+            {btnLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
           </Box>
         </>
       )}

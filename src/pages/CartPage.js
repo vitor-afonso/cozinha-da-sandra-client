@@ -51,8 +51,7 @@ const cartClasses = {
 
   image: {
     mx: 'auto',
-    minWidth: '200px',
-    maxWidth: '300px',
+    width: { xs: '200px', md: '300px' },
     marginBottom: 4,
   },
 };
