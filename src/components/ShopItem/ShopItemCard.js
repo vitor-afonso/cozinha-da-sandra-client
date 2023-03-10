@@ -25,6 +25,7 @@ import { Box, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
+import { APP } from '../../utils/app.utils';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -150,7 +151,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
       <CardContent>
         <Box sx={cardClasses.cardContent}>
           <Typography sx={{ mr: 1, fontSize: '20px' }} color='neutral' onClick={() => navigate(`/items/${_id}`)}>
-            {price}€
+            {price + APP.currency}
           </Typography>
 
           {!isLoggedIn && (

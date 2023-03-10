@@ -7,30 +7,60 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
+import { ExitModal } from '../components/ExitModal';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
+import { APP } from '../utils/app.utils';
 
 import ms from 'ms';
 
-import { Box, Button, Modal, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  bgcolor: 'background.paper',
-  border: '2px solid #816E94',
-  boxShadow: 24,
-  p: 4,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+const cartClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  itemsContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+
+  formContainer: {
+    marginTop: 0,
+    marginBottom: 5,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 5,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+  },
+
+  image: {
+    mx: 'auto',
+    minWidth: '200px',
+    maxWidth: '300px',
+    marginBottom: 4,
+  },
 };
+
+// ms converts days to milliseconds
+// then i can use it to define the date that the user can book
+const minDay = ms('2d');
+const maxDay = ms('60d');
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
@@ -55,58 +85,20 @@ const CartPage = () => {
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const formRef = useRef();
   const submitBtnRef = useRef();
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery;
+  const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
+  const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
-  // ms converts days to milliseconds
-  // then i can use it to define the date that the user can book
-  const minDay = ms('2d');
-  const maxDay = ms('60d');
-
-  const cartClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    itemsContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-    },
-
-    formContainer: {
-      marginTop: 0,
-      marginBottom: 5,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-    },
-
-    image: {
-      mx: 'auto',
-      minWidth: '200px',
-      maxWidth: '400px',
-    },
-  };
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -190,8 +182,17 @@ const CartPage = () => {
     return false;
   };
 
+  const calculateCartTotalToShow = () => {
+    if (deliveryMethod === 'delivery') {
+      return shouldPayForDeliveryFee ? orderPriceWithFee : orderPrice;
+    }
+    return orderPrice;
+  };
+
   const submitOrder = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     if (!user._id) {
       return;
@@ -245,7 +246,7 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       let fullAddress;
@@ -277,12 +278,13 @@ const CartPage = () => {
 
       dispatch(updateShopUser(data.updatedUser));
 
-      setSuccessMessage('Pedido criado com sucesso. Será contactado o mais brevemente possivel para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
+      setSuccessMessage('Pedido criado com sucesso. Será contactado/a em breve para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
 
       dispatch(clearCart());
     } catch (error) {
       setErrorMessage(error.message);
-      setBtnLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -308,64 +310,22 @@ const CartPage = () => {
                 })}
               </Box>
 
-              {deliveryMethod === 'delivery' && (
-                <Box sx={{ mt: 4 }}>
-                  {hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery') ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                        Taxa de entrega:
-                      </Typography>
-                      <Typography variant='body1' color='#031D44' sx={{ textDecoration: 'line-through', mr: 1 }}>
-                        {orderDeliveryFee}€
-                      </Typography>
-                      <Typography variant='body1' color='#031D44'>
-                        0€
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                        Taxa de entrega:
-                      </Typography>
-                      <Typography variant='body1' color='#031D44'>
-                        {orderDeliveryFee}€
-                      </Typography>
-                    </Box>
-                  )}
+              {deliveryMethod !== 'delivery' && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  <Typography variant='h4' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                    Total:
+                  </Typography>
+                  <Typography variant='h4' color='#031D44'>
+                    {calculateCartTotalToShow()}
+                  </Typography>
                 </Box>
               )}
-
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2, fontWeight: 'bold', mr: 1 }}>
-                  Total:
-                </Typography>
-                <Typography variant='h4' color='#031D44' sx={{ mt: '10px', mb: 2 }}>
-                  {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
-                </Typography>
-              </Box>
-
-              <Button sx={{ mr: 1 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpen}>
+              <Button sx={{ mt: 2 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpenModal}>
                 Limpar
               </Button>
 
-              <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-                <Box sx={modalStyle}>
-                  <Typography id='modal-modal-title' variant='h6' component='h2'>
-                    Limpar carrinho?
-                  </Typography>
-                  <Box sx={{ mt: 2 }}>
-                    <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                      Cancelar
-                    </Button>
-                    <Button type='button' color='error' variant='contained' onClick={() => dispatch(clearCart())}>
-                      Limpar
-                    </Button>
-                  </Box>
-                </Box>
-              </Modal>
-
               {isNotVisible && (
-                <Button variant='contained' onClick={() => toggleForm()}>
+                <Button variant='contained' sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
                   Continuar
                 </Button>
               )}
@@ -401,16 +361,17 @@ const CartPage = () => {
                 addressCodeError={addressCodeError}
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
-                btnLoading={btnLoading}
+                isLoading={isLoading}
                 minDay={minDay}
                 maxDay={maxDay}
                 user={user}
+                calculateCartTotalToShow={calculateCartTotalToShow}
               />
             </>
           ) : (
             <Box>
               <Box sx={cartClasses.image}>
-                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
+                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto' }} />
               </Box>
 
               <Typography paragraph sx={{ fontSize: 16 }}>
@@ -423,7 +384,7 @@ const CartPage = () => {
 
       {successMessage && (
         <>
-          <Typography paragraph sx={{ my: '25px', maxWidth: '600px', mx: 'auto' }} color='#031D44'>
+          <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color='#031D44'>
             {successMessage}
           </Typography>
 
@@ -432,6 +393,7 @@ const CartPage = () => {
           </Button>
         </>
       )}
+      <ExitModal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} dispatch={dispatch} mainFunction={clearCart} question={'Limpar carrinho?'} buttonText={'Limpar'} />
     </Box>
   );
 };

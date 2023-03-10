@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { capitalizeAppName, appEmail, ownerName } from '../utils/app.utils.js';
+import { capitalizeAppName, APP } from '../utils/app.utils.js';
 import mapImage from '../images/aboutMap.png';
 import ownerImage from '../images/aboutChef.jpeg';
 import instagramImage from '../images/instagram.svg';
@@ -10,7 +10,7 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import EmailIcon from '@mui/icons-material/Email';
 
 const APP_NAME = capitalizeAppName();
-const MAIL_TO = `mailto:${appEmail}`;
+const MAIL_TO = `mailto:${APP.email}`;
 
 const AboutPage = () => {
   const aboutClasses = {
@@ -122,7 +122,7 @@ const AboutPage = () => {
               A dona da cozinha!
             </Typography>
             <Typography variant='body1' sx={aboutClasses.heroDescription}>
-              <i>{ownerName}</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
+              <i>{APP.ownerName}</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
             </Typography>
           </Box>
         </Grid>

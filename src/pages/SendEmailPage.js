@@ -5,14 +5,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
-import { parseDateToShow, capitalizeAppName, appEmail } from '../utils/app.utils';
+import { parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
 
 const APP_NAME = capitalizeAppName();
+const APP_EMAIL = APP.email;
 
 const SendEmailPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const from = { appEmail };
+  const from = { APP_EMAIL };
   const [to, setTo] = useState('');
   const [toError, setToError] = useState(false);
   const [subject, setSubject] = useState('');

@@ -4,7 +4,7 @@ import { Box, TextField, Typography, Button, CircularProgress } from '@mui/mater
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
-import { NAVBAR_HEIGHT } from '../utils/app.utils';
+import { APP } from '../utils/app.utils';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -19,7 +19,7 @@ const ForgotPage = () => {
       flexDirection: 'column',
       alignItems: 'center',
       py: 5,
-      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
+      height: `calc(100vh - ${APP.navbarHeight})`,
       justifyContent: 'center',
     },
     top: {

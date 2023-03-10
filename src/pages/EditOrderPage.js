@@ -8,13 +8,13 @@ import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
 import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
-import { getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
+import { APP, getItemsAmount, parseDateToEdit } from '../utils/app.utils';
 
 import ms from 'ms';
 
-import { Typography, Box, Button, Grid, CircularProgress } from '@mui/material';
+import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
@@ -58,13 +58,14 @@ const EditOrderPage = () => {
   const [deliveryDateError, setDeliveryDateError] = useState(false);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
   const { orderId } = useParams();
   const navigate = useNavigate();
 
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -91,7 +92,6 @@ const EditOrderPage = () => {
       marginLeft: 'auto',
       marginRight: 'auto',
       maxWidth: 600,
-      my: 2,
     },
     infoField: {
       display: 'flex',
@@ -169,7 +169,7 @@ const EditOrderPage = () => {
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
-    if (order.deliveryMethod === 'delivery') {
+    if (!wasTakeAwayOrder()) {
       setIsAddressNotVisible(false);
       setFullAddress(order.address);
     }
@@ -226,9 +226,9 @@ const EditOrderPage = () => {
     }
   };
 
-  const wasTakeAwayOrder = () => {
+  function wasTakeAwayOrder() {
     return order.deliveryMethod === 'takeAway';
-  };
+  }
 
   const calculateCartTotalToShow = () => {
     if (deliveryMethod === 'delivery') {
@@ -257,8 +257,17 @@ const EditOrderPage = () => {
     return (hasDeliveryDiscount && deliveryMethod === 'delivery') || (!wasTakeAwayOrder() && order.deliveryDiscount) ? true : false;
   };
 
+  const getMissingAmountForFreeDelivery = () => {
+    if (!wasTakeAwayOrder()) {
+      return ' ' + (order.amountForFreeDelivery - cartTotal).toFixed(2);
+    }
+    return ' ' + (amountForFreeDelivery - cartTotal).toFixed(2);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setErrorMessage(undefined);
 
     if (!user._id) {
       return;
@@ -289,7 +298,7 @@ const EditOrderPage = () => {
       return;
     }
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       let requestBody = {
@@ -308,25 +317,22 @@ const EditOrderPage = () => {
       await updateOrder(requestBody, orderId);
 
       setSuccessMessage('Pedido actualizado com sucesso.');
-
-      setBtnLoading(false);
-
       clearInputs();
       dispatch(clearCart());
     } catch (error) {
       setErrorMessage(error.message);
-      setBtnLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <Box sx={editOrderClasses.container}>
+      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        EDITAR
+      </Typography>
       {order && !successMessage && (
         <>
-          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
-            EDITAR
-          </Typography>
-
           <Grid container spacing={2}>
             {shopItems.map((element) => {
               if (cartItems.includes(element._id)) {
@@ -396,40 +402,47 @@ const EditOrderPage = () => {
           <Box sx={editOrderClasses.infoContainer}>
             {user._id !== order.userId._id && (
               <Box sx={editOrderClasses.infoField}>
-                <Typography variant='body1' color='#031D44' onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
+                <Typography variant='body1' color={theme.palette.neutral.main} onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
                   <b>Autor de pedido:</b>
                 </Typography>
-                <Typography variant='body1' gutterBottom>
+                <Typography variant='body1' color={theme.palette.neutral.main} gutterBottom>
                   {order.userId.username}
                 </Typography>
               </Box>
             )}
 
             {deliveryMethod === 'delivery' && (
-              <Box sx={editOrderClasses.infoField}>
-                <Typography variant='body1' color='#031D44'>
-                  <b>Taxa de entrega:</b>
-                </Typography>
-                <Box sx={editOrderClasses.deliveryField}>
-                  <Typography variant='body1' gutterBottom sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                    {wasTakeAwayOrder() ? orderDeliveryFee : order.deliveryFee}€
+              <>
+                {!isElegibleForFreeDelivery() && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
+                    <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
+                      Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery + APP.currency}. Valor em falta:
+                      {getMissingAmountForFreeDelivery() + APP.currency}
+                    </Typography>
+                  </Box>
+                )}
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                    Taxa de entrega:
+                  </Typography>
+                  <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                    {wasTakeAwayOrder() ? orderDeliveryFee + APP.currency : order.deliveryFee + APP.currency}
                   </Typography>
                   {isElegibleForFreeDelivery() && (
-                    <Typography variant='body1' gutterBottom>
-                      0€
+                    <Typography variant='body1' color={theme.palette.neutral.main}>
+                      0{APP.currency}
                     </Typography>
                   )}
                 </Box>
-              </Box>
+              </>
             )}
-
-            <Box sx={editOrderClasses.infoField}>
-              <Typography variant='body1' color='#031D44'>
-                <b>Total:</b>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+                Total:
               </Typography>
-
-              <Typography variant='body1' gutterBottom>
-                {calculateCartTotalToShow()}€
+              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
+                {calculateCartTotalToShow() + APP.currency}
               </Typography>
             </Box>
           </Box>
@@ -437,19 +450,19 @@ const EditOrderPage = () => {
       )}
 
       {successMessage && (
-        <Typography paragraph sx={{ my: '25px' }}>
+        <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color={theme.palette.neutral.main}>
           {successMessage}
         </Typography>
       )}
 
       <div>
-        {!btnLoading && (
+        {!isLoading && (
           <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
           </Button>
         )}
 
-        {!successMessage && !btnLoading && (
+        {!successMessage && !isLoading && (
           <>
             <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
               Apagar
@@ -476,7 +489,7 @@ const EditOrderPage = () => {
             </Button>
           </>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='20px' />}
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mt: 2, mb: 5 }} />}
       </div>
     </Box>
   );

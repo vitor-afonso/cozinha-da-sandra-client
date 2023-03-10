@@ -33,7 +33,7 @@ export function EditOrderForm({
   const editOrderClasses = {
     formContainer: {
       marginTop: 0,
-      marginBottom: 5,
+      marginBottom: 1,
     },
     form: {
       marginLeft: 'auto',
@@ -43,7 +43,7 @@ export function EditOrderForm({
     },
     formField: {
       marginTop: 0,
-      marginBottom: 5,
+      marginBottom: 2,
       display: 'block',
     },
     formTextArea: {
@@ -81,7 +81,7 @@ export function EditOrderForm({
 
           <FormControl
             sx={{
-              mb: 5,
+              mb: 2,
             }}
             align='left'
             fullWidth={true}

@@ -1,12 +1,15 @@
 // jshint esversion:9
 // app name is also hardcoded in the manifest.json file
-export const appName = 'a cozinha da sandra';
-export const ownerName = 'Sandra';
-export const appEmail = 'cozinhadasandra22@gmail.com';
-export const NAVBAR_HEIGHT = '64px';
+export const APP = {
+  name: 'a cozinha da sandra',
+  ownerName: 'Sandra',
+  email: 'cozinhadasandra22@gmail.com',
+  navbarHeight: '64px',
+  currency: '€',
+};
 
 export const capitalizeAppName = () => {
-  let capitalizedName = appName
+  let capitalizedName = APP.name
     .split(' ')
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ');
