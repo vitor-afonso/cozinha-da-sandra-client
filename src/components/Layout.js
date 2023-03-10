@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { appName, capitalizeAppName } from '../utils/app.utils.js';
+import { capitalizeAppName, APP } from '../utils/app.utils.js';
 import { NavItems } from './NavItems';
 
 import * as React from 'react';
@@ -23,7 +23,7 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 
 const drawerWidth = 220;
 
-const APP_NAME = appName.toUpperCase();
+const APP_NAME = APP.name.toUpperCase();
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -73,7 +73,7 @@ export const Layout = (props) => {
   }, []);
 
   const getTotal = () => {
-    return cartTotal.toFixed(2).replace('-', '').toString();
+    return cartTotal.toFixed(2).replace('-', '').toString() + APP.currency;
   };
 
   return (
@@ -136,7 +136,7 @@ export const Layout = (props) => {
           {children}
           {cartButtonLocations.includes(location.pathname) && (
             <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon fontSize='large' />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='neutral'>
-              Carrinho: {getTotal()}€
+              Carrinho: {getTotal()}
             </Button>
           )}
         </Box>

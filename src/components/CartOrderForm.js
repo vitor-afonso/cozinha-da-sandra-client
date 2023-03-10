@@ -1,8 +1,11 @@
 // jshint esversion:9
 
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
+import { APP } from '../utils/app.utils';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -39,11 +42,13 @@ export const CartOrderForm = ({
   addressCityError,
   submitBtnRef,
   successMessage,
-  btnLoading,
+  isLoading,
   minDay,
   maxDay,
   user,
+  calculateCartTotalToShow,
 }) => {
+  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const [inputType, setInputType] = useState('text');
   const cartFormClasses = {
     form: {
@@ -72,7 +77,13 @@ export const CartOrderForm = ({
       max: new Date(+new Date() + maxDay).toISOString().slice(0, -8),
     },
   };
+  const getMissingAmountForFreeDelivery = () => {
+    return (amountForFreeDelivery - cartTotal).toFixed(2);
+  };
 
+  const isElegibleForFreeDelivery = () => {
+    return hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery');
+  };
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
       <Typography variant='h4' color='#031D44' sx={{ my: 2 }}>
@@ -164,7 +175,7 @@ export const CartOrderForm = ({
             <Typography
               paragraph
               sx={{
-                my: '25px',
+                my: 4,
               }}
               color='error'
             >
@@ -176,9 +187,43 @@ export const CartOrderForm = ({
             Encomendar
           </button>
         </form>
+
+        {deliveryMethod === 'delivery' && (
+          <Box sx={{ mb: 2 }}>
+            {!isElegibleForFreeDelivery() && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
+                <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
+                  Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta: {getMissingAmountForFreeDelivery() + APP.currency}.
+                </Typography>
+              </Box>
+            )}
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                Taxa de entrega:
+              </Typography>
+              <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                {orderDeliveryFee + APP.currency}
+              </Typography>
+              {isElegibleForFreeDelivery() && (
+                <Typography variant='body1' color='#031D44'>
+                  0{APP.currency}
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+                Total:
+              </Typography>
+              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
+                {calculateCartTotalToShow()}
+              </Typography>
+            </Box>
+          </Box>
+        )}
       </Box>
 
-      {!successMessage && !btnLoading && (
+      {!successMessage && !isLoading && (
         <Box>
           <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
@@ -189,7 +234,7 @@ export const CartOrderForm = ({
           </Button>
         </Box>
       )}
-      {btnLoading && <CircularProgress size='20px' />}
+      {isLoading && <CircularProgress size='80px' sx={{ mb: 2 }} />}
     </Box>
   );
 };
