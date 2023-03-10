@@ -1,5 +1,7 @@
 // jshint esversion:9
 
+
+import Tilt from 'react-parallax-tilt';
 import { capitalizeAppName, APP } from '../utils/app.utils.js';
 import mapImage from '../images/aboutMap.png';
 import ownerImage from '../images/aboutChef.jpeg';
@@ -113,8 +115,10 @@ const AboutPage = () => {
   return (
     <Box sx={aboutClasses.container}>
       <Grid container spacing={0} sx={aboutClasses.hero}>
-        <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'end' } }}>
+        <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'center' } }}>
+        <Tilt>
           <Box sx={aboutClasses.imgContainer}></Box>
+          </Tilt>
         </Grid>
         <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'start' } }}>
           <Box sx={aboutClasses.heroText}>
