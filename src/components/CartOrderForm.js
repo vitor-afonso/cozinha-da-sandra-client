@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
+import { APP } from '../utils/app.utils';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -45,10 +46,9 @@ export const CartOrderForm = ({
   minDay,
   maxDay,
   user,
-  isElegibleForFreeDelivery,
-  getMissingAmountForFreeDelivery,
+  calculateCartTotalToShow,
 }) => {
-  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
+  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const [inputType, setInputType] = useState('text');
   const cartFormClasses = {
     form: {
@@ -77,7 +77,13 @@ export const CartOrderForm = ({
       max: new Date(+new Date() + maxDay).toISOString().slice(0, -8),
     },
   };
+  const getMissingAmountForFreeDelivery = () => {
+    return (amountForFreeDelivery - cartTotal).toFixed(2);
+  };
 
+  const isElegibleForFreeDelivery = () => {
+    return hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery');
+  };
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
       <Typography variant='h4' color='#031D44' sx={{ my: 2 }}>
@@ -187,7 +193,7 @@ export const CartOrderForm = ({
             {!isElegibleForFreeDelivery() && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
-                  Entrega grátis a partir de {amountForFreeDelivery}€. Valor em falta: {getMissingAmountForFreeDelivery()}€.
+                  Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta: {getMissingAmountForFreeDelivery() + APP.currency}.
                 </Typography>
               </Box>
             )}
@@ -197,11 +203,11 @@ export const CartOrderForm = ({
                 Taxa de entrega:
               </Typography>
               <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                {orderDeliveryFee}€
+                {orderDeliveryFee + APP.currency}
               </Typography>
               {isElegibleForFreeDelivery() && (
                 <Typography variant='body1' color='#031D44'>
-                  0€
+                  0{APP.currency}
                 </Typography>
               )}
             </Box>
@@ -210,7 +216,7 @@ export const CartOrderForm = ({
                 Total:
               </Typography>
               <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
-                {addedDeliveryFee && cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2)}€
+                {calculateCartTotalToShow()}
               </Typography>
             </Box>
           </Box>

@@ -6,10 +6,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { getItemsPrice, getItemsQuantity, parseDateToShow, capitalizeAppName, appEmail } from '../utils/app.utils';
+import { getItemsPrice, getItemsQuantity, parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
 
 import { Box, Button, Card, CardActions, CardContent, CircularProgress, Modal, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -108,7 +109,7 @@ export function ShopOrder({ order }) {
       let requestBody = { orderStatus: 'confirmed' };
 
       let confirmationEmail = {
-        from: appEmail,
+        from: APP.email,
         to: order.userId.email,
         subject: 'Pedido confirmado',
         message: `O seu pedido com o Nº: ${order.orderNumber} foi confirmado para o dia ${deliveredAt}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
@@ -147,14 +148,14 @@ export function ShopOrder({ order }) {
 
   const getTotal = () => {
     if (order.deliveryDiscount) {
-      return order.total.toFixed(2);
+      return order.total.toFixed(2) + APP.currency;
     }
 
     if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
-      return (order.total + order.deliveryFee).toFixed(2);
+      return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
     }
 
-    return order.total.toFixed(2);
+    return order.total.toFixed(2) + APP.currency;
   };
 
   const isPending = () => {
@@ -270,7 +271,7 @@ export function ShopOrder({ order }) {
               itemsPrice.map((item, index) => {
                 return (
                   <Typography variant='body1' gutterBottom key={index}>
-                    {item}€
+                    {item + APP.currency}
                   </Typography>
                 );
               })}
@@ -284,9 +285,9 @@ export function ShopOrder({ order }) {
             </Typography>
             <Box variant='body1'>
               <Typography sx={{ textDecoration: order.deliveryDiscount ? 'line-through' : '' }} gutterBottom>
-                {order.deliveryFee}€
+                {order.deliveryFee + APP.currency}
               </Typography>
-              {order.deliveryDiscount && '0€'}
+              {order.deliveryDiscount && `0${APP.currency}`}
             </Box>
           </Box>
         )}
@@ -375,7 +376,7 @@ export function ShopOrder({ order }) {
           <Typography variant='body1' color='#031D44'>
             <b>Total:</b>
           </Typography>
-          <Typography variant='body1'>{getTotal()}€</Typography>
+          <Typography variant='body1'>{getTotal()}</Typography>
         </Box>
       </CardContent>
 

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
-import { NAVBAR_HEIGHT } from '../utils/app.utils';
+import { APP } from '../utils/app.utils';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const SignupPage = () => {
 
   const signupClasses = {
     container: {
-      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
+      height: `calc(100vh - ${APP.navbarHeight})`,
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       justifyContent: 'center',

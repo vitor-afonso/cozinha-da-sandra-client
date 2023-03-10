@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
-import { NAVBAR_HEIGHT } from '../utils/app.utils';
+import { APP } from '../utils/app.utils';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
@@ -21,7 +21,7 @@ const LoginPage = () => {
 
   const loginClasses = {
     container: {
-      height: `calc(100vh - ${NAVBAR_HEIGHT})`,
+      height: `calc(100vh - ${APP.navbarHeight})`,
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' },
       justifyContent: 'center',
