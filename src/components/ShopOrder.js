@@ -216,7 +216,7 @@ export function ShopOrder({ order }) {
 
         <Box sx={orderClasses.infoField}>
           <Typography variant='body1' color='#031D44'>
-            <b>Metodo de entrega:</b>
+            <b>Método de entrega:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
             {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}

@@ -219,7 +219,7 @@ const CartPage = () => {
 
     if (!deliveryMethod) {
       setDeliveryMethodError(true);
-      setErrorMessage('Por favor escolha metodo de entrega.');
+      setErrorMessage('Por favor escolha método de entrega.');
       return;
     }
     setDeliveryMethodError(false);
