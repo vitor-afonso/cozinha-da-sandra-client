@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
-import Radio from '@mui/material/Radio';
 import { APP } from '../utils/app.utils';
+
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Tooltip, Typography, useTheme, Zoom } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import InfoIcon from '@mui/icons-material/Info';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -49,7 +50,9 @@ export const CartOrderForm = ({
   calculateCartTotalToShow,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
+  const theme = useTheme();
   const [inputType, setInputType] = useState('text');
+
   const cartFormClasses = {
     form: {
       display: 'flex',
@@ -86,7 +89,7 @@ export const CartOrderForm = ({
   };
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
-      <Typography variant='h4' color='#031D44' sx={{ my: 2 }}>
+      <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 2 }}>
         Dados de entrega
       </Typography>
       <Box sx={cartFormClasses.form}>
@@ -109,7 +112,7 @@ export const CartOrderForm = ({
           />
 
           <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
-            <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
+            <FormLabel id='demo-row-radio-buttons-group-label'>Método de entrega</FormLabel>
             <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
               <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
               <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
@@ -117,7 +120,7 @@ export const CartOrderForm = ({
           </FormControl>
 
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
-            <Typography variant='h4' color='#031D44' sx={{ mb: 2 }}>
+            <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mb: 2 }}>
               Morada
             </Typography>
             <TextField
@@ -192,30 +195,34 @@ export const CartOrderForm = ({
           <Box sx={{ mb: 2 }}>
             {!isElegibleForFreeDelivery() && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
-                <Typography variant='body2' color='#031D44' sx={{ mr: 1, maxWidth: '350px' }}>
+                <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta: {getMissingAmountForFreeDelivery() + APP.currency}.
                 </Typography>
               </Box>
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography variant='h6' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
-                Taxa de entrega:
+              <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1, textAlign: 'left' }}>
+                Entrega desde:
               </Typography>
-              <Typography variant='body1' color='#031D44' sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+              <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
                 {orderDeliveryFee + APP.currency}
               </Typography>
               {isElegibleForFreeDelivery() && (
-                <Typography variant='body1' color='#031D44'>
+                <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>
                   0{APP.currency}
                 </Typography>
               )}
+
+              <Tooltip title='Este valor pode variar consoante local de entrega.' placement='top-start' enterDelay={200} leaveDelay={200} TransitionComponent={Zoom} arrow>
+                <InfoIcon color='primary' fontSize='inherit' />
+              </Tooltip>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
                 Total:
               </Typography>
-              <Typography variant='h4' color='#031D44' sx={{ mt: 1, mb: 2 }}>
+              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
                 {calculateCartTotalToShow()}
               </Typography>
             </Box>
