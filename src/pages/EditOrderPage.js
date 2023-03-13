@@ -20,6 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import Modal from '@mui/material/Modal';
+import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
 
 const modalStyle = {
   position: 'absolute',
@@ -105,14 +106,18 @@ const EditOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [contact, setContact] = useState('');
+  const [deliveryPrice, setDeliveryPrice] = useState('');
   const [contactError, setContactError] = useState(false);
+  const [deliveryPriceError, setDeliveryPriceError] = useState(false);
   const [fullAddress, setFullAddress] = useState('');
   const [message, setMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState('');
   const [deliveryDateError, setDeliveryDateError] = useState(false);
+  const [addressError, setAddressError] = useState(false);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [haveExtraFee, setHaveExtraFee] = useState(false);
   const adminEffectRan = useRef(false);
   const addressRef = useRef();
   const submitForm = useRef();
@@ -169,6 +174,16 @@ const EditOrderPage = () => {
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
 
+    if (order.deliveryFee > 0) {
+      setDeliveryPrice(order.deliveryFee);
+    } else {
+      setDeliveryPrice(orderDeliveryFee);
+    }
+
+    if (order.haveExtraDeliveryFee) {
+      setHaveExtraFee(true);
+    }
+
     if (!wasTakeAwayOrder()) {
       setIsAddressNotVisible(false);
       setFullAddress(order.address);
@@ -184,6 +199,14 @@ const EditOrderPage = () => {
 
     if (e.target.value === '' || re.test(e.target.value)) {
       setContact(e.target.value);
+    }
+  };
+  const validateDeliveryFee = (e) => {
+    //regEx to prevent from typing letters
+    const re = /^[0-9.]+$/;
+
+    if (e.target.value === '' || re.test(e.target.value)) {
+      setDeliveryPrice(e.target.value);
     }
   };
 
@@ -204,6 +227,7 @@ const EditOrderPage = () => {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
       dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      setHaveExtraFee(false);
     }
   };
 
@@ -231,6 +255,9 @@ const EditOrderPage = () => {
   }
 
   const calculateCartTotalToShow = () => {
+    if (haveExtraFee) {
+      return (cartTotal + Number(deliveryPrice)).toFixed(2);
+    }
     if (deliveryMethod === 'delivery') {
       if (!wasTakeAwayOrder()) {
         return cartTotal < order.amountForFreeDelivery && !order.deliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
@@ -242,26 +269,34 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return hasDeliveryDiscount || (order.deliveryDiscount && !wasTakeAwayOrder()) || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery');
+    return (hasDeliveryDiscount && !haveExtraFee) || (order.deliveryDiscount && !wasTakeAwayOrder()) || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery' && !haveExtraFee);
   };
 
   const getDeliveryFee = () => {
-    if (order.deliveryFee > 0) {
-      return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
+    if (haveExtraFee) {
+      return deliveryPrice;
     }
 
-    return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
+    if (wasTakeAwayOrder() && user.userType === 'user') {
+      return deliveryMethod === 'delivery' ? deliveryPrice : 0;
+    }
+
+    if (order.deliveryMethod === 'delivery' && order.total >= order.amountForFreeDelivery) {
+      return order.deliveryFee;
+    }
+
+    return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
   };
 
   const isElegibleForGlobalDiscount = () => {
-    return (hasDeliveryDiscount && deliveryMethod === 'delivery') || (!wasTakeAwayOrder() && order.deliveryDiscount) ? true : false;
+    return (hasDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) || (!wasTakeAwayOrder() && order.deliveryDiscount && !haveExtraFee) ? true : false;
   };
 
   const getMissingAmountForFreeDelivery = () => {
-    if (!wasTakeAwayOrder()) {
-      return ' ' + (order.amountForFreeDelivery - cartTotal).toFixed(2);
+    if (wasTakeAwayOrder()) {
+      return ' ' + (amountForFreeDelivery - cartTotal).toFixed(2);
     }
-    return ' ' + (amountForFreeDelivery - cartTotal).toFixed(2);
+    return ' ' + (order.amountForFreeDelivery - cartTotal).toFixed(2);
   };
 
   const handleSubmit = async (e) => {
@@ -272,6 +307,7 @@ const EditOrderPage = () => {
     if (!user._id) {
       return;
     }
+
     if (!contact) {
       setContactError(true);
       setErrorMessage('Por favor adicione contacto.');
@@ -294,9 +330,20 @@ const EditOrderPage = () => {
     setDeliveryDateError(false);
 
     if (deliveryMethod === 'delivery' && !fullAddress) {
+      setAddressError(true);
       setErrorMessage('Por favor adicione morada para entrega.');
       return;
     }
+
+    setAddressError(false);
+
+    if (!deliveryPrice) {
+      setDeliveryPriceError(true);
+      setErrorMessage('Por favor adicione taxa de entrega.');
+      return;
+    }
+
+    setDeliveryPriceError(false);
 
     setIsLoading(true);
 
@@ -305,7 +352,8 @@ const EditOrderPage = () => {
         deliveryDate: new Date(deliveryDate),
         contact,
         address: deliveryMethod === 'delivery' ? fullAddress : '',
-        deliveryFee: getDeliveryFee(),
+        deliveryFee: Number(getDeliveryFee()),
+        haveExtraDeliveryFee: haveExtraFee,
         deliveryDiscount: isElegibleForGlobalDiscount(),
         message,
         deliveryMethod,
@@ -328,7 +376,7 @@ const EditOrderPage = () => {
 
   return (
     <Box sx={editOrderClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
         EDITAR
       </Typography>
       {order && !successMessage && (
@@ -393,10 +441,15 @@ const EditOrderPage = () => {
             setMessage={setMessage}
             errorMessage={errorMessage}
             submitForm={submitForm}
-            order={order}
+            deliveryPrice={deliveryPrice}
             deliveryDateError={deliveryDateError}
+            deliveryPriceError={deliveryPriceError}
+            validateDeliveryFee={validateDeliveryFee}
+            addressError={addressError}
             minDays={MIN_DAYS}
             maxDays={MAX_DAYS}
+            haveExtraFee={haveExtraFee}
+            setHaveExtraFee={setHaveExtraFee}
           />
 
           <Box sx={editOrderClasses.infoContainer}>
@@ -424,16 +477,27 @@ const EditOrderPage = () => {
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                    Items no carrinho:
+                  </Typography>
+                  <Typography variant='body1' color={theme.palette.neutral.main}>
+                    {cartTotal.toFixed(2) + APP.currency}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Taxa de entrega:
                   </Typography>
+
                   <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                    {wasTakeAwayOrder() ? orderDeliveryFee + APP.currency : order.deliveryFee + APP.currency}
+                    {getDeliveryFee() + APP.currency}
                   </Typography>
+
                   {isElegibleForFreeDelivery() && (
                     <Typography variant='body1' color={theme.palette.neutral.main}>
                       0{APP.currency}
                     </Typography>
                   )}
+                  {user.userType === 'user' && <TooltipDeliveryFee />}
                 </Box>
               </>
             )}
