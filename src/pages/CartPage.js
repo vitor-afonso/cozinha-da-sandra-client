@@ -91,7 +91,7 @@ const CartPage = () => {
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
 
-  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery;
+  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery && !hasDeliveryDiscount;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
@@ -261,7 +261,7 @@ const CartPage = () => {
         address: fullAddress ? fullAddress.join(' ') : '',
         message,
         deliveryMethod,
-        deliveryFee: addedDeliveryFee ? orderDeliveryFee : 0,
+        deliveryFee: shouldPayForDeliveryFee ? orderDeliveryFee : 0,
         amountForFreeDelivery: amountForFreeDelivery,
         deliveryDiscount: checkIfHaveDiscount(),
         items: cartItems,
