@@ -146,15 +146,17 @@ export function ShopOrder({ order }) {
     }
   };
 
-  const getTotal = () => {
-    if (order.deliveryDiscount) {
-      return order.total.toFixed(2) + APP.currency;
-    }
+  const isElegibleForFreeDelivery = () => {
+    return (order.deliveryDiscount && !order.haveExtraDeliveryFee) || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery' && !order.haveExtraDeliveryFee);
+  };
 
-    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
+  const getTotal = () => {
+    if (order.haveExtraDeliveryFee) {
       return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
     }
-
+    if (order.deliveryMethod === 'delivery') {
+      return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
+    }
     return order.total.toFixed(2) + APP.currency;
   };
 
@@ -284,7 +286,7 @@ export function ShopOrder({ order }) {
               <b>Taxa de entrega:</b>
             </Typography>
             <Box variant='body1'>
-              <Typography sx={{ textDecoration: order.deliveryDiscount ? 'line-through' : '' }} gutterBottom>
+              <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
               {order.deliveryDiscount && `0${APP.currency}`}
