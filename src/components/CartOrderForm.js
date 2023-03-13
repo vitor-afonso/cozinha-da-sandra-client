@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { APP } from '../utils/app.utils';
 
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import TooltipDeliveryFee from './TooltipDeliveryFee';
 
@@ -48,6 +48,11 @@ export const CartOrderForm = ({
   maxDay,
   user,
   calculateCartTotalToShow,
+  haveExtraFee,
+  setHaveExtraFee,
+  deliveryPriceError,
+  deliveryPrice,
+  validateDeliveryFee,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
@@ -85,7 +90,7 @@ export const CartOrderForm = ({
   };
 
   const isElegibleForFreeDelivery = () => {
-    return hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery');
+    return (hasDeliveryDiscount && !haveExtraFee) || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery' && !haveExtraFee);
   };
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
@@ -111,14 +116,36 @@ export const CartOrderForm = ({
             inputProps={user.userType === 'user' ? cartFormClasses.dateProps : {}}
           />
 
-          <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
-            <FormLabel id='demo-row-radio-buttons-group-label'>Método de entrega</FormLabel>
-            <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
-              <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
-              <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
-            </RadioGroup>
-          </FormControl>
+          <Box sx={{ display: { xs: 'block', md: 'flex' }, mb: 2 }}>
+            <FormControl align='left' fullWidth={true} error={deliveryMethodError} sx={{ my: 1 }}>
+              <FormLabel id='demo-row-radio-buttons-group-label'>Método de entrega</FormLabel>
+              <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
+                <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
+                <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
+              </RadioGroup>
+            </FormControl>
 
+            {deliveryMethod === 'delivery' && user.userType === 'admin' && (
+              <FormControlLabel
+                control={<Switch checked={haveExtraFee} onChange={() => setHaveExtraFee(!haveExtraFee)} inputProps={{ 'aria-label': 'controlled' }} />}
+                label='Definir taxa de entrega'
+                sx={{ width: '100%', pt: { xs: 0, md: 3 } }}
+              />
+            )}
+          </Box>
+          {user.userType === 'admin' && haveExtraFee && (
+            <TextField
+              label='Taxa de entrega'
+              type='text'
+              variant='outlined'
+              fullWidth
+              required
+              sx={cartFormClasses.formField}
+              onChange={(e) => validateDeliveryFee(e)}
+              error={deliveryPriceError}
+              value={deliveryPrice}
+            />
+          )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
             <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mb: 2 }}>
               Morada
@@ -193,7 +220,7 @@ export const CartOrderForm = ({
 
         {deliveryMethod === 'delivery' && (
           <Box sx={{ mb: 2 }}>
-            {!isElegibleForFreeDelivery() && (
+            {cartTotal < amountForFreeDelivery && !haveExtraFee && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta: {getMissingAmountForFreeDelivery() + APP.currency}.
@@ -206,7 +233,7 @@ export const CartOrderForm = ({
                 Entrega desde:
               </Typography>
               <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                {orderDeliveryFee + APP.currency}
+                {haveExtraFee ? deliveryPrice : orderDeliveryFee + APP.currency}
               </Typography>
               {isElegibleForFreeDelivery() && (
                 <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>

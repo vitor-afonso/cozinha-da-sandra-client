@@ -80,7 +80,10 @@ const CartPage = () => {
   const [addressCityError, setAddressCityError] = useState(false);
   const [addressCode, setAddressCode] = useState('');
   const [addressCodeError, setAddressCodeError] = useState(false);
+  const [deliveryPrice, setDeliveryPrice] = useState(orderDeliveryFee);
+  const [deliveryPriceError, setDeliveryPriceError] = useState(false);
   const [message, setMessage] = useState('');
+  const [haveExtraFee, setHaveExtraFee] = useState(false);
   const [isNotVisible, setIsNotVisible] = useState(true);
   const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
   const [requiredInput, setRequiredInput] = useState(false);
@@ -91,7 +94,7 @@ const CartPage = () => {
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
 
-  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery && !hasDeliveryDiscount;
+  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery && !hasDeliveryDiscount && !haveExtraFee;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
@@ -142,6 +145,15 @@ const CartPage = () => {
     }
   };
 
+  const validateDeliveryFee = (e) => {
+    //regEx to prevent from typing letters
+    const re = /^[0-9.]+$/;
+
+    if (e.target.value === '' || re.test(e.target.value)) {
+      setDeliveryPrice(e.target.value);
+    }
+  };
+
   const checkDeliveryDate = () => {
     //delivery date must be min 2 days from actual date
     const minDate = new Date(+new Date() + minDay).toISOString().slice(0, -8);
@@ -169,19 +181,29 @@ const CartPage = () => {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
       dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      setHaveExtraFee(false);
     }
-
-    //console.log(e.target.value);
   };
 
-  const checkIfHaveDiscount = () => {
-    if ((deliveryMethod === 'delivery' && cartTotal > amountForFreeDelivery) || hasDeliveryDiscount) {
+  const isElegibleForGlobalDiscount = () => {
+    if (hasDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) {
       return true;
     }
     return false;
   };
 
+  const getDeliveryFee = () => {
+    if (haveExtraFee) {
+      return Number(deliveryPrice);
+    }
+
+    return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
+  };
+
   const calculateCartTotalToShow = () => {
+    if (haveExtraFee) {
+      return (cartTotal + Number(deliveryPrice)).toFixed(2);
+    }
     if (deliveryMethod === 'delivery') {
       return shouldPayForDeliveryFee ? orderPriceWithFee : orderPrice;
     }
@@ -245,6 +267,14 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
+    if (!deliveryPrice) {
+      setDeliveryPriceError(true);
+      setErrorMessage('Por favor adicione taxa de entrega.');
+      return;
+    }
+
+    setDeliveryPriceError(false);
+
     setIsLoading(true);
 
     try {
@@ -261,15 +291,16 @@ const CartPage = () => {
         address: fullAddress ? fullAddress.join(' ') : '',
         message,
         deliveryMethod,
-        deliveryFee: shouldPayForDeliveryFee ? orderDeliveryFee : 0,
+        deliveryFee: getDeliveryFee(),
+        haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
-        deliveryDiscount: checkIfHaveDiscount(),
+        deliveryDiscount: isElegibleForGlobalDiscount(),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
       };
 
-      //console.log('requestBody to create order: ', requestBody);
+      // console.log('requestBody to create order: ', requestBody);
 
       let { data } = await createOrder(requestBody);
 
@@ -365,6 +396,11 @@ const CartPage = () => {
                 maxDay={maxDay}
                 user={user}
                 calculateCartTotalToShow={calculateCartTotalToShow}
+                haveExtraFee={haveExtraFee}
+                setHaveExtraFee={setHaveExtraFee}
+                deliveryPrice={deliveryPrice}
+                deliveryPriceError={deliveryPriceError}
+                validateDeliveryFee={validateDeliveryFee}
               />
             </>
           ) : (

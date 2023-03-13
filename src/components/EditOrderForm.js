@@ -83,7 +83,7 @@ export function EditOrderForm({
             onFocus={() => setInputType('datetime-local')}
             onBlur={() => !deliveryDate && setInputType('text')}
           />
-          <Box sx={{ display: 'flex', mb: 2 }}>
+          <Box sx={{ display: { xs: 'block', md: 'flex' }, mb: 2 }}>
             <FormControl align='left' fullWidth={true}>
               <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
               <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
@@ -96,7 +96,7 @@ export function EditOrderForm({
               <FormControlLabel
                 control={<Switch checked={haveExtraFee} onChange={() => setHaveExtraFee(!haveExtraFee)} inputProps={{ 'aria-label': 'controlled' }} />}
                 label='Definir taxa de entrega'
-                sx={{ width: '100%', pt: 3 }}
+                sx={{ width: '100%', pt: { xs: 0, md: 3 } }}
               />
             )}
           </Box>
