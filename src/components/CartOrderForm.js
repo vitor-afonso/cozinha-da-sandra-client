@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { APP } from '../utils/app.utils';
 
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Tooltip, Typography, useTheme, Zoom } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
-import InfoIcon from '@mui/icons-material/Info';
+import TooltipDeliveryFee from './TooltipDeliveryFee';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -214,9 +214,7 @@ export const CartOrderForm = ({
                 </Typography>
               )}
 
-              <Tooltip title='Este valor pode variar consoante local de entrega.' placement='top-start' enterDelay={200} leaveDelay={200} TransitionComponent={Zoom} arrow>
-                <InfoIcon color='primary' fontSize='inherit' />
-              </Tooltip>
+              {user.userType === 'user' && <TooltipDeliveryFee />}
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
