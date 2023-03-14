@@ -11,7 +11,7 @@ import ConfirmOrderModal from './ConfirmOrderModal';
 
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
 import PaidOrderModal from './PaidOrderModal';
-import { orderClasses } from '../utils/app.styleClasses';
+import { shopOrderClasses } from '../utils/app.styleClasses';
 
 const APP_NAME = capitalizeAppName();
 
@@ -145,9 +145,9 @@ export function ShopOrder({ order }) {
   }
 
   return (
-    <Card sx={orderClasses.container}>
+    <Card sx={shopOrderClasses.container}>
       <CardContent>
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Nº:</b>
           </Typography>
@@ -157,7 +157,7 @@ export function ShopOrder({ order }) {
         </Box>
 
         {isCurrentUserAdmin && (
-          <Box sx={orderClasses.infoField}>
+          <Box sx={shopOrderClasses.infoField}>
             <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Utilizador:</b>
             </Typography>
@@ -167,7 +167,7 @@ export function ShopOrder({ order }) {
           </Box>
         )}
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Telefone:</b>
           </Typography>
@@ -176,7 +176,7 @@ export function ShopOrder({ order }) {
           </Typography>
         </Box>
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Data de criação:</b>
           </Typography>
@@ -185,7 +185,7 @@ export function ShopOrder({ order }) {
           </Typography>
         </Box>
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Data de entrega:</b>
           </Typography>
@@ -194,7 +194,7 @@ export function ShopOrder({ order }) {
           </Typography>
         </Box>
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Método de entrega:</b>
           </Typography>
@@ -216,7 +216,7 @@ export function ShopOrder({ order }) {
         )}
 
         {order.message && (
-          <Box sx={orderClasses.infoField}>
+          <Box sx={shopOrderClasses.infoField}>
             <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Mensagem:</b>
             </Typography>
@@ -226,7 +226,7 @@ export function ShopOrder({ order }) {
           </Box>
         )}
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Quantidade: </b>
           </Typography>
@@ -242,7 +242,7 @@ export function ShopOrder({ order }) {
           </Box>
         </Box>
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Preço: </b>
           </Typography>
@@ -259,7 +259,7 @@ export function ShopOrder({ order }) {
         </Box>
 
         {isOrderForDelivery && (
-          <Box sx={orderClasses.infoField}>
+          <Box sx={shopOrderClasses.infoField}>
             <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Taxa de entrega:</b>
             </Typography>
@@ -271,7 +271,7 @@ export function ShopOrder({ order }) {
             </Box>
           </Box>
         )}
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Status: </b>
           </Typography>
@@ -288,7 +288,7 @@ export function ShopOrder({ order }) {
           <ConfirmOrderModal open={open} handleConfirmOrder={handleConfirmOrder} handleClose={handleClose} isConfirmLoading={isConfirmLoading} />
         </Box>
 
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Pago: </b>
           </Typography>
@@ -303,7 +303,7 @@ export function ShopOrder({ order }) {
 
           <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} handleClosePaid={handleClosePaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
         </Box>
-        <Box sx={orderClasses.infoField}>
+        <Box sx={shopOrderClasses.infoField}>
           <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Total:</b>
           </Typography>
@@ -312,14 +312,14 @@ export function ShopOrder({ order }) {
       </CardContent>
 
       {shouldShowCardActions && (
-        <CardActions sx={orderClasses.actions}>
+        <CardActions sx={shopOrderClasses.actions}>
           {!location.pathname.includes('send-email') && isCurrentUserAdmin && (
             <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
               Contactar
             </Button>
           )}
           {shouldShowEditButton && (
-            <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            <Button size='small' sx={shopOrderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
               Editar
             </Button>
           )}

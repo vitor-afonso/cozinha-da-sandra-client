@@ -1,6 +1,6 @@
 import { grey } from '@mui/material/colors';
 
-export const orderClasses = {
+export const shopOrderClasses = {
   container: {
     width: 300,
     backgroundColor: '#E3DDE3',
