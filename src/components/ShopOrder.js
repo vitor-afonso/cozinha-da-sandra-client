@@ -82,15 +82,9 @@ export function ShopOrder({ order }) {
         from: APP.email,
         to: order.userId.email,
         subject: 'Pedido confirmado',
-        message: `O seu pedido com o Nº: ${
+        message: `<p>O seu pedido com o Nº: ${
           order.orderNumber
-        } foi confirmado para o dia ${deliveredAt}, com o valor total de ${getTotal()}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
-
-        Encontre todos os detalhes do seu pedido na sua pagina de perfil -> Historico de pedidos.
-        
-        Com os melhores cumprimentos,
-        ${APP_NAME} 👩🏾‍🍳
-        `,
+        } foi confirmado para o dia ${deliveredAt}, com o valor total de ${getTotal()}. Por favor indique o número do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).</p><p>Encontre todos os detalhes do seu pedido na sua pagina de perfil -> Historico de pedidos.</p> <br/><br/><p>Com os melhores cumprimentos,</p><p>${APP_NAME} 👩🏾‍🍳</p>`,
       };
 
       await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
