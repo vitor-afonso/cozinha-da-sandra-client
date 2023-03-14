@@ -7,38 +7,34 @@ import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { getItemsPrice, getItemsQuantity, parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
+import ConfirmOrderModal from './ConfirmOrderModal';
 
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Modal, Typography } from '@mui/material';
-import { grey } from '@mui/material/colors';
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  bgcolor: 'background.paper',
-  border: '2px solid #816E94',
-  boxShadow: 24,
-  p: 4,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
+import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
+import PaidOrderModal from './PaidOrderModal';
+import { orderClasses } from '../utils/app.styleClasses';
 
 const APP_NAME = capitalizeAppName();
+
 export function ShopOrder({ order }) {
   const { user } = useContext(AuthContext);
   const [createdAt, setCreatedAt] = useState('');
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
   const [itemsPrice, setItemsPrice] = useState([]);
-  const [btnLoading, setBtnLoading] = useState(false);
-  const [paidBtnLoading, setPaidBtnLoading] = useState(false);
+  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+  const [isPaidLoading, setIsPaidLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const isCurrentUserAdmin = user.userType === 'admin';
+  const shouldShowCardActions = isCurrentUserAdmin || isPending();
+  const shouldShowEditButton = (isPending() && user.userType === 'user') || isCurrentUserAdmin;
+  const shouldShowConfirmButton = order.orderStatus === 'pending' && checkDeliveryDate() && isCurrentUserAdmin;
+  const isOrderForDelivery = order.deliveryMethod === 'delivery';
+  const isOrderPending = order.orderStatus === 'pending' ? true : false;
+
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -46,32 +42,6 @@ export function ShopOrder({ order }) {
   const [openPaid, setOpenPaid] = React.useState(false);
   const handleOpenPaid = () => setOpenPaid(true);
   const handleClosePaid = () => setOpenPaid(false);
-
-  const orderClasses = {
-    container: {
-      width: 300,
-      backgroundColor: '#E3DDE3',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    infoField: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    addressField: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      borderTop: '1px solid #CCC',
-    },
-    editBtn: {
-      color: grey[700],
-      cursor: 'pointer',
-    },
-  };
 
   useEffect(() => {
     if (order) {
@@ -86,12 +56,12 @@ export function ShopOrder({ order }) {
   }, [order]);
 
   //fn compares dates to know if we can render confirm button
-  const checkDeliveryDate = () => {
+  function checkDeliveryDate() {
     const orderDeliveryDate = new Date(order.deliveryDate);
     const todaysDate = new Date();
 
     return orderDeliveryDate > todaysDate ? true : false;
-  };
+  }
 
   const translateStatus = (status) => {
     if (status === 'pending') {
@@ -104,7 +74,7 @@ export function ShopOrder({ order }) {
   };
 
   const handleConfirmOrder = async () => {
-    setBtnLoading(true);
+    setIsConfirmLoading(true);
     try {
       let requestBody = { orderStatus: 'confirmed' };
 
@@ -112,9 +82,11 @@ export function ShopOrder({ order }) {
         from: APP.email,
         to: order.userId.email,
         subject: 'Pedido confirmado',
-        message: `O seu pedido com o Nº: ${order.orderNumber} foi confirmado para o dia ${deliveredAt}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
+        message: `O seu pedido com o Nº: ${
+          order.orderNumber
+        } foi confirmado para o dia ${deliveredAt}, com o valor total de ${getTotal()}. Por favor indique o Nº do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).
 
-        Encontre os detalhes do seu pedido na sua pagina de perfil.
+        Encontre todos os detalhes do seu pedido na sua pagina de perfil -> Historico de pedidos.
         
         Com os melhores cumprimentos,
         ${APP_NAME} 👩🏾‍🍳
@@ -126,12 +98,13 @@ export function ShopOrder({ order }) {
       handleClose();
     } catch (error) {
       console.log(error.message);
-      setBtnLoading(false);
+    } finally {
+      setIsConfirmLoading(false);
     }
   };
 
   const handleConfirmPayment = async () => {
-    setPaidBtnLoading(true);
+    setIsPaidLoading(true);
 
     try {
       let requestBody = { paid: true };
@@ -142,8 +115,13 @@ export function ShopOrder({ order }) {
       handleClosePaid();
     } catch (error) {
       console.log(error.message);
-      setPaidBtnLoading(false);
+    } finally {
+      setIsPaidLoading(false);
     }
+  };
+
+  const isElegibleForFreeDelivery = () => {
+    return (order.deliveryDiscount && !order.haveExtraDeliveryFee) || (order.total > order.amountForFreeDelivery && isOrderForDelivery && !order.haveExtraDeliveryFee);
   };
 
   const getTotal = () => {
@@ -154,21 +132,23 @@ export function ShopOrder({ order }) {
     if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
       return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
     }
-
+    if (isOrderForDelivery) {
+      return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
+    }
     return order.total.toFixed(2) + APP.currency;
   };
 
-  const isPending = () => {
+  function isPending() {
     if (order.orderStatus === 'pending' && checkDeliveryDate()) {
       return true;
     }
-  };
+  }
 
   return (
     <Card sx={orderClasses.container}>
       <CardContent>
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Nº:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
@@ -176,9 +156,9 @@ export function ShopOrder({ order }) {
           </Typography>
         </Box>
 
-        {user.userType === 'admin' && (
+        {isCurrentUserAdmin && (
           <Box sx={orderClasses.infoField}>
-            <Typography variant='body1' color='#031D44' onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
+            <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Utilizador:</b>
             </Typography>
             <Typography variant='body1' gutterBottom>
@@ -188,7 +168,7 @@ export function ShopOrder({ order }) {
         )}
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Telefone:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
@@ -197,7 +177,7 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Data de criação:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
@@ -206,7 +186,7 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Data de entrega:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
@@ -215,17 +195,17 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Método de entrega:</b>
           </Typography>
           <Typography variant='body1' gutterBottom>
-            {order.deliveryMethod === 'delivery' ? 'Entrega' : 'Take Away'}
+            {isOrderForDelivery ? 'Entrega' : 'Take Away'}
           </Typography>
         </Box>
 
         {order.address && (
           <Box>
-            <Typography variant='body1' color='#031D44' align='left'>
+            <Typography variant='body1' color={theme.palette.neutral.main} align='left'>
               <b>Morada: </b>
             </Typography>
 
@@ -237,7 +217,7 @@ export function ShopOrder({ order }) {
 
         {order.message && (
           <Box sx={orderClasses.infoField}>
-            <Typography variant='body1' color='#031D44'>
+            <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Mensagem:</b>
             </Typography>
             <Typography variant='body1' gutterBottom>
@@ -247,7 +227,7 @@ export function ShopOrder({ order }) {
         )}
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Quantidade: </b>
           </Typography>
           <Box>
@@ -263,7 +243,7 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Preço: </b>
           </Typography>
           <Box>
@@ -278,9 +258,9 @@ export function ShopOrder({ order }) {
           </Box>
         </Box>
 
-        {order.deliveryMethod === 'delivery' && (
+        {isOrderForDelivery && (
           <Box sx={orderClasses.infoField}>
-            <Typography variant='body1' color='#031D44'>
+            <Typography variant='body1' color={theme.palette.neutral.main}>
               <b>Taxa de entrega:</b>
             </Typography>
             <Box variant='body1'>
@@ -292,111 +272,57 @@ export function ShopOrder({ order }) {
           </Box>
         )}
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Status: </b>
           </Typography>
           <Typography>
             {translateStatus(order.orderStatus)}
-            {order.orderStatus === 'pending' && checkDeliveryDate() && user.userType === 'admin' && (
+
+            {shouldShowConfirmButton && (
               <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>
             )}
           </Typography>
 
-          <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-            <Box sx={modalStyle}>
-              <Typography id='modal-modal-title' variant='body1' sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
-                Enviar email de confirmação?
-              </Typography>
-              <Box sx={{ mt: 2 }}>
-                {!btnLoading && (
-                  <>
-                    <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                      Cancelar
-                    </Button>
-                    <Button type='button' variant='contained' onClick={handleConfirmOrder}>
-                      Confirmar
-                    </Button>
-                  </>
-                )}
-                {btnLoading && <CircularProgress size='20px' />}
-              </Box>
-            </Box>
-          </Modal>
+          <ConfirmOrderModal open={open} handleConfirmOrder={handleConfirmOrder} handleClose={handleClose} isConfirmLoading={isConfirmLoading} />
         </Box>
 
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Pago: </b>
           </Typography>
           <Typography>
             {order.paid ? 'Sim' : 'Não'}
-            {!order.paid && user.userType === 'admin' && (
+            {!order.paid && isCurrentUserAdmin && (
               <Button size='small' onClick={handleOpenPaid}>
                 Confirmar
               </Button>
             )}
           </Typography>
-          <Modal open={openPaid} onClose={handleClosePaid} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-            <Box sx={modalStyle}>
-              {order.orderStatus === 'pending' ? (
-                <>
-                  <Typography id='modal-modal-title' variant='body1' sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
-                    Confirme status do pedido antes.
-                  </Typography>
-                  <Button variant='outlined' onClick={handleClosePaid}>
-                    Voltar
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Typography id='modal-modal-title' variant='h6' component='h2'>
-                    Confirmar pago?
-                  </Typography>
-                  <Box sx={{ mt: 2 }}>
-                    {!paidBtnLoading && (
-                      <>
-                        <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClosePaid}>
-                          Cancelar
-                        </Button>
-                        <Button type='button' variant='contained' onClick={handleConfirmPayment}>
-                          Confirmar
-                        </Button>
-                      </>
-                    )}
-                    {paidBtnLoading && <CircularProgress size='20px' />}
-                  </Box>
-                </>
-              )}
-            </Box>
-          </Modal>
+
+          <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} handleClosePaid={handleClosePaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
         </Box>
         <Box sx={orderClasses.infoField}>
-          <Typography variant='body1' color='#031D44'>
+          <Typography variant='body1' color={theme.palette.neutral.main}>
             <b>Total:</b>
           </Typography>
           <Typography variant='body1'>{getTotal()}</Typography>
         </Box>
       </CardContent>
 
-      {isPending() && user.userType === 'user' && (
+      {shouldShowCardActions && (
         <CardActions sx={orderClasses.actions}>
-          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
-            Editar
-          </Button>
-        </CardActions>
-      )}
-      {user.userType === 'admin' && (
-        <CardActions sx={orderClasses.actions}>
-          {!location.pathname.includes('send-email') && (
+          {!location.pathname.includes('send-email') && isCurrentUserAdmin && (
             <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
               Contactar
             </Button>
           )}
-          <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
-            Editar
-          </Button>
+          {shouldShowEditButton && (
+            <Button size='small' sx={orderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+              Editar
+            </Button>
+          )}
         </CardActions>
       )}
     </Card>
