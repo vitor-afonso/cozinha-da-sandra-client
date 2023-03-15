@@ -86,7 +86,7 @@ export function ShopOrder({ order }) {
   }, [order]);
 
   //fn compares dates to know if we can render confirm button
-  const checkDeliveryDate = () => {
+  const shouldDisplayConfirmButton = () => {
     const orderDeliveryDate = new Date(order.deliveryDate);
     const todaysDate = new Date();
 
@@ -161,7 +161,7 @@ export function ShopOrder({ order }) {
   };
 
   const isPending = () => {
-    if (order.orderStatus === 'pending' && checkDeliveryDate()) {
+    if (order.orderStatus === 'pending' && shouldDisplayConfirmButton()) {
       return true;
     }
   };
@@ -299,7 +299,7 @@ export function ShopOrder({ order }) {
           </Typography>
           <Typography>
             {translateStatus(order.orderStatus)}
-            {order.orderStatus === 'pending' && checkDeliveryDate() && user.userType === 'admin' && (
+            {order.orderStatus === 'pending' && shouldDisplayConfirmButton() && user.userType === 'admin' && (
               <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { APP } from '../utils/app.utils';
+import { APP, getMissingAmountForFreeDelivery, handleCustomDeliveryFee, maxDays, minDays } from '../utils/app.utils';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -44,15 +44,13 @@ export const CartOrderForm = ({
   submitBtnRef,
   successMessage,
   isLoading,
-  minDay,
-  maxDay,
   user,
   calculateCartTotalToShow,
   haveExtraFee,
   setHaveExtraFee,
-  deliveryPriceError,
-  deliveryPrice,
-  validateDeliveryFee,
+  customDeliveryFeeError,
+  customDeliveryFee,
+  setcustomDeliveryFee,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
@@ -66,7 +64,6 @@ export const CartOrderForm = ({
       mx: 'auto',
       minWidth: 300,
       maxWidth: 600,
-      //outline: '1px solid red',
     },
     formField: {
       marginTop: 0,
@@ -81,17 +78,15 @@ export const CartOrderForm = ({
       display: 'none',
     },
     dateProps: {
-      min: new Date(+new Date() + minDay).toISOString().slice(0, -8),
-      max: new Date(+new Date() + maxDay).toISOString().slice(0, -8),
+      min: new Date(+new Date() + minDays).toISOString().slice(0, -8),
+      max: new Date(+new Date() + maxDays).toISOString().slice(0, -8),
     },
-  };
-  const getMissingAmountForFreeDelivery = () => {
-    return (amountForFreeDelivery - cartTotal).toFixed(2);
   };
 
   const isElegibleForFreeDelivery = () => {
     return (hasDeliveryDiscount && !haveExtraFee) || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery' && !haveExtraFee);
   };
+
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
       <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 2 }}>
@@ -141,9 +136,9 @@ export const CartOrderForm = ({
               fullWidth
               required
               sx={cartFormClasses.formField}
-              onChange={(e) => validateDeliveryFee(e)}
-              error={deliveryPriceError}
-              value={deliveryPrice}
+              onChange={(e) => handleCustomDeliveryFee(e.target.value, setcustomDeliveryFee)}
+              error={customDeliveryFeeError}
+              value={customDeliveryFee}
             />
           )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
@@ -223,7 +218,7 @@ export const CartOrderForm = ({
             {cartTotal < amountForFreeDelivery && !haveExtraFee && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
-                  Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta: {getMissingAmountForFreeDelivery() + APP.currency}.
+                  Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta:{getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) + APP.currency}.
                 </Typography>
               </Box>
             )}
@@ -233,9 +228,9 @@ export const CartOrderForm = ({
                 Entrega desde:
               </Typography>
               <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                {haveExtraFee ? deliveryPrice : orderDeliveryFee + APP.currency}
+                {haveExtraFee ? customDeliveryFee + APP.currency : orderDeliveryFee + APP.currency}
               </Typography>
-              {isElegibleForFreeDelivery() && (
+              {(isElegibleForFreeDelivery() || !customDeliveryFee) && (
                 <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>
                   0{APP.currency}
                 </Typography>

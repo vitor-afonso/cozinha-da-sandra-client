@@ -10,9 +10,7 @@ import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
 import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
-import { APP, getItemsAmount, parseDateToEdit } from '../utils/app.utils';
-
-import ms from 'ms';
+import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
 
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
@@ -91,11 +89,6 @@ const editOrderClasses = {
   },
 };
 
-// ms converts days to milliseconds
-// then i can use it to define the date that the user can book
-const MIN_DAYS = ms('2d');
-const MAX_DAYS = ms('60d');
-
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
@@ -106,9 +99,9 @@ const EditOrderPage = () => {
   const [order, setOrder] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState('');
   const [contact, setContact] = useState('');
-  const [deliveryPrice, setDeliveryPrice] = useState('');
+  const [customDeliveryFee, setCustomDeliveryFee] = useState('');
   const [contactError, setContactError] = useState(false);
-  const [deliveryPriceError, setDeliveryPriceError] = useState(false);
+  const [customDeliveryFeeError, setCustomDeliveryFeeError] = useState(false);
   const [fullAddress, setFullAddress] = useState('');
   const [message, setMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState('');
@@ -175,9 +168,9 @@ const EditOrderPage = () => {
     setDeliveryMethod(order.deliveryMethod);
 
     if (order.deliveryFee > 0) {
-      setDeliveryPrice(order.deliveryFee);
+      setCustomDeliveryFee(order.deliveryFee);
     } else {
-      setDeliveryPrice(orderDeliveryFee);
+      setCustomDeliveryFee(orderDeliveryFee);
     }
 
     if (order.haveExtraDeliveryFee) {
@@ -200,21 +193,6 @@ const EditOrderPage = () => {
     if (e.target.value === '' || re.test(e.target.value)) {
       setContact(e.target.value);
     }
-  };
-  const validateDeliveryFee = (e) => {
-    //regEx to prevent from typing letters
-    const re = /^[0-9.]+$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setDeliveryPrice(e.target.value);
-    }
-  };
-
-  const isValidDeliveryDate = () => {
-    //delivery date must be min 2 days from actual date
-    const minDate = new Date(+new Date() + MIN_DAYS).toISOString().slice(0, -8);
-
-    return new Date(deliveryDate) > new Date(minDate) ? true : false;
   };
 
   const handleRadioClick = (e) => {
@@ -256,7 +234,7 @@ const EditOrderPage = () => {
 
   const calculateCartTotalToShow = () => {
     if (haveExtraFee) {
-      return (cartTotal + Number(deliveryPrice)).toFixed(2);
+      return (cartTotal + Number(customDeliveryFee)).toFixed(2);
     }
     if (deliveryMethod === 'delivery') {
       if (!wasTakeAwayOrder()) {
@@ -274,11 +252,11 @@ const EditOrderPage = () => {
 
   const getDeliveryFee = () => {
     if (haveExtraFee) {
-      return deliveryPrice;
+      return customDeliveryFee;
     }
 
     if (wasTakeAwayOrder() && user.userType === 'user') {
-      return deliveryMethod === 'delivery' ? deliveryPrice : 0;
+      return deliveryMethod === 'delivery' ? customDeliveryFee : 0;
     }
 
     if (order.deliveryMethod === 'delivery' && order.total >= order.amountForFreeDelivery) {
@@ -286,17 +264,6 @@ const EditOrderPage = () => {
     }
 
     return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
-  };
-
-  const isElegibleForGlobalDiscount = () => {
-    return (hasDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) || (!wasTakeAwayOrder() && order.deliveryDiscount && !haveExtraFee) ? true : false;
-  };
-
-  const getMissingAmountForFreeDelivery = () => {
-    if (wasTakeAwayOrder()) {
-      return ' ' + (amountForFreeDelivery - cartTotal).toFixed(2);
-    }
-    return ' ' + (order.amountForFreeDelivery - cartTotal).toFixed(2);
   };
 
   const handleSubmit = async (e) => {
@@ -322,7 +289,7 @@ const EditOrderPage = () => {
     }
     setDeliveryDateError(false);
 
-    if (!isValidDeliveryDate() && user.userType === 'user') {
+    if (!isValidDeliveryDate(deliveryDate) && user.userType === 'user') {
       setDeliveryDateError(true);
       setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
       return;
@@ -337,13 +304,13 @@ const EditOrderPage = () => {
 
     setAddressError(false);
 
-    if (!deliveryPrice) {
-      setDeliveryPriceError(true);
+    if (!customDeliveryFee) {
+      setCustomDeliveryFeeError(true);
       setErrorMessage('Por favor adicione taxa de entrega.');
       return;
     }
 
-    setDeliveryPriceError(false);
+    setCustomDeliveryFeeError(false);
 
     setIsLoading(true);
 
@@ -354,7 +321,7 @@ const EditOrderPage = () => {
         address: deliveryMethod === 'delivery' ? fullAddress : '',
         deliveryFee: Number(getDeliveryFee()),
         haveExtraDeliveryFee: haveExtraFee,
-        deliveryDiscount: isElegibleForGlobalDiscount(),
+        deliveryDiscount: isElegibleForGlobalDiscount(hasDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.deliveryDiscount),
         message,
         deliveryMethod,
         amountForFreeDelivery: wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery,
@@ -441,13 +408,11 @@ const EditOrderPage = () => {
             setMessage={setMessage}
             errorMessage={errorMessage}
             submitForm={submitForm}
-            deliveryPrice={deliveryPrice}
+            customDeliveryFee={customDeliveryFee}
             deliveryDateError={deliveryDateError}
-            deliveryPriceError={deliveryPriceError}
-            validateDeliveryFee={validateDeliveryFee}
+            customDeliveryFeeError={customDeliveryFeeError}
+            setCustomDeliveryFee={setCustomDeliveryFee}
             addressError={addressError}
-            minDays={MIN_DAYS}
-            maxDays={MAX_DAYS}
             haveExtraFee={haveExtraFee}
             setHaveExtraFee={setHaveExtraFee}
           />
@@ -469,8 +434,8 @@ const EditOrderPage = () => {
                 {!isElegibleForFreeDelivery() && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
                     <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
-                      Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery + APP.currency}. Valor em falta:
-                      {getMissingAmountForFreeDelivery() + APP.currency}
+                      Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery + APP.currency : order.amountForFreeDelivery + APP.currency}. Valor em falta:
+                      {getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) + APP.currency}.
                     </Typography>
                   </Box>
                 )}
@@ -493,7 +458,7 @@ const EditOrderPage = () => {
                   </Typography>
 
                   {isElegibleForFreeDelivery() && (
-                    <Typography variant='body1' color={theme.palette.neutral.main}>
+                    <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>
                       0{APP.currency}
                     </Typography>
                   )}

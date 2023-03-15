@@ -3,6 +3,7 @@ import { AuthContext } from '../context/auth.context';
 
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
+import { handleCustomDeliveryFee, maxDays, minDays } from '../utils/app.utils';
 
 export function EditOrderForm({
   handleSubmit,
@@ -23,11 +24,9 @@ export function EditOrderForm({
   errorMessage,
   submitForm,
   deliveryDateError,
-  minDays,
-  maxDays,
-  validateDeliveryFee,
-  deliveryPriceError,
-  deliveryPrice,
+  customDeliveryFeeError,
+  customDeliveryFee,
+  setCustomDeliveryFee,
   addressError,
   haveExtraFee,
   setHaveExtraFee,
@@ -110,9 +109,9 @@ export function EditOrderForm({
                   fullWidth
                   required
                   sx={editOrderClasses.formField}
-                  onChange={(e) => validateDeliveryFee(e)}
-                  error={deliveryPriceError}
-                  value={deliveryPrice}
+                  onChange={(e) => handleCustomDeliveryFee(e.target.value, setCustomDeliveryFee)}
+                  error={customDeliveryFeeError}
+                  value={customDeliveryFee}
                 />
               )}
               <TextField

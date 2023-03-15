@@ -11,9 +11,7 @@ import { ExitModal } from '../components/ExitModal';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
-import { APP } from '../utils/app.utils';
-
-import ms from 'ms';
+import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/app.utils';
 
 import { Box, Button, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -56,11 +54,6 @@ const cartClasses = {
   },
 };
 
-// ms converts days to milliseconds
-// then i can use it to define the date that the user can book
-const minDay = ms('2d');
-const maxDay = ms('60d');
-
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
   const { shopOrders } = useSelector((store) => store.orders);
@@ -80,8 +73,8 @@ const CartPage = () => {
   const [addressCityError, setAddressCityError] = useState(false);
   const [addressCode, setAddressCode] = useState('');
   const [addressCodeError, setAddressCodeError] = useState(false);
-  const [deliveryPrice, setDeliveryPrice] = useState(orderDeliveryFee);
-  const [deliveryPriceError, setDeliveryPriceError] = useState(false);
+  const [customDeliveryFee, setCustomDeliveryFee] = useState(orderDeliveryFee);
+  const [customDeliveryFeeError, setCustomDeliveryFeeError] = useState(false);
   const [message, setMessage] = useState('');
   const [haveExtraFee, setHaveExtraFee] = useState(false);
   const [isNotVisible, setIsNotVisible] = useState(true);
@@ -145,22 +138,6 @@ const CartPage = () => {
     }
   };
 
-  const validateDeliveryFee = (e) => {
-    //regEx to prevent from typing letters
-    const re = /^[0-9.]+$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setDeliveryPrice(e.target.value);
-    }
-  };
-
-  const checkDeliveryDate = () => {
-    //delivery date must be min 2 days from actual date
-    const minDate = new Date(+new Date() + minDay).toISOString().slice(0, -8);
-
-    return new Date(deliveryDate) > new Date(minDate) ? true : false;
-  };
-
   const validateAddressCode = (e) => {
     const re = /^[0-9]{0,4}(?:-[0-9]{0,3})?$/;
 
@@ -185,16 +162,9 @@ const CartPage = () => {
     }
   };
 
-  const isElegibleForGlobalDiscount = () => {
-    if (hasDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) {
-      return true;
-    }
-    return false;
-  };
-
   const getDeliveryFee = () => {
     if (haveExtraFee) {
-      return Number(deliveryPrice);
+      return Number(customDeliveryFee);
     }
 
     return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
@@ -202,7 +172,7 @@ const CartPage = () => {
 
   const calculateCartTotalToShow = () => {
     if (haveExtraFee) {
-      return (cartTotal + Number(deliveryPrice)).toFixed(2);
+      return (cartTotal + Number(customDeliveryFee)).toFixed(2);
     }
     if (deliveryMethod === 'delivery') {
       return shouldPayForDeliveryFee ? orderPriceWithFee : orderPrice;
@@ -232,7 +202,7 @@ const CartPage = () => {
     }
     setDeliveryDateError(false);
 
-    if (!checkDeliveryDate() && user.userType === 'user') {
+    if (!isValidDeliveryDate(deliveryDate) && user.userType === 'user') {
       setDeliveryDateError(true);
       setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
       return;
@@ -267,13 +237,13 @@ const CartPage = () => {
     }
     setAddressCityError(false);
 
-    if (!deliveryPrice) {
-      setDeliveryPriceError(true);
+    if (!customDeliveryFee) {
+      setCustomDeliveryFeeError(true);
       setErrorMessage('Por favor adicione taxa de entrega.');
       return;
     }
 
-    setDeliveryPriceError(false);
+    setCustomDeliveryFeeError(false);
 
     setIsLoading(true);
 
@@ -294,17 +264,13 @@ const CartPage = () => {
         deliveryFee: getDeliveryFee(),
         haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
-        deliveryDiscount: isElegibleForGlobalDiscount(),
+        deliveryDiscount: isElegibleForGlobalDiscount(hasDeliveryDiscount, deliveryMethod, haveExtraFee),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
       };
 
-      // console.log('requestBody to create order: ', requestBody);
-
       let { data } = await createOrder(requestBody);
-
-      //console.log('created order data', data);
 
       dispatch(updateShopUser(data.updatedUser));
 
@@ -392,15 +358,13 @@ const CartPage = () => {
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
                 isLoading={isLoading}
-                minDay={minDay}
-                maxDay={maxDay}
                 user={user}
                 calculateCartTotalToShow={calculateCartTotalToShow}
                 haveExtraFee={haveExtraFee}
                 setHaveExtraFee={setHaveExtraFee}
-                deliveryPrice={deliveryPrice}
-                deliveryPriceError={deliveryPriceError}
-                validateDeliveryFee={validateDeliveryFee}
+                customDeliveryFee={customDeliveryFee}
+                customDeliveryFeeError={customDeliveryFeeError}
+                setCustomDeliveryFee={setCustomDeliveryFee}
               />
             </>
           ) : (
