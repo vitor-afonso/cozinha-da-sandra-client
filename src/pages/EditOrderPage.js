@@ -242,7 +242,7 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (hasDeliveryDiscount && !haveExtraFee) || (order.deliveryDiscount && !wasTakeAwayOrder()) || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery' && !haveExtraFee);
+    return (hasDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery') || (order.deliveryDiscount && !wasTakeAwayOrder())) && !haveExtraFee;
   };
 
   const getDeliveryFee = () => {

@@ -147,7 +147,7 @@ export function ShopOrder({ order }) {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (order.deliveryDiscount && !order.haveExtraDeliveryFee) || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery' && !order.haveExtraDeliveryFee);
+    return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
   };
 
   const getTotal = () => {
