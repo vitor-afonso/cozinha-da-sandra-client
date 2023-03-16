@@ -261,6 +261,10 @@ const EditOrderPage = () => {
     return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
   };
 
+  const shouldShowDeliveryMessage = () => {
+    return !isElegibleForFreeDelivery() && getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) > 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -426,7 +430,7 @@ const EditOrderPage = () => {
 
             {deliveryMethod === 'delivery' && (
               <>
-                {!isElegibleForFreeDelivery() && (
+                {shouldShowDeliveryMessage() && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
                     <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                       Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery + APP.currency : order.amountForFreeDelivery + APP.currency}. Valor em falta:
@@ -435,7 +439,7 @@ const EditOrderPage = () => {
                   </Box>
                 )}
 
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: shouldShowDeliveryMessage() ? 0 : 4 }}>
                   <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Items no carrinho:
                   </Typography>
