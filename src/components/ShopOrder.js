@@ -30,7 +30,7 @@ export function ShopOrder({ order }) {
   const isCurrentUserAdmin = user.userType === 'admin';
   const shouldShowCardActions = isCurrentUserAdmin || isPending();
   const shouldShowEditButton = (isPending() && user.userType === 'user') || isCurrentUserAdmin;
-  const shouldShowConfirmButton = order.orderStatus === 'pending' && checkDeliveryDate() && isCurrentUserAdmin;
+  const shouldShowConfirmButton = order.orderStatus === 'pending' && shouldDisplayConfirmButton() && isCurrentUserAdmin;
   const isOrderForDelivery = order.deliveryMethod === 'delivery';
   const isOrderPending = order.orderStatus === 'pending' ? true : false;
 
@@ -56,8 +56,7 @@ export function ShopOrder({ order }) {
   }, [order]);
 
   //fn compares dates to know if we can render confirm button
-  const shouldDisplayConfirmButton = () => {
-
+  function shouldDisplayConfirmButton() {
     const orderDeliveryDate = new Date(order.deliveryDate);
     const todaysDate = new Date();
 
@@ -116,7 +115,6 @@ export function ShopOrder({ order }) {
   };
 
   const isElegibleForFreeDelivery = () => {
-
     return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
   };
 
@@ -126,13 +124,12 @@ export function ShopOrder({ order }) {
     }
 
     if (isOrderForDelivery) {
-
       return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
     }
     return order.total.toFixed(2) + APP.currency;
   };
 
-  const isPending = () => {
+  function isPending() {
     if (order.orderStatus === 'pending' && shouldDisplayConfirmButton()) {
       return true;
     }
@@ -273,7 +270,6 @@ export function ShopOrder({ order }) {
             {translateStatus(order.orderStatus)}
 
             {shouldShowConfirmButton && (
-
               <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>
