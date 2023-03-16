@@ -166,12 +166,7 @@ const EditOrderPage = () => {
     setContact(order.contact);
     setDeliveryDate(parseDateToEdit(order.deliveryDate));
     setDeliveryMethod(order.deliveryMethod);
-
-    if (order.deliveryFee > 0) {
-      setCustomDeliveryFee(order.deliveryFee);
-    } else {
-      setCustomDeliveryFee(orderDeliveryFee);
-    }
+    setCustomDeliveryFee(order.deliveryFee > 0 ? order.deliveryFee : orderDeliveryFee);
 
     if (order.haveExtraDeliveryFee) {
       setHaveExtraFee(true);
