@@ -86,7 +86,7 @@ export function ShopOrder({ order }) {
   }, [order]);
 
   //fn compares dates to know if we can render confirm button
-  const checkDeliveryDate = () => {
+  const shouldDisplayConfirmButton = () => {
     const orderDeliveryDate = new Date(order.deliveryDate);
     const todaysDate = new Date();
 
@@ -146,20 +146,22 @@ export function ShopOrder({ order }) {
     }
   };
 
-  const getTotal = () => {
-    if (order.deliveryDiscount) {
-      return order.total.toFixed(2) + APP.currency;
-    }
+  const isElegibleForFreeDelivery = () => {
+    return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
+  };
 
-    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
+  const getTotal = () => {
+    if (order.haveExtraDeliveryFee) {
       return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
     }
-
+    if (order.deliveryMethod === 'delivery') {
+      return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
+    }
     return order.total.toFixed(2) + APP.currency;
   };
 
   const isPending = () => {
-    if (order.orderStatus === 'pending' && checkDeliveryDate()) {
+    if (order.orderStatus === 'pending' && shouldDisplayConfirmButton()) {
       return true;
     }
   };
@@ -284,7 +286,7 @@ export function ShopOrder({ order }) {
               <b>Taxa de entrega:</b>
             </Typography>
             <Box variant='body1'>
-              <Typography sx={{ textDecoration: order.deliveryDiscount ? 'line-through' : '' }} gutterBottom>
+              <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
               {order.deliveryDiscount && `0${APP.currency}`}
@@ -297,7 +299,7 @@ export function ShopOrder({ order }) {
           </Typography>
           <Typography>
             {translateStatus(order.orderStatus)}
-            {order.orderStatus === 'pending' && checkDeliveryDate() && user.userType === 'admin' && (
+            {order.orderStatus === 'pending' && shouldDisplayConfirmButton() && user.userType === 'admin' && (
               <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>

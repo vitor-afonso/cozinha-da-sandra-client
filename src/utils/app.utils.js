@@ -1,4 +1,11 @@
 // jshint esversion:9
+import ms from 'ms';
+
+// ms converts days to milliseconds
+// then i can use it to define the date that the user can book
+export const minDays = ms('2d');
+export const maxDays = ms('60d');
+
 // app name is also hardcoded in the manifest.json file
 export const APP = {
   name: 'a cozinha da sandra',
@@ -14,6 +21,40 @@ export const capitalizeAppName = () => {
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ');
   return capitalizedName;
+};
+
+export const validateDeliveryFee = (value) => {
+  //regEx to prevent from typing letters
+  const re = /^[0-9.]+$/;
+  return re.test(value) || value === '';
+};
+
+export const handleCustomDeliveryFee = (value, setValue) => {
+  const isValid = validateDeliveryFee(value);
+  if (isValid) setValue(value);
+};
+
+export const isValidDeliveryDate = (deliveryDate) => {
+  //delivery date must be min 2 days from actual date
+  const minDate = new Date(+new Date() + minDays).toISOString().slice(0, -8);
+  return new Date(deliveryDate) > new Date(minDate);
+};
+
+export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderDeliveryDiscount) => {
+  //CartPage
+  if (globalDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) return true;
+
+  //EditOrderPage
+  if (orderDeliveryMethod === 'delivery' && orderDeliveryDiscount && !haveExtraFee) return true;
+
+  return false;
+};
+
+export const getMissingAmountForFreeDelivery = (amountForFreeDelivery, cartTotal, orderDeliveryMethod) => {
+  if (orderDeliveryMethod === 'takeAway') {
+    return ` ${(amountForFreeDelivery - cartTotal).toFixed(2)}`;
+  }
+  return ` ${(amountForFreeDelivery - cartTotal).toFixed(2)}`;
 };
 
 const parseDateToShow = (dateToParse) => {

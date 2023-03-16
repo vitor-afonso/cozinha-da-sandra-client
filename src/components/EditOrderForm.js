@@ -1,8 +1,9 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 
-import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
+import { handleCustomDeliveryFee, maxDays, minDays } from '../utils/app.utils';
 
 export function EditOrderForm({
   handleSubmit,
@@ -22,10 +23,13 @@ export function EditOrderForm({
   setMessage,
   errorMessage,
   submitForm,
-  order,
   deliveryDateError,
-  minDays,
-  maxDays,
+  customDeliveryFeeError,
+  customDeliveryFee,
+  setCustomDeliveryFee,
+  addressError,
+  haveExtraFee,
+  setHaveExtraFee,
 }) {
   const { user } = useContext(AuthContext);
   const [inputType, setInputType] = useState('datetime-local');
@@ -61,7 +65,7 @@ export function EditOrderForm({
   return (
     <Box sx={editOrderClasses.formContainer}>
       <Box sx={editOrderClasses.form}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={editOrderClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           <TextField
@@ -78,69 +82,61 @@ export function EditOrderForm({
             onFocus={() => setInputType('datetime-local')}
             onBlur={() => !deliveryDate && setInputType('text')}
           />
+          <Box sx={{ display: { xs: 'block', md: 'flex' }, mb: 2 }}>
+            <FormControl align='left' fullWidth={true}>
+              <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
+              <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
+                <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
+                <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
+              </RadioGroup>
+            </FormControl>
 
-          <FormControl
-            sx={{
-              mb: 2,
-            }}
-            align='left'
-            fullWidth={true}
-          >
-            <FormLabel id='demo-row-radio-buttons-group-label'>Metodo de entrega</FormLabel>
-            <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={handleRadioClick}>
-              <FormControlLabel value='delivery' control={<Radio />} label='Entrega' checked={deliveryMethod === 'delivery'} />
-              <FormControlLabel value='takeAway' control={<Radio />} label='Take Away' checked={deliveryMethod === 'takeAway'} />
-            </RadioGroup>
-          </FormControl>
-
+            {deliveryMethod === 'delivery' && user.userType === 'admin' && (
+              <FormControlLabel
+                control={<Switch checked={haveExtraFee} onChange={() => setHaveExtraFee(!haveExtraFee)} inputProps={{ 'aria-label': 'controlled' }} />}
+                label='Definir taxa de entrega'
+                sx={{ width: '100%', pt: { xs: 0, md: 3 } }}
+              />
+            )}
+          </Box>
           {!isAddressNotVisible && (
-            <TextField
-              label='Morada'
-              type='text'
-              variant='outlined'
-              fullWidth
-              required={requiredInput}
-              sx={editOrderClasses.formField}
-              onChange={(e) => setFullAddress(e.target.value)}
-              placeholder='Rua dos bolos n 7'
-              error={contactError}
-              value={fullAddress}
-              ref={addressRef}
-            />
+            <>
+              {user.userType === 'admin' && haveExtraFee && (
+                <TextField
+                  label='Taxa de entrega'
+                  type='text'
+                  variant='outlined'
+                  fullWidth
+                  required
+                  sx={editOrderClasses.formField}
+                  onChange={(e) => handleCustomDeliveryFee(e.target.value, setCustomDeliveryFee)}
+                  error={customDeliveryFeeError}
+                  value={customDeliveryFee}
+                />
+              )}
+              <TextField
+                label='Morada'
+                type='text'
+                variant='outlined'
+                fullWidth
+                required={requiredInput}
+                sx={editOrderClasses.formField}
+                onChange={(e) => setFullAddress(e.target.value)}
+                placeholder='Rua dos bolos n 7'
+                error={addressError}
+                value={fullAddress}
+                ref={addressRef}
+              />
+            </>
           )}
 
-          {user._id !== order.userId._id && (
-            <TextField
-              id='outlined-read-only-input'
-              label='Mensagem'
-              defaultValue={message}
-              InputProps={{
-                readOnly: true,
-              }}
-              sx={editOrderClasses.formTextArea}
-              multiline
-              maxRows={4}
-            />
-          )}
-
-          {user._id === order.userId._id && (
-            <TextField
-              id='outlined-multiline-flexible'
-              label='Mensagem'
-              multiline
-              maxRows={4}
-              sx={editOrderClasses.formTextArea}
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
-              placeholder='Escreva aqui a sua mensagem...'
-            />
-          )}
+          <TextField label='Mensagem' value={message} sx={editOrderClasses.formTextArea} multiline maxRows={4} onChange={(e) => setMessage(e.target.value)} placeholder='Escreva aqui a sua mensagem' />
 
           {errorMessage && (
             <Typography
               paragraph
               sx={{
-                my: '25px',
+                my: 4,
               }}
               color='error'
             >
