@@ -168,9 +168,9 @@ const EditOrderPage = () => {
     setDeliveryMethod(order.deliveryMethod);
     setCustomDeliveryFee(order.deliveryFee > 0 ? order.deliveryFee : orderDeliveryFee);
 
-    if (order.haveExtraDeliveryFee) {
-      setHaveExtraFee(true);
-    }
+    // converts the a value to a boolean if not already a boolean,
+    // sets that boolean to HaveExtraFee
+    setHaveExtraFee(!!order.haveExtraDeliveryFee);
 
     if (!wasTakeAwayOrder()) {
       setIsAddressNotVisible(false);
