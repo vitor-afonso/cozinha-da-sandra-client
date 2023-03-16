@@ -4,7 +4,7 @@ import { Box, TextField, Typography, Button, CircularProgress } from '@mui/mater
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
-import { APP } from '../utils/app.utils';
+import { forgotClasses } from '../utils/app.styleClasses';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -12,33 +12,6 @@ const ForgotPage = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const forgotClasses = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      py: 5,
-      height: `calc(100vh - ${APP.navbarHeight})`,
-      justifyContent: 'center',
-    },
-    top: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    image: {
-      maxWidth: { xs: '200px', md: '350px' },
-    },
-    form: {
-      width: { xs: '300px', md: '500px' },
-    },
-    field: {
-      marginTop: 2,
-      marginBottom: 2,
-      display: 'block',
-    },
-  };
 
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
@@ -106,7 +79,7 @@ const ForgotPage = () => {
           <Box sx={forgotClasses.image}>
             <img src={forgotImage} alt='Forgot password' className='auth-images' />
           </Box>
-          <Typography sx={{ mt: '25px', mx: 3 }}>{successMessage}</Typography>
+          <Typography sx={{ mt: 4, mx: 3 }}>{successMessage}</Typography>
         </Box>
       )}
     </Box>

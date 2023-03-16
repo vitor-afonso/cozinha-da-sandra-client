@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
+import { profileClasses } from '../utils/app.styleClasses';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
@@ -21,50 +22,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const userEffectRan = useRef(false);
   const ordersRef = useRef(null);
-
-  const profileClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    formContainer: {
-      marginTop: 0,
-    },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      mx: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    nameField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-      marginBottom: 5,
-    },
-    ordersNotVisible: {
-      display: 'none',
-    },
-    ordersVisible: {
-      //outline: '1px solid red',
-    },
-    breakpoints: {
-      default: 4,
-      1600: 3,
-      1100: 2,
-      700: 1,
-    },
-  };
 
   useEffect(() => {
     if (userEffectRan.current === false) {

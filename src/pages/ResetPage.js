@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
 import resetImage from '../images/reset.svg';
+import { resetClasses } from '../utils/app.styleClasses';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -14,31 +15,6 @@ const ResetPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
-
-  const resetClasses = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      py: 5,
-    },
-    top: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    image: {
-      maxWidth: { xs: '250px', md: '450px' },
-    },
-    form: {
-      width: { xs: '300px', md: '500px' },
-    },
-    field: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-  };
 
   const handleResetSubmit = async (e) => {
     e.preventDefault();

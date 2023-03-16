@@ -8,6 +8,7 @@ import Masonry from 'react-masonry-css';
 
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
+import { ordersClasses } from '../utils/app.styleClasses';
 
 const OrdersPage = () => {
   const dispatch = useDispatch();
@@ -15,15 +16,6 @@ const OrdersPage = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
   const userEffectRan = useRef(false);
-
-  const ordersClasses = {
-    breakpoints: {
-      default: 4,
-      1600: 3,
-      1100: 2,
-      700: 1,
-    },
-  };
 
   useEffect(() => {
     if (userEffectRan.current === false) {

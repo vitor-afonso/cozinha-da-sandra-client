@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
+import { sendEmailClasses } from '../utils/app.styleClasses';
 import { parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
 
 const APP_NAME = capitalizeAppName();
@@ -25,31 +26,6 @@ const SendEmailPage = () => {
   const submitForm = useRef();
   const navigate = useNavigate();
   const { orderId } = useParams();
-
-  const sendEmailClasses = {
-    container: {
-      px: 3,
-      pb: 3,
-    },
-    formContainer: {
-      marginTop: 5,
-      marginBottom: 5,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-    },
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -108,16 +84,16 @@ const SendEmailPage = () => {
 
   return (
     <Box sx={sendEmailClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
         Enviar Email
       </Typography>
-      <Typography variant='h4' color='#031D44' sx={{ my: '25px' }}>
+      <Typography variant='h4' color='#031D44' sx={{ my: 4 }}>
         Detalhes de pedido
       </Typography>
 
       {order && <ShopOrder order={order} />}
 
-      {!order && <CircularProgress sx={{ my: '25px' }} />}
+      {!order && <CircularProgress sx={{ my: 4 }} size='80px' />}
 
       {!successMessage && order && (
         <Box sx={sendEmailClasses.formContainer}>
@@ -156,12 +132,12 @@ const SendEmailPage = () => {
                 required
                 sx={sendEmailClasses.formTextArea}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder='Escreva aqui a sua mensagem...'
+                placeholder='Escreva aqui a sua mensagem'
                 error={messageError}
               />
 
               {errorMessage && (
-                <Typography paragraph sx={{ my: '25px' }} color='error'>
+                <Typography paragraph sx={{ my: 4 }} color='error'>
                   {errorMessage}
                 </Typography>
               )}
@@ -175,7 +151,7 @@ const SendEmailPage = () => {
       )}
 
       {successMessage && (
-        <Typography paragraph sx={{ my: '25px' }}>
+        <Typography paragraph sx={{ my: 4 }}>
           {successMessage}
         </Typography>
       )}
@@ -192,7 +168,7 @@ const SendEmailPage = () => {
             Enviar
           </Button>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='20px' />}
+        {btnLoading && !successMessage && <CircularProgress size='80px' />}
       </div>
     </Box>
   );

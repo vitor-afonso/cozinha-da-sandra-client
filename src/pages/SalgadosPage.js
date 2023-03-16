@@ -6,26 +6,13 @@ import { ShopItem } from '../components/ShopItem/ShopItemCard';
 
 import { Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { salgadosClasses } from '../utils/app.styleClasses';
 
 const SalgadosPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
   const [str, setStr] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
 
-  const salgadosClasses = {
-    container: {
-      px: 3,
-      mb: 12,
-    },
-    field: {
-      minWidth: '300px',
-      maxWidth: '600px',
-      marginTop: 0,
-      marginBottom: 5,
-      mx: 'auto',
-      display: 'block',
-    },
-  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -78,7 +65,7 @@ const SalgadosPage = () => {
         </Grid>
       )}
       {filteredItems.length === 0 && (
-        <Typography paragraph color='neutral' sx={{ my: '25px' }}>
+        <Typography paragraph color='neutral' sx={{ my: 4 }}>
           Nenhum item encontrado.
         </Typography>
       )}

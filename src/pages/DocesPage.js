@@ -5,26 +5,12 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { docesClasses } from '../utils/app.styleClasses';
 
 const DocesPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
   const [str, setStr] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
-
-  const docesClasses = {
-    container: {
-      px: 3,
-      mb: 12,
-    },
-    field: {
-      minWidth: '300px',
-      maxWidth: '600px',
-      marginTop: 0,
-      marginBottom: 5,
-      mx: 'auto',
-      display: 'block',
-    },
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -7,6 +7,7 @@ import { AuthContext } from '../context/auth.context';
 
 import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, InputAdornment } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import { usersClasses } from '../utils/app.styleClasses';
 
 const UsersPage = () => {
   const { user } = useContext(AuthContext);
@@ -15,62 +16,6 @@ const UsersPage = () => {
   const [str, setStr] = useState('');
   const effectRan = useRef(false);
   const navigate = useNavigate();
-
-  const usersClasses = {
-    container: {
-      display: 'flex',
-      width: '100%',
-      flexDirection: 'column',
-      alignItems: 'center',
-      px: 3,
-      pb: 6,
-    },
-
-    top: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
-    },
-    field: {
-      minWidth: '300px',
-      maxWidth: '600px',
-      marginTop: 0,
-      marginBottom: 5,
-      display: 'block',
-    },
-    bottom: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
-    },
-    avatarContainer: {
-      width: '100%',
-      maxWidth: '600px',
-      display: 'flex',
-      alignItems: 'center',
-      padding: 1,
-      backgroundColor: '#E3DDE3',
-      cursor: 'pointer',
-    },
-    deletedAvatarContainer: {
-      width: '100%',
-      maxWidth: '600px',
-      display: 'flex',
-      alignItems: 'center',
-      padding: 1,
-      backgroundColor: '#ddd',
-      cursor: 'pointer',
-    },
-    avatar: {
-      width: '40px',
-      height: 'auto',
-      backgroundColor: '#FFF',
-      padding: 1,
-      mr: 3,
-    },
-  };
 
   useEffect(() => {
     if (effectRan.current === false && shopUsers.length > 0) {
@@ -94,7 +39,7 @@ const UsersPage = () => {
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant='h2' color='primary' sx={{ my: '25px', fontSize: { xs: '40px' } }}>
+        <Typography variant='h2' color='primary' sx={{ my: 4, fontSize: { xs: 8 } }}>
           UTILIZADORES
         </Typography>
 

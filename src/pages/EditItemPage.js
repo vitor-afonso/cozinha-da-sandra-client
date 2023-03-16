@@ -12,51 +12,7 @@ import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  bgcolor: 'background.paper',
-  border: '2px solid #816E94',
-  boxShadow: 24,
-  p: 4,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
-const editItemClasses = {
-  container: {
-    px: 3,
-    pb: 8,
-  },
-  formContainer: {
-    marginTop: 0,
-  },
-  form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    minWidth: 300,
-    maxWidth: 600,
-  },
-  formField: {
-    marginTop: 0,
-    marginBottom: 5,
-    display: 'block',
-  },
-  nameField: {
-    marginTop: 0,
-    marginBottom: 2,
-    display: 'block',
-  },
-  formTextArea: {
-    minWidth: '100%',
-    marginBottom: 5,
-  },
-};
+import { editItemClasses, modalStyle } from '../utils/app.styleClasses';
 
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
