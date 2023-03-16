@@ -130,16 +130,7 @@ export function EditOrderForm({
             </>
           )}
 
-          <TextField
-            id='outlined-multiline-flexible'
-            label='Mensagem'
-            value={message}
-            sx={editOrderClasses.formTextArea}
-            multiline
-            maxRows={4}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder='Escreva aqui a sua mensagem'
-          />
+          <TextField label='Mensagem' value={message} sx={editOrderClasses.formTextArea} multiline maxRows={4} onChange={(e) => setMessage(e.target.value)} placeholder='Escreva aqui a sua mensagem' />
 
           {errorMessage && (
             <Typography
