@@ -50,7 +50,7 @@ export const CartOrderForm = ({
   setHaveExtraFee,
   customDeliveryFeeError,
   customDeliveryFee,
-  setcustomDeliveryFee,
+  setCustomDeliveryFee,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
@@ -84,7 +84,7 @@ export const CartOrderForm = ({
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (hasDeliveryDiscount && !haveExtraFee) || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery' && !haveExtraFee);
+    return (hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery')) && !haveExtraFee;
   };
 
   return (
@@ -122,7 +122,7 @@ export const CartOrderForm = ({
 
             {deliveryMethod === 'delivery' && user.userType === 'admin' && (
               <FormControlLabel
-                control={<Switch checked={haveExtraFee} onChange={() => setHaveExtraFee(!haveExtraFee)} inputProps={{ 'aria-label': 'controlled' }} />}
+                control={<Switch checked={haveExtraFee} onChange={() => setHaveExtraFee(!haveExtraFee)} />}
                 label='Definir taxa de entrega'
                 sx={{ width: '100%', pt: { xs: 0, md: 3 } }}
               />
@@ -136,9 +136,10 @@ export const CartOrderForm = ({
               fullWidth
               required
               sx={cartFormClasses.formField}
-              onChange={(e) => handleCustomDeliveryFee(e.target.value, setcustomDeliveryFee)}
+              onChange={(e) => handleCustomDeliveryFee(e.target.value, setCustomDeliveryFee)}
               error={customDeliveryFeeError}
               value={customDeliveryFee}
+              inputProps={{ maxLength: 6 }}
             />
           )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
@@ -215,7 +216,7 @@ export const CartOrderForm = ({
 
         {deliveryMethod === 'delivery' && (
           <Box sx={{ mb: 2 }}>
-            {cartTotal < amountForFreeDelivery && !haveExtraFee && (
+            {isElegibleForFreeDelivery() && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta:{getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) + APP.currency}.
@@ -228,10 +229,11 @@ export const CartOrderForm = ({
                 Entrega desde:
               </Typography>
               <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
-                {haveExtraFee ? customDeliveryFee + APP.currency : orderDeliveryFee + APP.currency}
+                {haveExtraFee ? customDeliveryFee : orderDeliveryFee}
+                {APP.currency}
               </Typography>
-              {(isElegibleForFreeDelivery() || !customDeliveryFee) && (
-                <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>
+              {isElegibleForFreeDelivery() && (
+                <Typography variant='body1' color={theme.palette.neutral.main}>
                   0{APP.currency}
                 </Typography>
               )}
