@@ -35,19 +35,16 @@ const ItemDetailsPage = () => {
   }, [itemId, shopItems]);
 
   return (
-    <Box sx={{ my: '25px' }}>
+    <Box sx={{ my: 4 }}>
       {oneItem && (
-        <Typography variant='h3' color='primary'>
+        <Typography variant='h3' color='primary' sx={{ mb: 4 }}>
           {oneItem.name}
         </Typography>
       )}
-      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
 
-      {oneItem && (
-        <>
-          <ShopItem {...oneItem} />
-        </>
-      )}
+      {isLoading && <CircularProgress sx={{ mt: 20 }} size='80px' />}
+
+      {oneItem && !isLoading && <ShopItem {...oneItem} />}
     </Box>
   );
 };
