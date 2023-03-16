@@ -56,7 +56,8 @@ export function ShopOrder({ order }) {
   }, [order]);
 
   //fn compares dates to know if we can render confirm button
-  function checkDeliveryDate() {
+  const shouldDisplayConfirmButton = () => {
+
     const orderDeliveryDate = new Date(order.deliveryDate);
     const todaysDate = new Date();
 
@@ -115,25 +116,24 @@ export function ShopOrder({ order }) {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (order.deliveryDiscount && !order.haveExtraDeliveryFee) || (order.total > order.amountForFreeDelivery && isOrderForDelivery && !order.haveExtraDeliveryFee);
+
+    return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
   };
 
   const getTotal = () => {
-    if (order.deliveryDiscount) {
-      return order.total.toFixed(2) + APP.currency;
-    }
-
-    if (order.total < order.amountForFreeDelivery && order.deliveryMethod === 'delivery') {
+    if (order.haveExtraDeliveryFee) {
       return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
     }
+
     if (isOrderForDelivery) {
+
       return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
     }
     return order.total.toFixed(2) + APP.currency;
   };
 
-  function isPending() {
-    if (order.orderStatus === 'pending' && checkDeliveryDate()) {
+  const isPending = () => {
+    if (order.orderStatus === 'pending' && shouldDisplayConfirmButton()) {
       return true;
     }
   }
@@ -258,7 +258,7 @@ export function ShopOrder({ order }) {
               <b>Taxa de entrega:</b>
             </Typography>
             <Box variant='body1'>
-              <Typography sx={{ textDecoration: order.deliveryDiscount ? 'line-through' : '' }} gutterBottom>
+              <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
               {order.deliveryDiscount && `0${APP.currency}`}
@@ -273,6 +273,7 @@ export function ShopOrder({ order }) {
             {translateStatus(order.orderStatus)}
 
             {shouldShowConfirmButton && (
+
               <Button size='small' onClick={handleOpen}>
                 Confirmar
               </Button>
