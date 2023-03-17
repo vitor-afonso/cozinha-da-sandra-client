@@ -1,6 +1,6 @@
 // jshint esversion:9
 import { AuthContext } from '../context/auth.context';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useContext } from 'react';
 import heroImage from '../images/hero.svg';
 
 import { ShopItem } from '../components/ShopItemCard';
@@ -8,43 +8,18 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { homeClasses } from '../utils/app.styleClasses';
+import useHomePageItems from '../hooks/useHomePageItems';
 
 const HomePage = () => {
-  const { shopItems, isLoading } = useSelector((store) => store.items);
+  const { shopItemsDoces, shopItemsSalgados } = useHomePageItems();
   const { user } = useContext(AuthContext);
-  const [shopItemsDoces, setShopItemsDoces] = useState([]);
-  const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
+  const { isLoading } = useSelector((store) => store.items);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    let docesCount = 0;
-    let salgadosCount = 0;
-
-    if (shopItems.length > 0) {
-      const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 3 && item.category === 'doces') {
-          docesCount++;
-          return item;
-        }
-        return null;
-      });
-
-      const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 3 && item.category === 'salgados') {
-          salgadosCount++;
-          return item;
-        }
-        return null;
-      });
-      setShopItemsDoces(filteredDoces);
-      setShopItemsSalgados(filteredSalgados);
-    }
-  }, [shopItems]);
 
   return (
     <Box className='HomePage' sx={homeClasses.container}>
