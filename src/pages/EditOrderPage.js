@@ -8,7 +8,7 @@ import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
 import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
-import { ShopItem } from '../components/ShopItem/ShopItemCard';
+import { ShopItem } from '../components/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
 

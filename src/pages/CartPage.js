@@ -5,7 +5,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
-import { ShopItem } from '../components/ShopItem/ShopItemCard';
+import { ShopItem } from '../components/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { ExitModal } from '../components/ExitModal';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';

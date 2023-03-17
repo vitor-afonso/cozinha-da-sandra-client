@@ -2,8 +2,8 @@
 import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/auth.context';
-import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from '../../redux/features/items/itemsSlice';
+import { AuthContext } from '../context/auth.context';
+import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from '../redux/features/items/itemsSlice';
 import { RWebShare } from 'react-web-share';
 
 /********************** MUI *************************/
@@ -25,8 +25,8 @@ import { Box, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
-import { APP } from '../../utils/app.utils';
-import { cardClasses } from '../../utils/app.styleClasses';
+import { APP } from '../utils/app.utils';
+import { cardClasses } from '../utils/app.styleClasses';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;

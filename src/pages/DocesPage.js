@@ -3,7 +3,7 @@
 import { Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ShopItem } from '../components/ShopItem/ShopItemCard';
+import { ShopItem } from '../components/ShopItemCard';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { docesClasses } from '../utils/app.styleClasses';
 

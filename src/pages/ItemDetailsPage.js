@@ -4,7 +4,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { ShopItem } from '../components/ShopItem/ShopItemCard';
+import { ShopItem } from '../components/ShopItemCard';
 import { getShopItems } from '../redux/features/items/itemsSlice';
 
 const ItemDetailsPage = () => {

@@ -1,13 +1,13 @@
 // jshint esversion:9
-import { AuthContext } from '../../context/auth.context';
+import { AuthContext } from '../context/auth.context';
 import { useEffect, useContext, useState } from 'react';
-import heroImage from '../../images/hero.svg';
+import heroImage from '../images/hero.svg';
 
-import { ShopItem } from '../../components/ShopItem/ShopItemCard';
+import { ShopItem } from '../components/ShopItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
-import { homeClasses } from '../../utils/app.styleClasses';
+import { homeClasses } from '../utils/app.styleClasses';
 
 const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
