@@ -1,6 +1,5 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
-import React from 'react';
 import { modalStyle } from '../utils/app.styleClasses';
+import { Box, Button, Modal, Typography } from '@mui/material';
 
 export function CustomModal({ isModalOpen, handleCloseModal, mainFunction, question, buttonText }) {
   const runModalMainFunction = () => {
