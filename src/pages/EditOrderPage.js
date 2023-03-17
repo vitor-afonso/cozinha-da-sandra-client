@@ -11,15 +11,15 @@ import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
+import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
+import { editOrderPageClasses } from '../utils/app.styleClasses';
+import { CustomModal } from '../components/CustomModal';
 
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import Modal from '@mui/material/Modal';
-import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
-import { editOrderPageClasses, modalStyle } from '../utils/app.styleClasses';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -428,21 +428,7 @@ const EditOrderPage = () => {
               Apagar
             </Button>
 
-            <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-              <Box sx={modalStyle}>
-                <Typography id='modal-modal-title' variant='h6' component='h2'>
-                  Apagar Pedido?
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                    Cancelar
-                  </Button>
-                  <Button type='button' color='error' variant='contained' onClick={handleDeleteOrder}>
-                    Apagar
-                  </Button>
-                </Box>
-              </Box>
-            </Modal>
+            <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteOrder} question='Apagar Pedido?' buttonText='Apagar' />
 
             <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
               Actualizar

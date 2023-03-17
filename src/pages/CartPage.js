@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItem/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
-import { ExitModal } from '../components/ExitModal';
+import { CustomModal } from '../components/CustomModal';
 import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
@@ -144,6 +144,10 @@ const CartPage = () => {
     return orderPrice;
   };
 
+  function handleClearCart() {
+    dispatch(clearCart());
+  }
+
   const submitOrder = async (e) => {
     e.preventDefault();
 
@@ -240,7 +244,7 @@ const CartPage = () => {
 
       setSuccessMessage('Pedido criado com sucesso. Será contactado/a em breve para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
 
-      dispatch(clearCart());
+      handleClearCart();
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -356,7 +360,7 @@ const CartPage = () => {
           </Button>
         </>
       )}
-      <ExitModal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} dispatch={dispatch} mainFunction={clearCart} question={'Limpar carrinho?'} buttonText={'Limpar'} />
+      <CustomModal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} mainFunction={handleClearCart} question='Limpar carrinho?' buttonText='Limpar' />
     </Box>
   );
 };
