@@ -18,7 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { grey, orange, teal } from '@mui/material/colors';
+import { orange, teal } from '@mui/material/colors';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button } from '@mui/material';
@@ -26,6 +26,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
 import { APP } from '../../utils/app.utils';
+import { cardClasses } from '../../utils/app.styleClasses';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -37,6 +38,7 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+
 /****************************************************/
 
 export const ShopItem = ({ name, _id, imageUrl, price, amount, description, category, ingredients }) => {
@@ -67,40 +69,6 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
     return upperList;
   };
 
-  const getCategoryColor = (category) => {
-    if (category === 'doces') {
-      return orange[50];
-    }
-    return teal[50];
-  };
-
-  const cardClasses = {
-    container: {
-      maxWidth: 300,
-      mx: 'auto',
-      //mt: 2,
-      backgroundColor: getCategoryColor(category),
-    },
-    avatar: {
-      backgroundColor: '#FFF',
-      cursor: 'pointer',
-    },
-    avatarLetter: {
-      fontSize: '18px',
-      fontWeight: 'bold',
-    },
-    editBtn: {
-      color: grey[700],
-      cursor: 'pointer',
-      mt: 1,
-    },
-    cardContent: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  };
-
   /********************** CARD MUI *************************/
   const [expanded, setExpanded] = React.useState(false);
 
@@ -123,7 +91,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
   };
 
   return (
-    <Card sx={cardClasses.container}>
+    <Card sx={{ maxWidth: 300, mx: 'auto', backgroundColor: category === 'doces' ? orange[50] : teal[50] }}>
       <CardHeader
         avatar={
           <Avatar sx={cardClasses.avatar} aria-label='recipe' onClick={() => navigate(`/${category}`)}>

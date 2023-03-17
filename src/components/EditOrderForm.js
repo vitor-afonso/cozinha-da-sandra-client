@@ -3,7 +3,8 @@ import { AuthContext } from '../context/auth.context';
 
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
-import { handleCustomDeliveryFee, maxDays, minDays } from '../utils/app.utils';
+import { handleCustomDeliveryFee } from '../utils/app.utils';
+import { editOrderClasses } from '../utils/app.styleClasses';
 
 export function EditOrderForm({
   handleSubmit,
@@ -33,34 +34,6 @@ export function EditOrderForm({
 }) {
   const { user } = useContext(AuthContext);
   const [inputType, setInputType] = useState('datetime-local');
-
-  const editOrderClasses = {
-    formContainer: {
-      marginTop: 0,
-      marginBottom: 1,
-    },
-    form: {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-    formTextArea: {
-      minWidth: '100%',
-    },
-    datePropsUser: {
-      min: new Date(+new Date() + minDays).toISOString().slice(0, -8),
-      max: new Date(+new Date() + maxDays).toISOString().slice(0, -8),
-    },
-    datePropsAdmin: {
-      min: new Date().toISOString().slice(0, -8),
-    },
-  };
 
   return (
     <Box sx={editOrderClasses.formContainer}>

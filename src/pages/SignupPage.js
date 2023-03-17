@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
-import { APP } from '../utils/app.utils';
+import { signupClasses } from '../utils/app.styleClasses';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -19,38 +19,6 @@ const SignupPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-
-  const signupClasses = {
-    container: {
-      height: `calc(100vh - ${APP.navbarHeight})`,
-      display: 'flex',
-      flexDirection: { xs: 'column', md: 'row' },
-      justifyContent: 'center',
-      alignItems: 'center',
-      py: 5,
-    },
-    top: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginRight: { md: 4 },
-      marginBottom: { md: 6 },
-    },
-    image: {
-      maxWidth: { xs: '200px', md: '450px' },
-      order: { xs: 0, md: 1 },
-      marginTop: { xs: 4 },
-    },
-    form: {
-      width: { xs: '300px', md: '500px' },
-      marginBottom: 4,
-    },
-    field: {
-      marginTop: 0,
-      marginBottom: 2,
-      display: 'block',
-    },
-  };
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +61,7 @@ const SignupPage = () => {
 
           <Box>
             <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
-              <Typography sx={{ mb: '3px' }} color='#031D44'>
+              <Typography sx={{ mb: 1 }} color='#031D44'>
                 Já tens conta?
               </Typography>
               <Button onClick={() => navigate('/login')} size='small'>

@@ -7,6 +7,7 @@ import { ShopItem } from '../../components/ShopItem/ShopItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import { homeClasses } from '../../utils/app.styleClasses';
 
 const HomePage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
@@ -15,64 +16,6 @@ const HomePage = () => {
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
 
   const navigate = useNavigate();
-
-  const homeClasses = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      minHeight: '100vh',
-    },
-    hero: {
-      width: '100%',
-      padding: 3,
-      backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
-    },
-    heroText: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-      py: 3,
-    },
-    heroTitle: {
-      fontSize: 50,
-      fontWeight: 'bold',
-      color: '#031D44',
-      pb: 2,
-      //whiteSpace: 'nowrap',
-    },
-    heroDescription: {
-      fontSize: '18px',
-      color: '#031D44',
-      maxWidth: '600px',
-    },
-    itemsContainer: {
-      mt: 3,
-      width: '100%',
-    },
-    docesContainer: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      px: 3,
-    },
-    salgadosContainer: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      px: 3,
-      pb: 6,
-    },
-    seeMoreBtn: {
-      my: 2,
-      alignSelf: 'end',
-      fontWeight: 'bold',
-    },
-  };
 
   useEffect(() => {
     window.scrollTo(0, 0);

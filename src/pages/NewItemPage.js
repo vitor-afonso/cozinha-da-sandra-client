@@ -12,36 +12,7 @@ import convert from 'image-file-resize';
 import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button, CircularProgress } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
-
-const newItemClasses = {
-  container: {
-    px: 3,
-    pb: 8,
-  },
-  formContainer: {
-    marginTop: 0,
-  },
-  form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    minWidth: 300,
-    maxWidth: 600,
-  },
-  formField: {
-    marginTop: 0,
-    marginBottom: 5,
-    display: 'block',
-  },
-  nameField: {
-    marginTop: 0,
-    marginBottom: 2,
-    display: 'block',
-  },
-  formTextArea: {
-    minWidth: '100%',
-    marginBottom: 5,
-  },
-};
+import { newItemClasses } from '../utils/app.styleClasses';
 
 const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -150,8 +121,6 @@ const NewItemPage = () => {
       const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
 
       let { data } = await createItem(requestBody);
-
-      //console.log('newly created item =>', data);
 
       dispatch(addNewShopItem(data));
 

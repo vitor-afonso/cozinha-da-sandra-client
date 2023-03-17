@@ -16,43 +16,7 @@ import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/
 import { Box, Button, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
-
-const cartClasses = {
-  container: {
-    px: 3,
-    pb: 8,
-  },
-  itemsContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
-
-  formContainer: {
-    marginTop: 0,
-    marginBottom: 5,
-  },
-  form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    minWidth: 300,
-    maxWidth: 600,
-  },
-  formField: {
-    marginTop: 0,
-    marginBottom: 5,
-    display: 'block',
-  },
-  formTextArea: {
-    minWidth: '100%',
-  },
-
-  image: {
-    mx: 'auto',
-    width: { xs: '200px', md: '300px' },
-    marginBottom: 4,
-  },
-};
+import { cartClasses } from '../utils/app.styleClasses';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);

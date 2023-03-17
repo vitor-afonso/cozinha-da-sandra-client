@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
-import { APP } from '../utils/app.utils';
+import { loginClasses } from '../utils/app.styleClasses';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
@@ -18,38 +18,6 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  const loginClasses = {
-    container: {
-      height: `calc(100vh - ${APP.navbarHeight})`,
-      display: 'flex',
-      flexDirection: { xs: 'column', md: 'row' },
-      justifyContent: 'center',
-      alignItems: 'center',
-      py: 5,
-    },
-    top: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginRight: { md: 4 },
-    },
-    image: {
-      maxWidth: { xs: '200px', md: '450px' },
-      transform: 'scaleX(-1)',
-      order: { xs: 0, md: 1 },
-      marginBottom: { xs: 4 },
-      marginTop: { xs: 4 },
-    },
-    form: {
-      width: { xs: '300px', md: '500px' },
-    },
-    field: {
-      marginTop: 2,
-      marginBottom: 2,
-      display: 'block',
-    },
-  };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();

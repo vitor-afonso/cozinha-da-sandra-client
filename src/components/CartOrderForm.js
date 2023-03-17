@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { APP, getMissingAmountForFreeDelivery, handleCustomDeliveryFee, maxDays, minDays } from '../utils/app.utils';
+import { APP, getMissingAmountForFreeDelivery, handleCustomDeliveryFee } from '../utils/app.utils';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import TooltipDeliveryFee from './TooltipDeliveryFee';
+import { cartFormClasses } from '../utils/app.styleClasses';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -55,33 +56,6 @@ export const CartOrderForm = ({
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
   const [inputType, setInputType] = useState('text');
-
-  const cartFormClasses = {
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      mx: 'auto',
-      minWidth: 300,
-      maxWidth: 600,
-    },
-    formField: {
-      marginTop: 0,
-      marginBottom: 2,
-    },
-
-    formTextArea: {
-      minWidth: '100%',
-      marginBottom: 5,
-    },
-    notVisible: {
-      display: 'none',
-    },
-    dateProps: {
-      min: new Date(+new Date() + minDays).toISOString().slice(0, -8),
-      max: new Date(+new Date() + maxDays).toISOString().slice(0, -8),
-    },
-  };
 
   const isElegibleForFreeDelivery = () => {
     return (hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery')) && !haveExtraFee;

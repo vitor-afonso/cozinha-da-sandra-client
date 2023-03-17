@@ -19,75 +19,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import Modal from '@mui/material/Modal';
 import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  bgcolor: 'background.paper',
-  border: '2px solid #816E94',
-  boxShadow: 24,
-  p: 4,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
-const editOrderClasses = {
-  container: {
-    px: 3,
-    pb: 8,
-  },
-  list: {
-    //minWidth: 300,
-  },
-  listItem: {
-    width: '100%',
-    minWidth: 200,
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  gridItem: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-  infoContainer: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    maxWidth: 600,
-  },
-  infoField: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  deliveryField: {
-    display: 'flex',
-  },
-  addressField: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  formContainer: {
-    marginTop: 0,
-    marginBottom: 5,
-  },
-  form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    minWidth: 300,
-    maxWidth: 600,
-  },
-  formField: {
-    marginTop: 0,
-    marginBottom: 5,
-    display: 'block',
-  },
-  formTextArea: {
-    minWidth: '100%',
-  },
-};
+import { editOrderPageClasses, modalStyle } from '../utils/app.styleClasses';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -341,7 +273,7 @@ const EditOrderPage = () => {
   };
 
   return (
-    <Box sx={editOrderClasses.container}>
+    <Box sx={editOrderPageClasses.container}>
       <Typography variant='h2' color='primary' sx={{ my: 4 }}>
         EDITAR
       </Typography>
@@ -351,7 +283,7 @@ const EditOrderPage = () => {
             {shopItems.map((element) => {
               if (cartItems.includes(element._id)) {
                 return (
-                  <Grid item key={element._id} xs={12} sm={6} md={4} lg={3} sx={editOrderClasses.gridItem}>
+                  <Grid item key={element._id} xs={12} sm={6} md={4} lg={3} sx={editOrderPageClasses.gridItem}>
                     <ShopItem {...element} deliveryMethod={deliveryMethod} />
                   </Grid>
                 );
@@ -360,7 +292,7 @@ const EditOrderPage = () => {
             })}
           </Grid>
 
-          <Box sx={editOrderClasses.list}>
+          <Box sx={editOrderPageClasses.list}>
             <PopupState variant='popover' popupId='demo-popup-menu'>
               {(popupState) => (
                 <React.Fragment>
@@ -372,7 +304,7 @@ const EditOrderPage = () => {
                       if (!cartItems.includes(item._id)) {
                         return (
                           <MenuItem key={index} onClick={() => dispatch(addToCart({ id: item._id }))}>
-                            <Box sx={editOrderClasses.listItem}>
+                            <Box sx={editOrderPageClasses.listItem}>
                               <Typography color='primary' sx={{ fontWeight: 'bold' }}>
                                 {item.name}
                               </Typography>
@@ -416,9 +348,9 @@ const EditOrderPage = () => {
             setHaveExtraFee={setHaveExtraFee}
           />
 
-          <Box sx={editOrderClasses.infoContainer}>
+          <Box sx={editOrderPageClasses.infoContainer}>
             {user._id !== order.userId._id && (
-              <Box sx={editOrderClasses.infoField}>
+              <Box sx={editOrderPageClasses.infoField}>
                 <Typography variant='body1' color={theme.palette.neutral.main} onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
                   <b>Autor de pedido:</b>
                 </Typography>
