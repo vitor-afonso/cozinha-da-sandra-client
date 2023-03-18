@@ -6,13 +6,18 @@ export default function useHomePageItems() {
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
 
+  const categories = {
+    doces: 'doces',
+    salgados: 'salgados',
+  };
+
   useEffect(() => {
     let docesCount = 0;
     let salgadosCount = 0;
 
     if (shopItems.length > 0) {
       const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 3 && item.category === 'doces') {
+        if (docesCount < 3 && item.category === categories.doces) {
           docesCount++;
           return item;
         }
@@ -20,7 +25,7 @@ export default function useHomePageItems() {
       });
 
       const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 3 && item.category === 'salgados') {
+        if (salgadosCount < 3 && item.category === categories.salgados) {
           salgadosCount++;
           return item;
         }
@@ -29,6 +34,7 @@ export default function useHomePageItems() {
       setShopItemsDoces(filteredDoces);
       setShopItemsSalgados(filteredSalgados);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shopItems]);
 
   return {
