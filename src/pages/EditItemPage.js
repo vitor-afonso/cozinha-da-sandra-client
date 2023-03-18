@@ -1,18 +1,18 @@
 // jshint esversion:9
 
+import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 import convert from 'image-file-resize';
+import { editItemClasses } from '../utils/app.styleClasses';
+import { CustomModal } from '../components/CustomModal';
 
-import * as React from 'react';
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
-import Modal from '@mui/material/Modal';
-import { editItemClasses, modalStyle } from '../utils/app.styleClasses';
 
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
@@ -275,21 +275,6 @@ const EditItemPage = () => {
                   Apagar
                 </Button>
 
-                <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-                  <Box sx={modalStyle}>
-                    <Typography id='modal-modal-title' variant='h6' component='h2'>
-                      Apagar Item?
-                    </Typography>
-                    <Box sx={{ mt: 2 }}>
-                      <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                        Cancelar
-                      </Button>
-                      <Button type='button' color='error' variant='contained' onClick={handleDeleteItem}>
-                        Apagar
-                      </Button>
-                    </Box>
-                  </Box>
-                </Modal>
                 <Button sx={{ mr: 1, mt: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
@@ -302,6 +287,7 @@ const EditItemPage = () => {
           </Box>
         </>
       )}
+      <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteItem} question='Apagar Item?' buttonText='Apagar' />
     </Box>
   );
 };

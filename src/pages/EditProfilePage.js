@@ -6,13 +6,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
+import { editProfileClasses } from '../utils/app.styleClasses';
+import { CustomModal } from '../components/CustomModal';
 
 import convert from 'image-file-resize';
 
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import Modal from '@mui/material/Modal';
-import { editProfileClasses, modalStyle } from '../utils/app.styleClasses';
 
 const EditProfilePage = () => {
   const { user, logOutUser } = useContext(AuthContext);
@@ -315,21 +315,7 @@ const EditProfilePage = () => {
               </Button>
             )}
 
-            <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
-              <Box sx={modalStyle}>
-                <Typography id='modal-modal-title' variant='h6' component='h2'>
-                  Apagar Utilizador?
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  <Button sx={{ mr: 1 }} variant='outlined' onClick={handleClose}>
-                    Cancelar
-                  </Button>
-                  <Button type='button' color='error' variant='contained' onClick={handleDeleteUser}>
-                    Apagar
-                  </Button>
-                </Box>
-              </Box>
-            </Modal>
+            <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteUser} question='Apagar Utilizador?' buttonText='Apagar' />
 
             {profileOwner && profileOwner.deleted && (
               <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} variant='outlined' color='success' type='button' onClick={handleActivateUser}>
