@@ -1,36 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { APP, getHomePageItemsPerCategory } from '../utils/app.utils';
 
 export default function useHomePageItems() {
   const { shopItems } = useSelector((store) => store.items);
   const [shopItemsDoces, setShopItemsDoces] = useState([]);
   const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
 
-  const categories = {
-    doces: 'doces',
-    salgados: 'salgados',
-  };
-
   useEffect(() => {
-    let docesCount = 0;
-    let salgadosCount = 0;
-
     if (shopItems.length > 0) {
-      const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 3 && item.category === categories.doces) {
-          docesCount++;
-          return item;
-        }
-        return null;
-      });
-
-      const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 3 && item.category === categories.salgados) {
-          salgadosCount++;
-          return item;
-        }
-        return null;
-      });
+      const filteredDoces = getHomePageItemsPerCategory(shopItems, APP.categories.doces);
+      const filteredSalgados = getHomePageItemsPerCategory(shopItems, APP.categories.salgados);
       setShopItemsDoces(filteredDoces);
       setShopItemsSalgados(filteredSalgados);
     }

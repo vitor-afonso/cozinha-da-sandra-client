@@ -13,6 +13,10 @@ export const APP = {
   email: 'cozinhadasandra22@gmail.com',
   navbarHeight: '64px',
   currency: '€',
+  categories: {
+    doces: 'doces',
+    salgados: 'salgados',
+  },
 };
 
 export const capitalizeAppName = () => {
@@ -21,6 +25,20 @@ export const capitalizeAppName = () => {
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(' ');
   return capitalizedName;
+};
+
+export const getHomePageItemsPerCategory = (itemsArr, category) => {
+  let counter = 0;
+  let amountOfItemsToDisplay = 3;
+
+  const filteredArray = itemsArr.filter((item) => {
+    if (counter < amountOfItemsToDisplay && item.category === category) {
+      counter++;
+      return item;
+    }
+    return null;
+  });
+  return filteredArray;
 };
 
 export const validateDeliveryFee = (value) => {
