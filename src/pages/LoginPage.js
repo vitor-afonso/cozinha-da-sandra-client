@@ -63,7 +63,7 @@ const LoginPage = () => {
 
           <Box sx={{ marginBottom: { md: 4 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography sx={{ mb: '2px' }} color='#031D44'>
+              <Typography sx={{ mb: 0.3 }} color='#031D44'>
                 Ainda não tens conta?
               </Typography>
 

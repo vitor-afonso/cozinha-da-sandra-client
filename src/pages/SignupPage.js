@@ -61,7 +61,7 @@ const SignupPage = () => {
 
           <Box>
             <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
-              <Typography sx={{ mb: 1 }} color='#031D44'>
+              <Typography sx={{ mb: 0.3 }} color='#031D44'>
                 Já tens conta?
               </Typography>
               <Button onClick={() => navigate('/login')} size='small'>
