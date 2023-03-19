@@ -27,7 +27,7 @@ export const capitalizeAppName = () => {
   return capitalizedName;
 };
 
-export const getHomePageItemsPerCategory = (itemsArr, category) => {
+export const getHomePageCategoryItems = (itemsArr, category) => {
   let counter = 0;
   let amountOfItemsToDisplay = 3;
 
