@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
@@ -34,6 +34,16 @@ export function EditOrderForm({
 }) {
   const { user } = useContext(AuthContext);
   const [inputType, setInputType] = useState('datetime-local');
+  const customFeeRef = useRef(null);
+
+  useEffect(() => {
+    //Focus the customDeliveryFee input when hasExtraFee is true
+    if (haveExtraFee) {
+      setTimeout(() => {
+        customFeeRef.current.focus();
+      }, 250);
+    }
+  }, [haveExtraFee]);
 
   return (
     <Box sx={editOrderClasses.formContainer}>
@@ -85,6 +95,7 @@ export function EditOrderForm({
                   onChange={(e) => handleCustomDeliveryFee(e.target.value, setCustomDeliveryFee)}
                   error={customDeliveryFeeError}
                   value={customDeliveryFee}
+                  inputRef={customFeeRef}
                 />
               )}
               <TextField
