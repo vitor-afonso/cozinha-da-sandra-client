@@ -38,6 +38,9 @@ export const cartFormClasses = {
     minWidth: 300,
     maxWidth: 600,
   },
+  innerForm: {
+    width: '100%',
+  },
   formField: {
     marginTop: 0,
     marginBottom: 2,

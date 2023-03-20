@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { APP, getMissingAmountForFreeDelivery, handleCustomDeliveryFee } from '../utils/app.utils';
 
@@ -56,10 +56,20 @@ export const CartOrderForm = ({
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
   const [inputType, setInputType] = useState('text');
+  const customFeeRef = useRef(null);
 
   const isElegibleForFreeDelivery = () => {
     return (hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery')) && !haveExtraFee;
   };
+
+  useEffect(() => {
+    //Focus the customDeliveryFee input when hasExtraFee is true
+    if (haveExtraFee) {
+      setTimeout(() => {
+        customFeeRef.current.focus();
+      }, 250);
+    }
+  }, [haveExtraFee]);
 
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
@@ -67,7 +77,7 @@ export const CartOrderForm = ({
         Dados de entrega
       </Typography>
       <Box sx={cartFormClasses.form}>
-        <form onSubmit={submitOrder} noValidate>
+        <form onSubmit={submitOrder} noValidate style={cartFormClasses.innerForm}>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           <TextField
@@ -114,6 +124,7 @@ export const CartOrderForm = ({
               error={customDeliveryFeeError}
               value={customDeliveryFee}
               inputProps={{ maxLength: 6 }}
+              inputRef={customFeeRef}
             />
           )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
