@@ -1,44 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { APP, getHomePageCategoryItems } from '../utils/app.utils';
 
 export default function useHomePageItems() {
   const { shopItems } = useSelector((store) => store.items);
-  const [shopItemsDoces, setShopItemsDoces] = useState([]);
-  const [shopItemsSalgados, setShopItemsSalgados] = useState([]);
-
-  const categories = {
-    doces: 'doces',
-    salgados: 'salgados',
-  };
+  const [docesData, setDocesData] = useState(null);
+  const [salgadosData, setSalgadosData] = useState(null);
 
   useEffect(() => {
-    let docesCount = 0;
-    let salgadosCount = 0;
-
     if (shopItems.length > 0) {
-      const filteredDoces = shopItems.filter((item) => {
-        if (docesCount < 3 && item.category === categories.doces) {
-          docesCount++;
-          return item;
-        }
-        return null;
-      });
-
-      const filteredSalgados = shopItems.filter((item) => {
-        if (salgadosCount < 3 && item.category === categories.salgados) {
-          salgadosCount++;
-          return item;
-        }
-        return null;
-      });
-      setShopItemsDoces(filteredDoces);
-      setShopItemsSalgados(filteredSalgados);
+      const filteredDoces = getHomePageCategoryItems(shopItems, APP.categories.doces);
+      const filteredSalgados = getHomePageCategoryItems(shopItems, APP.categories.salgados);
+      setDocesData({ categoryItems: filteredDoces, categoryName: APP.categories.doces });
+      setSalgadosData({ categoryItems: filteredSalgados, categoryName: APP.categories.salgados });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shopItems]);
 
   return {
-    shopItemsDoces,
-    shopItemsSalgados,
+    docesData,
+    salgadosData,
   };
 }
