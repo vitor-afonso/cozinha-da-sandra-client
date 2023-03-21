@@ -9,6 +9,8 @@ import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, Inp
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { usersClasses } from '../utils/app.styleClasses';
 
+const IS_MOBILE = window.innerWidth < 600 ? true : false;
+
 const UsersPage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers, isLoading } = useSelector((store) => store.users);
@@ -36,10 +38,12 @@ const UsersPage = () => {
     }
   }, [str, shopUsers]);
 
+  const titleSize = IS_MOBILE ? 'h3' : 'h2';
+
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant='h2' color='primary' sx={{ my: 4, fontSize: { xs: 8 } }}>
+        <Typography variant={titleSize} color='primary' sx={{ my: 4 }}>
           UTILIZADORES
         </Typography>
 
