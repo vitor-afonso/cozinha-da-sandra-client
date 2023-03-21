@@ -9,8 +9,8 @@ const initialState = {
   cartAmount: 0,
   cartTotal: 0,
   orderDeliveryFee: 3.99,
-  addedDeliveryFee: false,
-  hasDeliveryDiscount: false, //<= change this to give discount or not to all new orders
+  canHaveFreeDelivery: false,
+  globalDeliveryDiscount: false, //<= change this to give discount or not to all new orders
   amountForFreeDelivery: 20,
   isLoading: true,
 };
@@ -93,13 +93,13 @@ const itemsSlice = createSlice({
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
     },
-    handleAddedDeliveryFee: (state, { payload }) => {
+    handlefreeDelivery: (state, { payload }) => {
       if (payload.deliveryMethod === 'delivery') {
-        state.addedDeliveryFee = true;
+        state.canHaveFreeDelivery = true;
       }
 
       if (payload.deliveryMethod === 'takeAway') {
-        state.addedDeliveryFee = false;
+        state.canHaveFreeDelivery = false;
       }
     },
     updateShopItem: (state, { payload }) => {
@@ -128,6 +128,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handleAddedDeliveryFee, updateShopItem, removeShopItem } =
-  itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handlefreeDelivery, updateShopItem, removeShopItem } = itemsSlice.actions;
 export default itemsSlice.reducer;

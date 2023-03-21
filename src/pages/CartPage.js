@@ -8,7 +8,7 @@ import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { CustomModal } from '../components/CustomModal';
-import { clearCart, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
+import { clearCart, handlefreeDelivery } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
 import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/app.utils';
@@ -19,7 +19,7 @@ import { getShopOrders } from '../redux/features/orders/ordersSlice';
 import { cartClasses } from '../utils/app.styleClasses';
 
 const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery, addedDeliveryFee } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
   const { shopOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
@@ -51,7 +51,7 @@ const CartPage = () => {
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
 
-  const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery && !hasDeliveryDiscount && !haveExtraFee;
+  const shouldPayForDeliveryFee = canHaveFreeDelivery && cartTotal < amountForFreeDelivery && !globalDeliveryDiscount && !haveExtraFee;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
@@ -115,13 +115,13 @@ const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
       setTimeout(() => scrollToOrderAddress(formRef), 300);
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
       setHaveExtraFee(false);
     }
   };
@@ -232,7 +232,7 @@ const CartPage = () => {
         deliveryFee: getDeliveryFee(),
         haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
-        deliveryDiscount: isElegibleForGlobalDiscount(hasDeliveryDiscount, deliveryMethod, haveExtraFee),
+        deliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
