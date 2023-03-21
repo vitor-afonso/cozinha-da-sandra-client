@@ -8,7 +8,7 @@ import { createOrder } from '../api';
 import { ShopItem } from '../components/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { CustomModal } from '../components/CustomModal';
-import { clearCart, handlefreeDelivery } from '../redux/features/items/itemsSlice';
+import { clearCart, handleFreeDelivery } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
 import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/app.utils';
@@ -115,13 +115,13 @@ const CartPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
       setTimeout(() => scrollToOrderAddress(formRef), 300);
     }
     if (e.target.value === 'takeAway') {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
       setHaveExtraFee(false);
     }
   };

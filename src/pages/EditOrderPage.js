@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
-import { addToCart, clearCart, setItemAmount, handlefreeDelivery } from '../redux/features/items/itemsSlice';
+import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from '../redux/features/items/itemsSlice';
 import { ShopItem } from '../components/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
@@ -130,11 +130,11 @@ const EditOrderPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
     } else {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      dispatch(handlefreeDelivery({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
       setHaveExtraFee(false);
     }
   };

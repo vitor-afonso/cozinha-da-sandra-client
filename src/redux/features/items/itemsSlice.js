@@ -93,7 +93,7 @@ const itemsSlice = createSlice({
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
     },
-    handlefreeDelivery: (state, { payload }) => {
+    handleFreeDelivery: (state, { payload }) => {
       if (payload.deliveryMethod === 'delivery') {
         state.canHaveFreeDelivery = true;
       }
@@ -128,5 +128,5 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handlefreeDelivery, updateShopItem, removeShopItem } = itemsSlice.actions;
+export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handleFreeDelivery, updateShopItem, removeShopItem } = itemsSlice.actions;
 export default itemsSlice.reducer;
