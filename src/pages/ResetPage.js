@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, TextField, Typography, Button } from '@mui/material';
+import { Box, TextField, Typography, Button, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
@@ -15,6 +15,7 @@ const ResetPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleResetSubmit = async (e) => {
     e.preventDefault();
@@ -49,11 +50,11 @@ const ResetPage = () => {
               <img src={resetImage} alt='Reset password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ my: 4 }} color='#031D44'>
+            <Typography variant='h4' sx={{ my: 4 }} color={theme.palette.neutral.main}>
               Repor password
             </Typography>
 
-            <Typography color='#031D44' sx={{ mb: 4 }}>
+            <Typography color={theme.palette.neutral.main} sx={{ mb: 4 }}>
               Digite a sua nova password.
             </Typography>
           </Box>

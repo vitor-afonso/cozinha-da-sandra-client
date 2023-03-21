@@ -430,7 +430,7 @@ export const forgotClasses = {
     alignItems: 'center',
   },
   image: {
-    maxWidth: { xs: '200px', md: '350px' },
+    maxWidth: { xs: '200px', md: '300px' },
   },
   form: {
     width: { xs: '300px', md: '500px' },

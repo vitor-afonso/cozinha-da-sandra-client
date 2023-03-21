@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
@@ -17,8 +17,8 @@ const SignupPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -55,13 +55,13 @@ const SignupPage = () => {
         </Box>
 
         <Box sx={{ alignSelf: { md: 'start' }, ml: { md: 6 } }}>
-          <Typography variant='h4' sx={{ marginTop: { xs: 2 } }} color='#031D44'>
+          <Typography variant='h4' sx={{ marginTop: { xs: 2 } }} color={theme.palette.neutral.main}>
             Registrar
           </Typography>
 
           <Box>
             <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
-              <Typography sx={{ mb: 0.3 }} color='#031D44'>
+              <Typography sx={{ mb: 0.3 }} color={theme.palette.neutral.main}>
                 Já tens conta?
               </Typography>
               <Button onClick={() => navigate('/login')} size='small'>
