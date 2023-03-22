@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, TextField, Typography, Button, CircularProgress } from '@mui/material';
+import { Box, TextField, Typography, Button, CircularProgress, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
@@ -12,6 +12,7 @@ const ForgotPage = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const theme = useTheme();
 
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
@@ -48,11 +49,11 @@ const ForgotPage = () => {
               <img src={forgotImage} alt='Forgot password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ my: 2 }} color='#031D44'>
+            <Typography variant='h4' sx={{ my: 2 }} color={theme.palette.neutral.main}>
               Esqueceu password?
             </Typography>
 
-            <Typography color='#031D44'>Digite o seu email.</Typography>
+            <Typography color={theme.palette.neutral.main}>Digite o seu email.</Typography>
           </Box>
           <Box sx={forgotClasses.form}>
             <form noValidate autoComplete='off' onSubmit={handleForgotSubmit}>

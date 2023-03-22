@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Button, CircularProgress, TextField, Typography } from '@mui/material';
+import { Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -57,13 +58,13 @@ const LoginPage = () => {
           <img src={loginImage} alt='Login' className='auth-images' />
         </Box>
         <Box sx={{ alignSelf: { xs: 'start' } }}>
-          <Typography variant='h4' color='#031D44'>
+          <Typography variant='h4' color={theme.palette.neutral.main}>
             Login
           </Typography>
 
           <Box sx={{ marginBottom: { md: 4 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography sx={{ mb: 0.3 }} color='#031D44'>
+              <Typography sx={{ mb: 0.3 }} color={theme.palette.neutral.main}>
                 Ainda não tens conta?
               </Typography>
 

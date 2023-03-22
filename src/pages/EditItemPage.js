@@ -10,7 +10,7 @@ import convert from 'image-file-resize';
 import { editItemClasses } from '../utils/app.styleClasses';
 import { CustomModal } from '../components/CustomModal';
 
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -38,6 +38,7 @@ const EditItemPage = () => {
   const submitFormButtom = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -184,11 +185,11 @@ const EditItemPage = () => {
     <Box sx={editItemClasses.container}>
       {itemToEdit && (
         <>
-          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+          <Typography variant='h2' color='primary' sx={{ my: 4 }}>
             EDITAR
           </Typography>
 
-          <Typography variant='h4' color='#031D44' sx={{ my: '25px' }}>
+          <Typography variant='h4' color={theme.pallete.neutral.main} sx={{ my: 4 }}>
             {name}
           </Typography>
 
@@ -196,7 +197,7 @@ const EditItemPage = () => {
             <Box sx={editItemClasses.formContainer}>
               <Box sx={editItemClasses.form}>
                 <form onSubmit={handleSubmit} noValidate>
-                  <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
+                  <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: 4 }} />}</Box>
 
                   <TextField label='Titulo' type='text' variant='outlined' fullWidth required sx={editItemClasses.nameField} onChange={(e) => setName(e.target.value)} error={nameError} value={name} />
 
@@ -239,7 +240,7 @@ const EditItemPage = () => {
                   />
 
                   {errorMessage && (
-                    <Typography paragraph sx={{ mb: '25px' }} color='error'>
+                    <Typography paragraph sx={{ mb: 4 }} color='error'>
                       {errorMessage}
                     </Typography>
                   )}
@@ -257,7 +258,7 @@ const EditItemPage = () => {
           )}
 
           {successMessage && (
-            <Typography paragraph sx={{ my: '25px' }}>
+            <Typography paragraph sx={{ my: 4 }}>
               {successMessage}
             </Typography>
           )}

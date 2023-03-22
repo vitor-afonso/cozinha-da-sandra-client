@@ -13,7 +13,7 @@ import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
 import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/app.utils';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 import { cartClasses } from '../utils/app.styleClasses';
@@ -50,6 +50,7 @@ const CartPage = () => {
   const submitBtnRef = useRef();
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
+  const theme = useTheme();
 
   const shouldPayForDeliveryFee = addedDeliveryFee && cartTotal < amountForFreeDelivery && !hasDeliveryDiscount && !haveExtraFee;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
@@ -276,10 +277,10 @@ const CartPage = () => {
 
               {deliveryMethod !== 'delivery' && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                  <Typography variant='h4' color='#031D44' sx={{ fontWeight: 'bold', mr: 1 }}>
+                  <Typography variant='h4' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Total:
                   </Typography>
-                  <Typography variant='h4' color='#031D44'>
+                  <Typography variant='h4' color={theme.palette.neutral.main}>
                     {calculateCartTotalToShow()}
                   </Typography>
                 </Box>
@@ -351,7 +352,7 @@ const CartPage = () => {
 
       {successMessage && (
         <>
-          <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color='#031D44'>
+          <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color={theme.palette.neutral.main}>
             {successMessage}
           </Typography>
 

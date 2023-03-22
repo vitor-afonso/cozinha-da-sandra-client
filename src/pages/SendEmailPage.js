@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
@@ -26,6 +26,7 @@ const SendEmailPage = () => {
   const submitForm = useRef();
   const navigate = useNavigate();
   const { orderId } = useParams();
+  const theme = useTheme();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -87,7 +88,7 @@ const SendEmailPage = () => {
       <Typography variant='h2' color='primary' sx={{ my: 4 }}>
         Enviar Email
       </Typography>
-      <Typography variant='h4' color='#031D44' sx={{ my: 4 }}>
+      <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 4 }}>
         Detalhes de pedido
       </Typography>
 
