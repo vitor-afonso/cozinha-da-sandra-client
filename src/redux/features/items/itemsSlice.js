@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+// eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllActiveItems } from '../../../api';
 

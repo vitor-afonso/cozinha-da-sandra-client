@@ -10,6 +10,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { usersClasses } from '../utils/app.styleClasses';
 
 const IS_MOBILE = window.innerWidth < 600 ? true : false;
+const HEADING_VARIANT = IS_MOBILE ? 'h3' : 'h2';
 
 const UsersPage = () => {
   const { user } = useContext(AuthContext);
@@ -38,12 +39,10 @@ const UsersPage = () => {
     }
   }, [str, shopUsers]);
 
-  const headingVariant = IS_MOBILE ? 'h3' : 'h2';
-
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant={headingVariant} color='primary' sx={{ my: 4 }}>
+        <Typography variant={HEADING_VARIANT} color='primary' sx={{ my: 4 }}>
           UTILIZADORES
         </Typography>
 
