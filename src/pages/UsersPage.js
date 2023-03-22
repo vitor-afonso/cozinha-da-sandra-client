@@ -38,12 +38,12 @@ const UsersPage = () => {
     }
   }, [str, shopUsers]);
 
-  const titleSize = IS_MOBILE ? 'h3' : 'h2';
+  const headingVariant = IS_MOBILE ? 'h3' : 'h2';
 
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant={titleSize} color='primary' sx={{ my: 4 }}>
+        <Typography variant={headingVariant} color='primary' sx={{ my: 4 }}>
           UTILIZADORES
         </Typography>
 
