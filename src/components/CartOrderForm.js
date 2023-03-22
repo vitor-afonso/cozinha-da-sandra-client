@@ -67,7 +67,7 @@ export const CartOrderForm = ({
         Dados de entrega
       </Typography>
       <Box sx={cartFormClasses.form}>
-        <form onSubmit={submitOrder} noValidate>
+        <form onSubmit={submitOrder} noValidate style={cartFormClasses.innerForm}>
           <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
 
           <TextField
@@ -114,6 +114,7 @@ export const CartOrderForm = ({
               error={customDeliveryFeeError}
               value={customDeliveryFee}
               inputProps={{ maxLength: 6 }}
+              autoFocus
             />
           )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
