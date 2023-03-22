@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
-import { addToCart, clearCart, setItemAmount, handleAddedDeliveryFee } from '../redux/features/items/itemsSlice';
+import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from '../redux/features/items/itemsSlice';
 import { ShopItem } from '../components/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
@@ -23,7 +23,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, hasDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -66,12 +66,14 @@ const EditOrderPage = () => {
         adminEffectRan.current = true;
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, shopOrders]);
 
   useEffect(() => {
     if (order) {
       setOrderDetails(order);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   useEffect(() => {
@@ -84,6 +86,7 @@ const EditOrderPage = () => {
         dispatch(setItemAmount({ id: item._id, amount: itemsArr[item.name] }));
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order]);
 
   useEffect(() => {
@@ -127,11 +130,11 @@ const EditOrderPage = () => {
     if (e.target.value === 'delivery') {
       setIsAddressNotVisible(false);
       setRequiredInput(true);
-      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
     } else {
       setIsAddressNotVisible(true);
       setRequiredInput(false);
-      dispatch(handleAddedDeliveryFee({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
       setHaveExtraFee(false);
     }
   };
@@ -174,7 +177,7 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (hasDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery') || (order.deliveryDiscount && !wasTakeAwayOrder())) && !haveExtraFee;
+    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery') || (order.deliveryDiscount && !wasTakeAwayOrder())) && !haveExtraFee;
   };
 
   const getDeliveryFee = () => {
@@ -252,7 +255,7 @@ const EditOrderPage = () => {
         address: deliveryMethod === 'delivery' ? fullAddress : '',
         deliveryFee: Number(getDeliveryFee()),
         haveExtraDeliveryFee: haveExtraFee,
-        deliveryDiscount: isElegibleForGlobalDiscount(hasDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.deliveryDiscount),
+        deliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.deliveryDiscount),
         message,
         deliveryMethod,
         amountForFreeDelivery: wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery,

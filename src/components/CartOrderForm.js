@@ -53,12 +53,12 @@ export const CartOrderForm = ({
   customDeliveryFee,
   setCustomDeliveryFee,
 }) => {
-  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, hasDeliveryDiscount } = useSelector((store) => store.items);
+  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, globalDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
   const [inputType, setInputType] = useState('text');
 
   const isElegibleForFreeDelivery = () => {
-    return (hasDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery')) && !haveExtraFee;
+    return (globalDeliveryDiscount || (cartTotal > amountForFreeDelivery && deliveryMethod === 'delivery')) && !haveExtraFee;
   };
 
   return (
@@ -176,7 +176,7 @@ export const CartOrderForm = ({
             <Typography
               paragraph
               sx={{
-                my: 4,
+                mb: 4,
               }}
               color='error'
             >
