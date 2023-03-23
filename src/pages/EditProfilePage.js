@@ -43,6 +43,9 @@ const EditProfilePage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const isProfileOwner = user._id === userId ? true : false;
+  const shouldShowDeleteButton = profileOwner && !profileOwner.deleted && profileOwner.userType === 'user';
+
   useEffect(() => {
     if (userId) {
       let owner = shopUsers.find((user) => user._id === userId);
@@ -57,11 +60,11 @@ const EditProfilePage = () => {
       if (owner.info) {
         setInfo(owner.info);
       }
-      if (user.userType === 'admin' && userId !== user._id) {
+      if (user.userType === 'admin' && !isProfileOwner) {
         setDisabledInput(true);
       }
     }
-  }, [userId, shopUsers, user]);
+  }, [userId, shopUsers, user, isProfileOwner]);
 
   const handleFileUpload = async (e) => {
     try {
@@ -104,15 +107,14 @@ const EditProfilePage = () => {
       let response = await deleteUser(userId);
 
       dispatch(deleteShopUser(response.data));
-      setSuccessMessage('Utilizador "apagado" com sucesso.');
-      logOutUser();
+      setSuccessMessage('Utilizador desactivado com sucesso.');
+
+      if (isProfileOwner) {
+        logOutUser();
+      }
     } catch (error) {
       console.log(error.message);
     }
-  };
-
-  const isProfileOwner = () => {
-    return user._id === userId;
   };
 
   const handleSubmit = async (e) => {
@@ -185,7 +187,7 @@ const EditProfilePage = () => {
 
   return (
     <Box sx={editProfileClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
         EDITAR
       </Typography>
 
@@ -193,7 +195,7 @@ const EditProfilePage = () => {
         <Box sx={editProfileClasses.formContainer}>
           <Box sx={editProfileClasses.form}>
             <form onSubmit={handleSubmit} noValidate>
-              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
+              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: 4 }} />}</Box>
 
               <TextField
                 label='Username'
@@ -202,7 +204,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => isProfileOwner() && setUsername(e.target.value)}
+                onChange={(e) => isProfileOwner && setUsername(e.target.value)}
                 error={usernameError}
                 value={username}
                 disabled={disabledInput}
@@ -215,7 +217,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => isProfileOwner() && setEmail(e.target.value)}
+                onChange={(e) => isProfileOwner && setEmail(e.target.value)}
                 error={emailError}
                 value={email}
                 disabled={disabledInput}
@@ -227,13 +229,13 @@ const EditProfilePage = () => {
                 variant='outlined'
                 fullWidth
                 sx={editProfileClasses.nameField}
-                onChange={isProfileOwner() && validateContact}
+                onChange={isProfileOwner && validateContact}
                 value={contact}
                 disabled={disabledInput}
                 placeholder='912345678'
               />
 
-              {isProfileOwner() && !isLoading && (
+              {isProfileOwner && !isLoading && (
                 <>
                   <TextField
                     label='Nova Password'
@@ -272,12 +274,12 @@ const EditProfilePage = () => {
                   sx={editProfileClasses.formTextArea}
                   onChange={(e) => setInfo(e.target.value)}
                   value={info}
-                  placeholder='Escreva aqui a descrição...'
+                  placeholder='Escreva aqui a descrição'
                 />
               )}
 
               {errorMessage && (
-                <Typography paragraph sx={{ mb: '25px' }} color='error'>
+                <Typography paragraph sx={{ mb: 4 }} color='error'>
                   {errorMessage}
                 </Typography>
               )}
@@ -293,7 +295,7 @@ const EditProfilePage = () => {
       )}
 
       {successMessage && (
-        <Typography paragraph sx={{ my: '25px' }}>
+        <Typography paragraph sx={{ my: 4 }}>
           {successMessage}
         </Typography>
       )}
@@ -309,7 +311,7 @@ const EditProfilePage = () => {
           <>
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
 
-            {profileOwner && !profileOwner.deleted && profileOwner.userType === 'user' && (
+            {shouldShowDeleteButton && (
               <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' color='error' variant='outlined' onClick={handleOpen}>
                 Apagar
               </Button>
@@ -323,7 +325,7 @@ const EditProfilePage = () => {
               </Button>
             )}
             <>
-              {isProfileOwner() && (
+              {isProfileOwner && (
                 <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
