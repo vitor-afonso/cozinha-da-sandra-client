@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+// eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllOrders } from '../../../api';
 
@@ -59,18 +60,18 @@ const ordersSlice = createSlice({
       //console.log('current shop orders in updateShopOrder   =>', current(state).shopOrders);
     },
   },
-  extraReducers: {
-    [getShopOrders.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getShopOrders.fulfilled]: (state, action) => {
-      //console.log('action on fulfilled', action);
-      state.isLoading = false;
-      state.shopOrders = action.payload;
-    },
-    [getShopOrders.rejected]: (state) => {
-      state.isLoading = false;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getShopOrders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getShopOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.shopOrders = action.payload;
+      })
+      .addCase(getShopOrders.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 

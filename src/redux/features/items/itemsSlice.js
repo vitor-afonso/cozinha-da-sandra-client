@@ -114,18 +114,18 @@ const itemsSlice = createSlice({
       //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
     },
   },
-  extraReducers: {
-    [getShopItems.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getShopItems.fulfilled]: (state, action) => {
-      //console.log('action on fulfilled', action);
-      state.isLoading = false;
-      state.shopItems = action.payload;
-    },
-    [getShopItems.rejected]: (state) => {
-      state.isLoading = false;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getShopItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getShopItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.shopItems = action.payload;
+      })
+      .addCase(getShopItems.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 
