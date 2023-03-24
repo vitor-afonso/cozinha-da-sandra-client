@@ -1,5 +1,6 @@
 // jshint esversion:9
 import ms from 'ms';
+import ImageResizer from 'react-image-file-resizer';
 
 // ms converts days to milliseconds
 // then i can use it to define the date that the user can book
@@ -73,6 +74,36 @@ export const getMissingAmountForFreeDelivery = (amountForFreeDelivery, cartTotal
     return ` ${(amountForFreeDelivery - cartTotal).toFixed(2)}`;
   }
   return ` ${(amountForFreeDelivery - cartTotal).toFixed(2)}`;
+};
+
+export const handleFileUpload = async (e, setTempImageUrl, setObjImageToUpload) => {
+  const resizeFile = (file) =>
+    new Promise((resolve) => {
+      ImageResizer.imageFileResizer(
+        file,
+        300, // new maxWidth
+        300, // new maxHheight
+        'JPEG', // output format
+        60, // quality (optional)
+        0, // rotation (optional)
+        (uri) => {
+          resolve(uri);
+        },
+        'base64' // output type (optional)
+      );
+    });
+
+  try {
+    if (e.target.files.lenght !== 0) {
+      const resizedImg = await resizeFile(e.target.files[0]);
+      setTempImageUrl(resizedImg);
+      // converts URI image to blob
+      const blobImg = await (await fetch(resizedImg)).blob();
+      setObjImageToUpload(blobImg);
+    }
+  } catch (error) {
+    console.log('Error while uploading the file: ', error);
+  }
 };
 
 const parseDateToShow = (dateToParse) => {

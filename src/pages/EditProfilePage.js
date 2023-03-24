@@ -7,9 +7,8 @@ import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
 import { editProfileClasses } from '../utils/app.styleClasses';
+import { handleFileUpload } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
-
-import convert from 'image-file-resize';
 
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -66,21 +65,8 @@ const EditProfilePage = () => {
     }
   }, [userId, shopUsers, user, isProfileOwner]);
 
-  const handleFileUpload = async (e) => {
-    try {
-      if (e.target.files.lenght !== 0) {
-        setTempImageUrl(URL.createObjectURL(e.target.files[0]));
-        let resizedImg = await convert({
-          file: e.target.files[0],
-          width: 300,
-          type: 'jpeg',
-        });
-
-        setObjImageToUpload(resizedImg);
-      }
-    } catch (error) {
-      console.log('Error while uploading the file: ', error);
-    }
+  const handleImageUpload = async (e) => {
+    handleFileUpload(e, setTempImageUrl, setObjImageToUpload);
   };
 
   const validateContact = (e) => {
@@ -309,7 +295,7 @@ const EditProfilePage = () => {
 
         {!successMessage && !isLoading && (
           <>
-            <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+            <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleImageUpload(e)} />
 
             {shouldShowDeleteButton && (
               <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' color='error' variant='outlined' onClick={handleOpen}>
