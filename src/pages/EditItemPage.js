@@ -189,7 +189,7 @@ const EditItemPage = () => {
             EDITAR
           </Typography>
 
-          <Typography variant='h4' color={theme.pallete.neutral.main} sx={{ my: 4 }}>
+          <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 4 }}>
             {name}
           </Typography>
 
@@ -204,7 +204,7 @@ const EditItemPage = () => {
                   <Box>
                     <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
                       <FormLabel id='demo-row-radio-buttons-group-label'>Categoria</FormLabel>
-                      <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
+                      <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
                         <FormControlLabel value='doces' control={<Radio />} label='Doces' checked={category === 'doces'} />
                         <FormControlLabel value='salgados' control={<Radio />} label='Salgados' checked={category === 'salgados'} />
                       </RadioGroup>
