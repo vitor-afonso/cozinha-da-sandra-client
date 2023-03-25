@@ -1,5 +1,6 @@
 // jshint esversion:9
 
+// eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllUsers } from '../../../api';
 
@@ -37,18 +38,18 @@ const usersSlice = createSlice({
       state.shopUsers.push(payload);
     },
   },
-  extraReducers: {
-    [getShopUsers.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getShopUsers.fulfilled]: (state, action) => {
-      //console.log('action on fulfilled', action);
-      state.isLoading = false;
-      state.shopUsers = action.payload;
-    },
-    [getShopUsers.rejected]: (state) => {
-      state.isLoading = false;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getShopUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getShopUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.shopUsers = action.payload;
+      })
+      .addCase(getShopUsers.rejected, (state) => {
+        state.isLoading = false;
+      });
   },
 });
 
