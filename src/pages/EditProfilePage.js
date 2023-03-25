@@ -84,6 +84,8 @@ const EditProfilePage = () => {
   };
 
   const validateContact = (e) => {
+    if (!isProfileOwner) return;
+
     //regEx to prevent from typing letters and adding limit of 14 digits
     const re = /^[0-9]{0,14}$/;
 
@@ -204,7 +206,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => isProfileOwner && setUsername(e.target.value)}
+                onChange={(e) => setUsername(isProfileOwner && e.target.value)}
                 error={usernameError}
                 value={username}
                 disabled={disabledInput}
@@ -217,7 +219,7 @@ const EditProfilePage = () => {
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
-                onChange={(e) => isProfileOwner && setEmail(e.target.value)}
+                onChange={(e) => setEmail(isProfileOwner && e.target.value)}
                 error={emailError}
                 value={email}
                 disabled={disabledInput}
@@ -229,7 +231,7 @@ const EditProfilePage = () => {
                 variant='outlined'
                 fullWidth
                 sx={editProfileClasses.nameField}
-                onChange={isProfileOwner && validateContact}
+                onChange={validateContact}
                 value={contact}
                 disabled={disabledInput}
                 placeholder='912345678'
