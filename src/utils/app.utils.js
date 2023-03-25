@@ -94,7 +94,7 @@ export const handleFileUpload = async (e, setTempImageUrl, setObjImageToUpload) 
     });
 
   try {
-    if (e.target.files.lenght !== 0) {
+    if (e.target.files.length !== 0) {
       const resizedImg = await resizeFile(e.target.files[0]);
       setTempImageUrl(resizedImg);
       // converts URI image to blob
