@@ -145,6 +145,12 @@ const CartPage = () => {
     return orderPrice;
   };
 
+  const getOrderNumber = () => {
+    dispatch(getShopOrders());
+    let orderNumber = String(shopOrders.length + 1).padStart(5, '0');
+    return orderNumber;
+  };
+
   function handleClearCart() {
     dispatch(clearCart());
   }
@@ -224,7 +230,7 @@ const CartPage = () => {
       }
 
       let requestBody = {
-        orderNumber: shopOrders.length + 1,
+        orderNumber: getOrderNumber(),
         deliveryDate: new Date(deliveryDate),
         contact,
         address: fullAddress ? fullAddress.join(' ') : '',
