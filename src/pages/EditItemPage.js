@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
-import convert from 'image-file-resize';
 import { editItemClasses } from '../utils/app.styleClasses';
 import { CustomModal } from '../components/CustomModal';
+import { handleFileUpload } from '../utils/app.utils';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -71,25 +71,6 @@ const EditItemPage = () => {
     }
   };
 
-  const handleFileUpload = async (e) => {
-    try {
-      if (e.target.files.lenght !== 0) {
-        setTempImageUrl(URL.createObjectURL(e.target.files[0]));
-
-        let resizedImg = await convert({
-          file: e.target.files[0],
-          width: 300,
-          height: 225,
-          type: 'jpeg',
-        });
-
-        setObjImageToUpload(resizedImg);
-      }
-    } catch (error) {
-      console.log('Error while uploading the file: ', error);
-    }
-  };
-
   const handleDeleteItem = async () => {
     try {
       await deleteItem(itemId);
@@ -106,7 +87,7 @@ const EditItemPage = () => {
 
     if (!name) {
       setNameError(true);
-      setErrorMessage('Por favor introduza Titulo.');
+      setErrorMessage('Por favor introduza titulo.');
       return;
     }
     setNameError(false);
@@ -162,8 +143,6 @@ const EditItemPage = () => {
         setSuccessMessage('Item actualizado com sucesso.');
 
         setBtnLoading(false);
-
-        setTimeout(() => navigate('/'), 5000);
       } else {
         const requestBody = { name, category, description, ingredients, price: Number(price) };
 
@@ -172,8 +151,6 @@ const EditItemPage = () => {
         dispatch(updateShopItem(data.updatedItem));
 
         setSuccessMessage('Item actualizado com sucesso.');
-
-        setTimeout(() => navigate('/'), 5000);
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -189,7 +166,7 @@ const EditItemPage = () => {
             EDITAR
           </Typography>
 
-          <Typography variant='h4' color={theme.pallete.neutral.main} sx={{ my: 4 }}>
+          <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 4 }}>
             {name}
           </Typography>
 
@@ -222,7 +199,7 @@ const EditItemPage = () => {
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                     required
-                    placeholder='Escreva aqui a descrição...'
+                    placeholder='Escreva aqui a descrição'
                     error={descriptionError}
                   />
 
@@ -235,7 +212,7 @@ const EditItemPage = () => {
                     onChange={(e) => setIngredients(e.target.value)}
                     value={ingredients}
                     required
-                    placeholder='Escreva aqui os ingredientes separados por virgula...'
+                    placeholder='Escreva aqui os ingredientes separados por virgula'
                     error={ingredientsError}
                   />
 
@@ -246,7 +223,7 @@ const EditItemPage = () => {
                   )}
 
                   <div>
-                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
                     <button type='submit' ref={submitFormButtom} hidden>
                       Actualizar
