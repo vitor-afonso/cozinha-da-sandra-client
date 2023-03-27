@@ -208,6 +208,8 @@ const EditProfilePage = () => {
                 error={usernameError}
                 value={username}
                 disabled={disabledInput}
+                autoComplete='true'
+                autoFocus
               />
 
               <TextField
@@ -221,6 +223,7 @@ const EditProfilePage = () => {
                 error={emailError}
                 value={email}
                 disabled={disabledInput}
+                autoComplete='true'
               />
 
               <TextField
@@ -233,6 +236,7 @@ const EditProfilePage = () => {
                 value={contact}
                 disabled={disabledInput}
                 placeholder='912345678'
+                autoComplete='true'
               />
 
               {isProfileOwner && !isLoading && (

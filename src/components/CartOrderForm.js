@@ -68,7 +68,19 @@ export const CartOrderForm = ({
       </Typography>
       <Box sx={cartFormClasses.form}>
         <form onSubmit={submitOrder} noValidate style={cartFormClasses.innerForm}>
-          <TextField label='Telefone' type='text' variant='outlined' fullWidth required sx={cartFormClasses.formField} onChange={(e) => validateContact(e)} error={contactError} value={contact} />
+          <TextField
+            label='Telefone'
+            type='text'
+            variant='outlined'
+            fullWidth
+            required
+            sx={cartFormClasses.formField}
+            onChange={(e) => validateContact(e)}
+            error={contactError}
+            value={contact}
+            autoComplete='true'
+            autoFocus
+          />
 
           <TextField
             label='Data & Hora de entrega'
@@ -132,6 +144,7 @@ export const CartOrderForm = ({
               placeholder='Rua dos bolos n 7'
               error={addressStreetError}
               value={addressStreet}
+              autoComplete='true'
             />
 
             <TextField
@@ -145,6 +158,7 @@ export const CartOrderForm = ({
               placeholder='8800-123'
               error={addressCodeError}
               value={addressCode}
+              autoComplete='true'
             />
 
             <TextField
@@ -158,6 +172,7 @@ export const CartOrderForm = ({
               placeholder='Tavira'
               error={addressCityError}
               value={addressCity}
+              autoComplete='true'
             />
           </Box>
 

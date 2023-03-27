@@ -45,6 +45,7 @@ const DocesPage = () => {
           ),
         }}
         onChange={(e) => setStr(e.target.value)}
+        autoComplete='true'
       />
 
       {isLoading && <CircularProgress sx={{ mt: 20 }} />}

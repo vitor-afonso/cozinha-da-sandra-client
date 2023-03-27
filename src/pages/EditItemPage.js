@@ -211,7 +211,18 @@ const EditItemPage = () => {
                     </FormControl>
                   </Box>
 
-                  <TextField label='Preço' type='text' variant='outlined' fullWidth required sx={editItemClasses.formField} onChange={(e) => handlePrice(e)} error={priceError} value={price} />
+                  <TextField
+                    label='Preço'
+                    type='text'
+                    variant='outlined'
+                    fullWidth
+                    required
+                    sx={editItemClasses.formField}
+                    onChange={(e) => handlePrice(e)}
+                    error={priceError}
+                    value={price}
+                    autoComplete='true'
+                  />
 
                   <TextField
                     id='outlined-multiline-flexible'

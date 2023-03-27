@@ -145,7 +145,18 @@ const NewItemPage = () => {
             <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-              <TextField label='Titulo' type='text' variant='outlined' fullWidth required sx={newItemClasses.nameField} onChange={(e) => setName(e.target.value)} error={nameError} value={name} />
+              <TextField
+                label='Titulo'
+                type='text'
+                variant='outlined'
+                fullWidth
+                required
+                sx={newItemClasses.nameField}
+                onChange={(e) => setName(e.target.value)}
+                error={nameError}
+                value={name}
+                autoFocus
+              />
 
               <Box>
                 <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>

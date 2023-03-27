@@ -60,6 +60,7 @@ const UsersPage = () => {
             ),
           }}
           onChange={(e) => setStr(e.target.value)}
+          autoComplete='true'
         />
       </Box>
 
