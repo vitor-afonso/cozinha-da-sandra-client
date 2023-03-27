@@ -65,10 +65,6 @@ const EditProfilePage = () => {
     }
   }, [userId, shopUsers, user, isProfileOwner]);
 
-  const handleImageUpload = async (e) => {
-    handleFileUpload(e, setTempImageUrl, setObjImageToUpload);
-  };
-
   const validateContact = (e) => {
     //regEx to prevent from typing letters and adding limit of 14 digits
     const re = /^[0-9]{0,14}$/;
@@ -295,7 +291,7 @@ const EditProfilePage = () => {
 
         {!successMessage && !isLoading && (
           <>
-            <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleImageUpload(e)} />
+            <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
             {shouldShowDeleteButton && (
               <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' color='error' variant='outlined' onClick={handleOpen}>

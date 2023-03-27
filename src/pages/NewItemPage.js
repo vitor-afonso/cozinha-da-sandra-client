@@ -47,10 +47,6 @@ const NewItemPage = () => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    handleFileUpload(e, setTempImageUrl, setObjImageToUpload);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -177,7 +173,7 @@ const NewItemPage = () => {
               )}
 
               <div>
-                <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleImageUpload(e)} />
+                <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
                 <button type='submit' ref={submitForm} hidden>
                   Criar

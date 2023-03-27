@@ -71,10 +71,6 @@ const EditItemPage = () => {
     }
   };
 
-  const handleImageUpload = async (e) => {
-    handleFileUpload(e, setTempImageUrl, setObjImageToUpload);
-  };
-
   const handleDeleteItem = async () => {
     try {
       await deleteItem(itemId);
@@ -227,7 +223,7 @@ const EditItemPage = () => {
                   )}
 
                   <div>
-                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleImageUpload(e)} />
+                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
                     <button type='submit' ref={submitFormButtom} hidden>
                       Actualizar
