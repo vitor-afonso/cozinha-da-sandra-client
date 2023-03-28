@@ -84,7 +84,7 @@ const SignupPage = () => {
             error={usernameError}
             disabled={isLoading}
             autoComplete='true'
-            autoFocuss
+            autoFocus
           />
 
           <TextField
