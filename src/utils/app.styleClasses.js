@@ -738,3 +738,43 @@ export const modalStyle = {
   flexDirection: 'column',
   alignItems: 'center',
 };
+
+export const componentStr = {
+  type: {
+    button: 'button',
+    text: 'text',
+    submit: 'submit',
+  },
+  variant: {
+    contained: 'contained',
+    outlined: 'outlined',
+    text: 'text',
+    string: 'string',
+    filled: 'filled',
+    standard: 'standard',
+    button: 'button',
+    inherit: 'inherit',
+    caption: 'caption',
+    h1: 'h1',
+    h2: 'h2',
+    h3: 'h3',
+    h4: 'h4',
+    h5: 'h5',
+    h6: 'h6',
+    subtitle1: 'subtitle1',
+    subtitle2: 'subtitle2',
+    body1: 'body1',
+    body2: 'body2',
+    overline: 'overline',
+  },
+  color: {
+    inherit: 'inherit',
+    primary: 'primary',
+    secondary: 'secondary',
+    success: 'success',
+    error: 'error',
+    info: 'info',
+    warning: 'warning',
+    string: 'string',
+  },
+};
