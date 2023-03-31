@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
-import convert from 'image-file-resize';
 import { componentProps, editItemClasses } from '../utils/app.styleClasses';
 import { APP } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
@@ -169,7 +168,6 @@ const EditItemPage = () => {
           </Typography>
 
           <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
-
             {name}
           </Typography>
 
