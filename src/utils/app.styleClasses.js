@@ -739,7 +739,7 @@ export const modalStyle = {
   alignItems: 'center',
 };
 
-export const componentStr = {
+export const componentProps = {
   type: {
     button: 'button',
     text: 'text',

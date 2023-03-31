@@ -7,7 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 import convert from 'image-file-resize';
-import { componentStr, editItemClasses } from '../utils/app.styleClasses';
+import { componentProps, editItemClasses } from '../utils/app.styleClasses';
+import { APP } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
@@ -185,11 +186,11 @@ const EditItemPage = () => {
     <Box sx={editItemClasses.container}>
       {itemToEdit && (
         <>
-          <Typography variant={componentStr.variant.h2} color={theme.palette.primary.main} sx={{ my: 4 }}>
+          <Typography variant={componentProps.variant.h2} color={theme.palette.primary.main} sx={{ my: 4 }}>
             EDITAR
           </Typography>
 
-          <Typography variant={componentStr.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
+          <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
             {name}
           </Typography>
 
@@ -201,8 +202,8 @@ const EditItemPage = () => {
 
                   <TextField
                     label='Titulo'
-                    type={componentStr.type.text}
-                    variant={componentStr.variant.outlined}
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
                     fullWidth
                     required
                     sx={editItemClasses.nameField}
@@ -215,16 +216,16 @@ const EditItemPage = () => {
                     <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
                       <FormLabel>Categoria</FormLabel>
                       <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
-                        <FormControlLabel value='doces' control={<Radio />} label='Doces' checked={category === 'doces'} />
-                        <FormControlLabel value='salgados' control={<Radio />} label='Salgados' checked={category === 'salgados'} />
+                        <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' checked={category === APP.categories.doces} />
+                        <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' checked={category === APP.categories.salgados} />
                       </RadioGroup>
                     </FormControl>
                   </Box>
 
                   <TextField
                     label='Preço'
-                    type={componentStr.type.text}
-                    variant={componentStr.variant.outlined}
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
                     fullWidth
                     required
                     sx={editItemClasses.formField}
@@ -259,7 +260,7 @@ const EditItemPage = () => {
                   />
 
                   {errorMessage && (
-                    <Typography paragraph sx={{ mb: 4 }} color={componentStr.color.error}>
+                    <Typography paragraph sx={{ mb: 4 }} color={componentProps.color.error}>
                       {errorMessage}
                     </Typography>
                   )}
@@ -291,14 +292,14 @@ const EditItemPage = () => {
 
             {!successMessage && !btnLoading && (
               <>
-                <Button sx={{ mr: 1, mt: 1 }} type={componentStr.type.button} color={componentStr.color.error} variant={componentStr.variant.outlined} onClick={handleOpen}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
                   Apagar
                 </Button>
 
-                <Button sx={{ mr: 1, mt: 1 }} type={componentStr.type.button} variant={componentStr.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
-                <Button sx={{ mt: 1 }} type={componentStr.type.button} variant={componentStr.variant.contained} onClick={() => submitFormButtom.current.click()}>
+                <Button sx={{ mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitFormButtom.current.click()}>
                   Actualizar
                 </Button>
               </>
