@@ -81,7 +81,19 @@ const LoginPage = () => {
       </Box>
       <Box sx={loginClasses.form}>
         <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
-          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={loginClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} disabled={isLoading} />
+          <TextField
+            label='Email'
+            type='email'
+            variant='outlined'
+            fullWidth
+            required
+            sx={loginClasses.field}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
+            disabled={isLoading}
+            autoComplete='true'
+            autoFocus
+          />
 
           <TextField
             label='Password'

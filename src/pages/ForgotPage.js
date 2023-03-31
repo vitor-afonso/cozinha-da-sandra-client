@@ -57,7 +57,18 @@ const ForgotPage = () => {
           </Box>
           <Box sx={forgotClasses.form}>
             <form noValidate autoComplete='off' onSubmit={handleForgotSubmit}>
-              <TextField label='Email' type='email' variant='outlined' fullWidth required sx={forgotClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} />
+              <TextField
+                label='Email'
+                type='email'
+                variant='outlined'
+                fullWidth
+                required
+                sx={forgotClasses.field}
+                onChange={(e) => setEmail(e.target.value)}
+                error={emailError}
+                autoComplete='true'
+                autoFocus
+              />
 
               {errorMessage && (
                 <Typography sx={{ marginBottom: 2 }} color='error'>

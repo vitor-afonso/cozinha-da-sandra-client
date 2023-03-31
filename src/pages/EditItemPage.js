@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
-import { editItemClasses } from '../utils/app.styleClasses';
+import convert from 'image-file-resize';
+import { componentProps, editItemClasses } from '../utils/app.styleClasses';
+import { APP } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
 import { handleFileUpload } from '../utils/app.utils';
 
@@ -162,11 +164,12 @@ const EditItemPage = () => {
     <Box sx={editItemClasses.container}>
       {itemToEdit && (
         <>
-          <Typography variant='h2' color='primary' sx={{ my: 4 }}>
+          <Typography variant={componentProps.variant.h2} color={theme.palette.primary.main} sx={{ my: 4 }}>
             EDITAR
           </Typography>
 
-          <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 4 }}>
+          <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
+
             {name}
           </Typography>
 
@@ -176,22 +179,42 @@ const EditItemPage = () => {
                 <form onSubmit={handleSubmit} noValidate>
                   <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: 4 }} />}</Box>
 
-                  <TextField label='Titulo' type='text' variant='outlined' fullWidth required sx={editItemClasses.nameField} onChange={(e) => setName(e.target.value)} error={nameError} value={name} />
+                  <TextField
+                    label='Titulo'
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    required
+                    sx={editItemClasses.nameField}
+                    onChange={(e) => setName(e.target.value)}
+                    error={nameError}
+                    value={name}
+                  />
 
                   <Box>
                     <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
-                      <FormLabel id='demo-row-radio-buttons-group-label'>Categoria</FormLabel>
-                      <RadioGroup row aria-labelledby='demo-row-radio-buttons-group-label' name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
-                        <FormControlLabel value='doces' control={<Radio />} label='Doces' checked={category === 'doces'} />
-                        <FormControlLabel value='salgados' control={<Radio />} label='Salgados' checked={category === 'salgados'} />
+                      <FormLabel>Categoria</FormLabel>
+                      <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
+                        <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' checked={category === APP.categories.doces} />
+                        <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' checked={category === APP.categories.salgados} />
                       </RadioGroup>
                     </FormControl>
                   </Box>
 
-                  <TextField label='Preço' type='text' variant='outlined' fullWidth required sx={editItemClasses.formField} onChange={(e) => handlePrice(e)} error={priceError} value={price} />
+                  <TextField
+                    label='Preço'
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    required
+                    sx={editItemClasses.formField}
+                    onChange={(e) => handlePrice(e)}
+                    error={priceError}
+                    value={price}
+                    autoComplete='true'
+                  />
 
                   <TextField
-                    id='outlined-multiline-flexible'
                     label='Descrição'
                     multiline
                     maxRows={4}
@@ -204,7 +227,6 @@ const EditItemPage = () => {
                   />
 
                   <TextField
-                    id='outlined-multiline-flexible'
                     label='Ingredientes'
                     multiline
                     maxRows={4}
@@ -217,7 +239,7 @@ const EditItemPage = () => {
                   />
 
                   {errorMessage && (
-                    <Typography paragraph sx={{ mb: 4 }} color='error'>
+                    <Typography paragraph sx={{ mb: 4 }} color={componentProps.color.error}>
                       {errorMessage}
                     </Typography>
                   )}
@@ -249,14 +271,14 @@ const EditItemPage = () => {
 
             {!successMessage && !btnLoading && (
               <>
-                <Button sx={{ mr: 1, mt: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
                   Apagar
                 </Button>
 
-                <Button sx={{ mr: 1, mt: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
                   Imagem
                 </Button>
-                <Button sx={{ mt: 1 }} type='button' variant='contained' onClick={() => submitFormButtom.current.click()}>
+                <Button sx={{ mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitFormButtom.current.click()}>
                   Actualizar
                 </Button>
               </>

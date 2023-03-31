@@ -60,7 +60,17 @@ const ResetPage = () => {
           </Box>
           <Box sx={resetClasses.form}>
             <form noValidate autoComplete='off' onSubmit={handleResetSubmit}>
-              <TextField label='Nova Password' type='password' variant='outlined' fullWidth required sx={resetClasses.field} onChange={(e) => setNewPassword(e.target.value)} error={passwordError} />
+              <TextField
+                label='Nova Password'
+                type='password'
+                variant='outlined'
+                fullWidth
+                required
+                sx={resetClasses.field}
+                onChange={(e) => setNewPassword(e.target.value)}
+                error={passwordError}
+                autoFocus
+              />
 
               <TextField
                 label='Repetir Password'
@@ -74,7 +84,7 @@ const ResetPage = () => {
               />
 
               {errorMessage && (
-                <Typography sx={{ marginBottom: '25px' }} color='error'>
+                <Typography sx={{ marginBottom: 4 }} color='error'>
                   {errorMessage}
                 </Typography>
               )}

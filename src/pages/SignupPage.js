@@ -83,9 +83,22 @@ const SignupPage = () => {
             onChange={(e) => setUsername(e.target.value)}
             error={usernameError}
             disabled={isLoading}
+            autoComplete='true'
+            autoFocus
           />
 
-          <TextField label='Email' type='email' variant='outlined' fullWidth required sx={signupClasses.field} onChange={(e) => setEmail(e.target.value)} error={emailError} disabled={isLoading} />
+          <TextField
+            label='Email'
+            type='email'
+            variant='outlined'
+            fullWidth
+            required
+            sx={signupClasses.field}
+            onChange={(e) => setEmail(e.target.value)}
+            error={emailError}
+            disabled={isLoading}
+            autoComplete='true'
+          />
           {!isLoading && (
             <Box>
               <TextField
