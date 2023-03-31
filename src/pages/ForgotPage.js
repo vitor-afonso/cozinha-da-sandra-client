@@ -4,7 +4,7 @@ import { Box, TextField, Typography, Button, CircularProgress, useTheme } from '
 import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
-import { forgotClasses } from '../utils/app.styleClasses';
+import { componentProps, forgotClasses } from '../utils/app.styleClasses';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -49,7 +49,7 @@ const ForgotPage = () => {
               <img src={forgotImage} alt='Forgot password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ my: 2 }} color={theme.palette.neutral.main}>
+            <Typography variant={componentProps.variant.h4} sx={{ my: 2 }} color={theme.palette.neutral.main}>
               Esqueceu password?
             </Typography>
 
@@ -59,8 +59,8 @@ const ForgotPage = () => {
             <form noValidate autoComplete='off' onSubmit={handleForgotSubmit}>
               <TextField
                 label='Email'
-                type='email'
-                variant='outlined'
+                type={componentProps.type.email}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={forgotClasses.field}
@@ -71,13 +71,13 @@ const ForgotPage = () => {
               />
 
               {errorMessage && (
-                <Typography sx={{ marginBottom: 2 }} color='error'>
+                <Typography sx={{ marginBottom: 2 }} color={componentProps.color.error}>
                   {errorMessage}
                 </Typography>
               )}
 
               {!isLoading && (
-                <Button variant='contained' type='submit' sx={{ mb: 4 }}>
+                <Button variant={componentProps.variant.contained} type={componentProps.type.submit} sx={{ mb: 4 }}>
                   Recuperar
                 </Button>
               )}

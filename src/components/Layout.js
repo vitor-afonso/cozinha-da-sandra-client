@@ -20,6 +20,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Avatar, Badge, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
+import { componentProps } from '../utils/app.styleClasses.js';
 
 const drawerWidth = 220;
 
@@ -84,10 +85,10 @@ export const Layout = (props) => {
           <AppBar component='nav' sx={{ height: '64px', display: 'flex', justifyContent: 'center' }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box>
-                <IconButton color='inherit' aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
-                  <MenuIcon fontSize='large' />
+                <IconButton color={componentProps.color.inherit} aria-label='open drawer' edge='start' onClick={handleDrawerToggle} sx={{ mr: 2, display: { md: 'none' } }}>
+                  <MenuIcon fontSize={componentProps.fontSize.large} />
                 </IconButton>
-                <Typography variant='h6' component='div' sx={{ display: { xs: 'none', md: 'block' }, textAlign: 'left' }}>
+                <Typography variant={componentProps.variant.h6} component='div' sx={{ display: { xs: 'none', md: 'block' }, textAlign: 'left' }}>
                   {APP_NAME}
                 </Typography>
               </Box>
@@ -97,9 +98,9 @@ export const Layout = (props) => {
                 </Box>
 
                 <Box sx={{ position: 'relative' }} onClick={() => navigate('/cart')}>
-                  <Badge color='secondary' overlap='circular' badgeContent={`${cartAmount}`}>
+                  <Badge color={componentProps.color.secondary} overlap='circular' badgeContent={`${cartAmount}`}>
                     <Avatar sx={{ backgroundColor: '#fff', cursor: 'pointer' }}>
-                      <ShoppingCartIcon color='primary' />
+                      <ShoppingCartIcon color={componentProps.color.primary} />
                     </Avatar>
                   </Badge>
                 </Box>
@@ -122,7 +123,7 @@ export const Layout = (props) => {
             }}
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-              <Typography variant='h6' sx={{ my: 2 }} color='primary'>
+              <Typography variant={componentProps.variant.h6} sx={{ my: 2 }} color={componentProps.color.primary}>
                 {APP_NAME}
               </Typography>
               <Divider />
@@ -135,7 +136,13 @@ export const Layout = (props) => {
           <Toolbar />
           {children}
           {cartButtonLocations.includes(location.pathname) && (
-            <Button variant='contained' startIcon={<ShoppingCartOutlinedIcon fontSize='large' />} sx={layoutStyle.cartTotalButton} onClick={() => navigate('/cart')} color='neutral'>
+            <Button
+              variant={componentProps.variant.contained}
+              startIcon={<ShoppingCartOutlinedIcon fontSize={componentProps.fontSize.large} />}
+              sx={layoutStyle.cartTotalButton}
+              onClick={() => navigate('/cart')}
+              color={componentProps.color.neutral}
+            >
               Carrinho: {getTotal()}
             </Button>
           )}

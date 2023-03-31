@@ -10,7 +10,7 @@ import defaultProductImage from '../images/item.svg';
 import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button, CircularProgress } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
-import { newItemClasses } from '../utils/app.styleClasses';
+import { componentProps, newItemClasses } from '../utils/app.styleClasses';
 import { handleFileUpload } from '../utils/app.utils';
 
 const NewItemPage = () => {
@@ -116,7 +116,7 @@ const NewItemPage = () => {
 
   return (
     <Box sx={newItemClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         CRIAR
       </Typography>
 
@@ -128,8 +128,8 @@ const NewItemPage = () => {
 
               <TextField
                 label='Titulo'
-                type='text'
-                variant='outlined'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={newItemClasses.nameField}
@@ -149,7 +149,17 @@ const NewItemPage = () => {
                 </FormControl>
               </Box>
 
-              <TextField label='Preço' type='text' variant='outlined' fullWidth required sx={newItemClasses.formField} onChange={(e) => handlePrice(e)} error={priceError} value={price} />
+              <TextField
+                label='Preço'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                required
+                sx={newItemClasses.formField}
+                onChange={(e) => handlePrice(e)}
+                error={priceError}
+                value={price}
+              />
 
               <TextField
                 id='outlined-multiline-flexible'
@@ -178,7 +188,7 @@ const NewItemPage = () => {
               />
 
               {errorMessage && (
-                <Typography paragraph sx={{ my: '25px' }} color='error'>
+                <Typography paragraph sx={{ my: 4 }} color={componentProps.color.error}>
                   {errorMessage}
                 </Typography>
               )}
@@ -186,7 +196,7 @@ const NewItemPage = () => {
               <div>
                 <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
-                <button type='submit' ref={submitForm} hidden>
+                <button type={componentProps.type.submit} ref={submitForm} hidden>
                   Criar
                 </button>
               </div>
@@ -206,10 +216,10 @@ const NewItemPage = () => {
 
         {!successMessage && !btnLoading && (
           <>
-            <Button sx={{ mr: 1 }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+            <Button sx={{ mr: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
               Imagem
             </Button>
-            <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
+            <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitForm.current.click()}>
               Criar
             </Button>
           </>

@@ -245,7 +245,7 @@ const EditItemPage = () => {
                   <div>
                     <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
-                    <button type='submit' ref={submitFormButtom} hidden>
+                    <button type={componentProps.type.submit} ref={submitFormButtom} hidden>
                       Actualizar
                     </button>
                   </div>

@@ -6,7 +6,7 @@ import { ShopItem } from '../components/ShopItemCard';
 
 import { Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { salgadosClasses } from '../utils/app.styleClasses';
+import { componentProps, salgadosClasses } from '../utils/app.styleClasses';
 
 const SalgadosPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
@@ -28,14 +28,14 @@ const SalgadosPage = () => {
 
   return (
     <Box sx={salgadosClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         SALGADOS
       </Typography>
 
       <TextField
         label='Procurar'
-        type='text'
-        variant='outlined'
+        type={componentProps.type.text}
+        variant={componentProps.variant.outlined}
         fullWidth
         sx={salgadosClasses.field}
         InputProps={{
@@ -66,7 +66,7 @@ const SalgadosPage = () => {
         </Grid>
       )}
       {filteredItems.length === 0 && (
-        <Typography paragraph color='neutral' sx={{ my: 4 }}>
+        <Typography paragraph color={componentProps.color.neutral} sx={{ my: 4 }}>
           Nenhum item encontrado.
         </Typography>
       )}

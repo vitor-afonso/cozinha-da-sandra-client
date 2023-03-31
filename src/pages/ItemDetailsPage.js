@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { ShopItem } from '../components/ShopItemCard';
 import { getShopItems } from '../redux/features/items/itemsSlice';
+import { componentProps } from '../utils/app.styleClasses';
 
 const ItemDetailsPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);
@@ -37,7 +38,7 @@ const ItemDetailsPage = () => {
   return (
     <Box sx={{ my: 4 }}>
       {oneItem && (
-        <Typography variant='h3' color='primary' sx={{ mb: 4 }}>
+        <Typography variant={componentProps.variant.h3} color={componentProps.color.primary} sx={{ mb: 4 }}>
           {oneItem.name}
         </Typography>
       )}

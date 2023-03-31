@@ -11,7 +11,7 @@ import ConfirmOrderModal from './ConfirmOrderModal';
 
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
 import PaidOrderModal from './PaidOrderModal';
-import { shopOrderClasses } from '../utils/app.styleClasses';
+import { componentProps, shopOrderClasses } from '../utils/app.styleClasses';
 
 const APP_NAME = capitalizeAppName();
 
@@ -139,68 +139,68 @@ export function ShopOrder({ order }) {
     <Card sx={shopOrderClasses.container}>
       <CardContent>
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Nº:</b>
           </Typography>
-          <Typography variant='body1' gutterBottom>
+          <Typography variant={componentProps.variant.body1} gutterBottom>
             {order.orderNumber}
           </Typography>
         </Box>
 
         {isCurrentUserAdmin && (
           <Box sx={shopOrderClasses.infoField}>
-            <Typography variant='body1' color={theme.palette.neutral.main}>
+            <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
               <b>Utilizador:</b>
             </Typography>
-            <Typography variant='body1' gutterBottom>
+            <Typography variant={componentProps.variant.body1} gutterBottom>
               {order.userId.username}
             </Typography>
           </Box>
         )}
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Telefone:</b>
           </Typography>
-          <Typography variant='body1' gutterBottom>
+          <Typography variant={componentProps.variant.body1} gutterBottom>
             {order.contact}
           </Typography>
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Data de criação:</b>
           </Typography>
-          <Typography variant='body1' gutterBottom>
+          <Typography variant={componentProps.variant.body1} gutterBottom>
             {createdAt}
           </Typography>
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Data de entrega:</b>
           </Typography>
-          <Typography variant='body1' gutterBottom>
+          <Typography variant={componentProps.variant.body1} gutterBottom>
             {deliveredAt}
           </Typography>
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Método de entrega:</b>
           </Typography>
-          <Typography variant='body1' gutterBottom>
+          <Typography variant={componentProps.variant.body1} gutterBottom>
             {isOrderForDelivery ? 'Entrega' : 'Take Away'}
           </Typography>
         </Box>
 
         {order.address && (
           <Box>
-            <Typography variant='body1' color={theme.palette.neutral.main} align='left'>
+            <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} align='left'>
               <b>Morada: </b>
             </Typography>
 
-            <Typography variant='body1' gutterBottom>
+            <Typography variant={componentProps.variant.body1} gutterBottom>
               {order.address}
             </Typography>
           </Box>
@@ -208,24 +208,24 @@ export function ShopOrder({ order }) {
 
         {order.message && (
           <Box sx={shopOrderClasses.infoField}>
-            <Typography variant='body1' color={theme.palette.neutral.main}>
+            <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
               <b>Mensagem:</b>
             </Typography>
-            <Typography variant='body1' gutterBottom>
+            <Typography variant={componentProps.variant.body1} gutterBottom>
               {order.message}
             </Typography>
           </Box>
         )}
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Quantidade: </b>
           </Typography>
           <Box>
             {itemsQuantity.length > 0 &&
               itemsQuantity.map((item, index) => {
                 return (
-                  <Typography variant='body1' gutterBottom key={index}>
+                  <Typography variant={componentProps.variant.body1} gutterBottom key={index}>
                     {item}
                   </Typography>
                 );
@@ -234,14 +234,14 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Preço: </b>
           </Typography>
           <Box>
             {itemsPrice.length > 0 &&
               itemsPrice.map((item, index) => {
                 return (
-                  <Typography variant='body1' gutterBottom key={index}>
+                  <Typography variant={componentProps.variant.body1} gutterBottom key={index}>
                     {item + APP.currency}
                   </Typography>
                 );
@@ -251,10 +251,10 @@ export function ShopOrder({ order }) {
 
         {isOrderForDelivery && (
           <Box sx={shopOrderClasses.infoField}>
-            <Typography variant='body1' color={theme.palette.neutral.main}>
+            <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
               <b>Taxa de entrega:</b>
             </Typography>
-            <Box variant='body1'>
+            <Box variant={componentProps.variant.body1}>
               <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
@@ -263,14 +263,14 @@ export function ShopOrder({ order }) {
           </Box>
         )}
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Status: </b>
           </Typography>
           <Typography>
             {translateStatus(order.orderStatus)}
 
             {shouldShowConfirmButton && (
-              <Button size='small' onClick={handleOpen}>
+              <Button size={componentProps.size.small} onClick={handleOpen}>
                 Confirmar
               </Button>
             )}
@@ -280,13 +280,13 @@ export function ShopOrder({ order }) {
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Pago: </b>
           </Typography>
           <Typography>
             {order.paid ? 'Sim' : 'Não'}
             {!order.paid && isCurrentUserAdmin && (
-              <Button size='small' onClick={handleOpenPaid}>
+              <Button size={componentProps.size.small} onClick={handleOpenPaid}>
                 Confirmar
               </Button>
             )}
@@ -295,22 +295,22 @@ export function ShopOrder({ order }) {
           <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} handleClosePaid={handleClosePaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
         </Box>
         <Box sx={shopOrderClasses.infoField}>
-          <Typography variant='body1' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Total:</b>
           </Typography>
-          <Typography variant='body1'>{getTotal()}</Typography>
+          <Typography variant={componentProps.variant.body1}>{getTotal()}</Typography>
         </Box>
       </CardContent>
 
       {shouldShowCardActions && (
         <CardActions sx={shopOrderClasses.actions}>
           {!location.pathname.includes('send-email') && isCurrentUserAdmin && (
-            <Button size='small' onClick={() => navigate(`/send-email/orders/${order._id}`)}>
+            <Button size={componentProps.size.small} onClick={() => navigate(`/send-email/orders/${order._id}`)}>
               Contactar
             </Button>
           )}
           {shouldShowEditButton && (
-            <Button size='small' sx={shopOrderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
+            <Button size={componentProps.size.small} sx={shopOrderClasses.editBtn} onClick={() => navigate(`/orders/edit/${order._id}`)}>
               Editar
             </Button>
           )}

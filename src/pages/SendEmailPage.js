@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
-import { sendEmailClasses } from '../utils/app.styleClasses';
+import { componentProps, sendEmailClasses } from '../utils/app.styleClasses';
 import { parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
 
 const APP_NAME = capitalizeAppName();
@@ -85,10 +85,10 @@ const SendEmailPage = () => {
 
   return (
     <Box sx={sendEmailClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         Enviar Email
       </Typography>
-      <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
         Detalhes de pedido
       </Typography>
 
@@ -101,7 +101,6 @@ const SendEmailPage = () => {
           <Box sx={sendEmailClasses.form}>
             <form onSubmit={handleSubmit} noValidate>
               <TextField
-                id='outlined-read-only-input'
                 label='De'
                 defaultValue={APP_NAME}
                 InputProps={{
@@ -111,12 +110,22 @@ const SendEmailPage = () => {
                 sx={sendEmailClasses.formField}
               />
 
-              <TextField label='Para' type='email' variant='outlined' fullWidth required sx={sendEmailClasses.formField} value={to} onChange={(e) => setTo(e.target.value)} error={toError} />
+              <TextField
+                label='Para'
+                type={componentProps.type.email}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                required
+                sx={sendEmailClasses.formField}
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                error={toError}
+              />
 
               <TextField
                 label='Assunto'
-                type='text'
-                variant='outlined'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={sendEmailClasses.formField}
@@ -138,12 +147,12 @@ const SendEmailPage = () => {
               />
 
               {errorMessage && (
-                <Typography paragraph sx={{ my: 4 }} color='error'>
+                <Typography paragraph sx={{ my: 4 }} color={componentProps.color.error}>
                   {errorMessage}
                 </Typography>
               )}
 
-              <button type='submit' ref={submitForm} hidden>
+              <button type={componentProps.type.submit} ref={submitForm} hidden>
                 Enviar
               </button>
             </form>
@@ -165,7 +174,7 @@ const SendEmailPage = () => {
         )}
 
         {!successMessage && !btnLoading && order && (
-          <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
+          <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitForm.current.click()}>
             Enviar
           </Button>
         )}

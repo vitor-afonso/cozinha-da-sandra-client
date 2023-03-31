@@ -4,7 +4,7 @@ import { AuthContext } from '../context/auth.context';
 import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import { handleCustomDeliveryFee } from '../utils/app.utils';
-import { editOrderClasses } from '../utils/app.styleClasses';
+import { componentProps, editOrderClasses } from '../utils/app.styleClasses';
 
 export function EditOrderForm({
   handleSubmit,
@@ -41,8 +41,8 @@ export function EditOrderForm({
         <form onSubmit={handleSubmit} noValidate>
           <TextField
             label='Telefone'
-            type='text'
-            variant='outlined'
+            type={componentProps.type.text}
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={editOrderClasses.formField}
@@ -55,7 +55,7 @@ export function EditOrderForm({
           <TextField
             label='Data & Hora de entrega'
             type={inputType}
-            variant='outlined'
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={editOrderClasses.formField}
@@ -88,8 +88,8 @@ export function EditOrderForm({
               {user.userType === 'admin' && haveExtraFee && (
                 <TextField
                   label='Taxa de entrega'
-                  type='text'
-                  variant='outlined'
+                  type={componentProps.type.text}
+                  variant={componentProps.variant.outlined}
                   fullWidth
                   required
                   sx={editOrderClasses.formField}
@@ -100,8 +100,8 @@ export function EditOrderForm({
               )}
               <TextField
                 label='Morada'
-                type='text'
-                variant='outlined'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required={requiredInput}
                 sx={editOrderClasses.formField}
@@ -122,13 +122,13 @@ export function EditOrderForm({
               sx={{
                 my: 4,
               }}
-              color='error'
+              color={componentProps.color.error}
             >
               {errorMessage}
             </Typography>
           )}
 
-          <button type='submit' ref={submitForm} hidden>
+          <button type={componentProps.type.submit} ref={submitForm} hidden>
             Actualizar
           </button>
         </form>

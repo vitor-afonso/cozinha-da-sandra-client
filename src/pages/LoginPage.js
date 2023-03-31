@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
-import { loginClasses } from '../utils/app.styleClasses';
+import { componentProps, loginClasses } from '../utils/app.styleClasses';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
@@ -58,7 +58,7 @@ const LoginPage = () => {
           <img src={loginImage} alt='Login' className='auth-images' />
         </Box>
         <Box sx={{ alignSelf: { xs: 'start' } }}>
-          <Typography variant='h4' color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main}>
             Login
           </Typography>
 
@@ -68,12 +68,12 @@ const LoginPage = () => {
                 Ainda não tens conta?
               </Typography>
 
-              <Button size='small' onClick={() => navigate('/signup')}>
+              <Button size={componentProps.size.small} onClick={() => navigate('/signup')}>
                 Registra-te
               </Button>
             </Box>
 
-            <Button size='small' onClick={() => navigate('/forgot')}>
+            <Button size={componentProps.size.small} onClick={() => navigate('/forgot')}>
               Recuperar password
             </Button>
           </Box>
@@ -83,8 +83,8 @@ const LoginPage = () => {
         <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
           <TextField
             label='Email'
-            type='email'
-            variant='outlined'
+            type={componentProps.type.email}
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={loginClasses.field}
@@ -98,7 +98,7 @@ const LoginPage = () => {
           <TextField
             label='Password'
             type='password'
-            variant='outlined'
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={loginClasses.field}
@@ -108,13 +108,13 @@ const LoginPage = () => {
           />
 
           {errorMessage && (
-            <Typography color='error' sx={{ mb: 2 }}>
+            <Typography color={componentProps.color.error} sx={{ mb: 2 }}>
               {errorMessage}
             </Typography>
           )}
 
           {!isLoading && (
-            <Button variant='contained' type='submit'>
+            <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
               Entrar
             </Button>
           )}

@@ -8,7 +8,7 @@ import Masonry from 'react-masonry-css';
 
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, CircularProgress } from '@mui/material';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { ordersClasses } from '../utils/app.styleClasses';
+import { componentProps, ordersClasses } from '../utils/app.styleClasses';
 
 const OrdersPage = () => {
   const dispatch = useDispatch();
@@ -82,13 +82,13 @@ const OrdersPage = () => {
   return (
     <Box>
       <Box>
-        <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+        <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
           PEDIDOS
         </Typography>
       </Box>
 
       <Box>
-        <FormControl sx={{ minWidth: 300 }} size='small'>
+        <FormControl sx={{ minWidth: 300 }} size={componentProps.size.small}>
           <Select id='demo-simple-select-helper' value={filterOption} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={handleFilterSelect}>
             <MenuItem value=''>Todos</MenuItem>
             <MenuItem value='pending'>Pendentes</MenuItem>

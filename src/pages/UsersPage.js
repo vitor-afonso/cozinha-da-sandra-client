@@ -7,7 +7,7 @@ import { AuthContext } from '../context/auth.context';
 
 import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, InputAdornment } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { usersClasses } from '../utils/app.styleClasses';
+import { componentProps, usersClasses } from '../utils/app.styleClasses';
 
 const IS_MOBILE = window.innerWidth < 600 ? true : false;
 const HEADING_VARIANT = IS_MOBILE ? 'h3' : 'h2';
@@ -42,14 +42,14 @@ const UsersPage = () => {
   return (
     <Box sx={usersClasses.container}>
       <Box sx={usersClasses.top}>
-        <Typography variant={HEADING_VARIANT} color='primary' sx={{ my: 4 }}>
+        <Typography variant={HEADING_VARIANT} color={componentProps.color.primary} sx={{ my: 4 }}>
           UTILIZADORES
         </Typography>
 
         <TextField
           label='Procurar'
-          type='text'
-          variant='outlined'
+          type={componentProps.type.text}
+          variant={componentProps.variant.outlined}
           fullWidth
           sx={usersClasses.field}
           InputProps={{
@@ -64,7 +64,7 @@ const UsersPage = () => {
         />
       </Box>
 
-      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+      {isLoading && <CircularProgress sx={{ mt: 20 }} size='80px' />}
 
       <Stack spacing={2} sx={usersClasses.bottom}>
         {!isLoading &&
@@ -74,7 +74,7 @@ const UsersPage = () => {
                 return (
                   <Paper elevation={2} key={oneUser._id} sx={usersClasses.deletedAvatarContainer} onClick={() => navigate(`/profile/${oneUser._id}`)}>
                     <Avatar src={oneUser.imageUrl} alt={oneUser.username} sx={usersClasses.avatar} />
-                    <Typography color='textSecondary' sx={{ fontSize: '18px' }}>
+                    <Typography color='textSecondary' sx={{ fontSize: 18 }}>
                       {oneUser.username}
                     </Typography>
                   </Paper>
@@ -84,7 +84,7 @@ const UsersPage = () => {
                 <Paper elevation={1} key={oneUser._id} sx={usersClasses.avatarContainer} onClick={() => navigate(`/profile/${oneUser._id}`)}>
                   <Avatar src={oneUser.imageUrl} alt={oneUser.username} sx={usersClasses.avatar} />
 
-                  <Typography color='secondary' sx={{ fontSize: '18px' }}>
+                  <Typography color={componentProps.color.secondary} sx={{ fontSize: 18 }}>
                     {oneUser.username}
                   </Typography>
                 </Paper>
