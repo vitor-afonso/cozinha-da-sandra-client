@@ -7,12 +7,11 @@ import { createItem, uploadImage } from '../api';
 import { addNewShopItem } from '../redux/features/items/itemsSlice';
 import defaultProductImage from '../images/item.svg';
 
-import convert from 'image-file-resize';
-
 import { Box, FormControl, Typography, FormLabel, RadioGroup, FormControlLabel, TextField, Button, CircularProgress } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import AddIcon from '@mui/icons-material/Add';
 import { newItemClasses } from '../utils/app.styleClasses';
+import { handleFileUpload } from '../utils/app.utils';
 
 const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -45,24 +44,6 @@ const NewItemPage = () => {
 
     if (e.target.value === '' || re.test(e.target.value)) {
       setPrice(e.target.value);
-    }
-  };
-
-  const handleFileUpload = async (e) => {
-    try {
-      if (e.target.files.lenght !== 0) {
-        setTempImageUrl(URL.createObjectURL(e.target.files[0]));
-        let resizedImg = await convert({
-          file: e.target.files[0],
-          width: 300,
-          height: 225,
-          type: 'jpeg',
-        });
-
-        setObjImageToUpload(resizedImg);
-      }
-    } catch (error) {
-      console.log('Error while uploading the file: ', error);
     }
   };
 
@@ -203,7 +184,7 @@ const NewItemPage = () => {
               )}
 
               <div>
-                <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e)} />
+                <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
                 <button type='submit' ref={submitForm} hidden>
                   Criar
