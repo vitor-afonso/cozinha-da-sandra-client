@@ -16,7 +16,7 @@ import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { cartClasses } from '../utils/app.styleClasses';
+import { cartClasses, componentProps } from '../utils/app.styleClasses';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
@@ -261,7 +261,7 @@ const CartPage = () => {
 
   return (
     <Box sx={cartClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         CARRINHO
       </Typography>
       {!successMessage && (
@@ -283,20 +283,20 @@ const CartPage = () => {
 
               {deliveryMethod !== 'delivery' && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                  <Typography variant='h4' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                  <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Total:
                   </Typography>
-                  <Typography variant='h4' color={theme.palette.neutral.main}>
+                  <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main}>
                     {calculateCartTotalToShow()}
                   </Typography>
                 </Box>
               )}
-              <Button sx={{ mt: 2 }} variant='outlined' endIcon={<DeleteIcon />} onClick={handleOpenModal}>
+              <Button sx={{ mt: 2 }} variant={componentProps.variant.outlined} endIcon={<DeleteIcon />} onClick={handleOpenModal}>
                 Limpar
               </Button>
 
               {isNotVisible && (
-                <Button variant='contained' sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
+                <Button variant={componentProps.variant.contained} sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
                   Continuar
                 </Button>
               )}
@@ -362,7 +362,7 @@ const CartPage = () => {
             {successMessage}
           </Typography>
 
-          <Button variant='outlined' onClick={() => navigate(`/profile/${user._id}`)}>
+          <Button variant={componentProps.variant.outlined} onClick={() => navigate(`/profile/${user._id}`)}>
             Perfil
           </Button>
         </>

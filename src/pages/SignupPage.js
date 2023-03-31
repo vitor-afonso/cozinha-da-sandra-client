@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
 import signupImage from '../images/signup.svg';
-import { signupClasses } from '../utils/app.styleClasses';
+import { componentProps, signupClasses } from '../utils/app.styleClasses';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -55,7 +55,7 @@ const SignupPage = () => {
         </Box>
 
         <Box sx={{ alignSelf: { md: 'start' }, ml: { md: 6 } }}>
-          <Typography variant='h4' sx={{ marginTop: { xs: 2 } }} color={theme.palette.neutral.main}>
+          <Typography variant={componentProps.variant.h4} sx={{ marginTop: { xs: 2 } }} color={theme.palette.neutral.main}>
             Registrar
           </Typography>
 
@@ -64,7 +64,7 @@ const SignupPage = () => {
               <Typography sx={{ mb: 0.3 }} color={theme.palette.neutral.main}>
                 Já tens conta?
               </Typography>
-              <Button onClick={() => navigate('/login')} size='small'>
+              <Button onClick={() => navigate('/login')} size={componentProps.size.small}>
                 Faz Login
               </Button>
             </Box>
@@ -75,8 +75,8 @@ const SignupPage = () => {
         <form noValidate autoComplete='off' onSubmit={handleSignupSubmit}>
           <TextField
             label='Username'
-            type='text'
-            variant='outlined'
+            type={componentProps.type.text}
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={signupClasses.field}
@@ -89,8 +89,8 @@ const SignupPage = () => {
 
           <TextField
             label='Email'
-            type='email'
-            variant='outlined'
+            type={componentProps.type.email}
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={signupClasses.field}
@@ -104,7 +104,7 @@ const SignupPage = () => {
               <TextField
                 label='Password'
                 type='password'
-                variant='outlined'
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={signupClasses.field}
@@ -116,7 +116,7 @@ const SignupPage = () => {
               <TextField
                 label='Repetir Password'
                 type='password'
-                variant='outlined'
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={signupClasses.field}
@@ -128,13 +128,13 @@ const SignupPage = () => {
           )}
 
           {errorMessage && (
-            <Typography sx={{ marginBottom: '20px' }} color='error'>
+            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
               {errorMessage}
             </Typography>
           )}
 
           {!isLoading && (
-            <Button variant='contained' type='submit'>
+            <Button type={componentProps.type.submit} variant={componentProps.variant.contained}>
               Registrar
             </Button>
           )}

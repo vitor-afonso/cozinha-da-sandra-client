@@ -26,7 +26,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { useEffect } from 'react';
 import { APP } from '../utils/app.utils';
-import { cardClasses } from '../utils/app.styleClasses';
+import { cardClasses, componentProps } from '../utils/app.styleClasses';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -95,7 +95,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
       <CardHeader
         avatar={
           <Avatar sx={cardClasses.avatar} onClick={() => navigate(`/${category}`)}>
-            <Typography color='primary' sx={cardClasses.avatarLetter}>
+            <Typography color={componentProps.color.primary} sx={cardClasses.avatarLetter}>
               {category[0].toUpperCase()}
             </Typography>
           </Avatar>
@@ -103,13 +103,13 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
         action={
           isLoggedIn &&
           user.userType === 'admin' && (
-            <Button size='small' sx={cardClasses.editBtn} onClick={() => navigate(`/items/edit/${_id}`)}>
+            <Button size={componentProps.size.small} sx={cardClasses.editBtn} onClick={() => navigate(`/items/edit/${_id}`)}>
               Editar
             </Button>
           )
         }
         title={
-          <Typography sx={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate(`/items/${_id}`)} color='primary'>
+          <Typography sx={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate(`/items/${_id}`)} color={componentProps.color.primary}>
             {name}
           </Typography>
         }
@@ -118,30 +118,43 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
       <CardMedia component='img' height='194' image={imageUrl} alt={name} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/items/${_id}`)} />
       <CardContent>
         <Box sx={cardClasses.cardContent}>
-          <Typography sx={{ mr: 1, fontSize: '20px' }} color='neutral' onClick={() => navigate(`/items/${_id}`)}>
+          <Typography sx={{ mr: 1, fontSize: '20px' }} color={componentProps.color.neutral} onClick={() => navigate(`/items/${_id}`)}>
             {price + APP.currency}
           </Typography>
 
           {!isLoggedIn && (
-            <Button size='small' variant='contained' sx={{ cursor: 'pointer' }} color='neutral' onClick={() => navigate(`/login`)} data-testid='go-to-login'>
+            <Button
+              size={componentProps.size.small}
+              variant={componentProps.variant.contained}
+              sx={{ cursor: 'pointer' }}
+              color={componentProps.color.neutral}
+              onClick={() => navigate(`/login`)}
+              data-testid='go-to-login'
+            >
               Adicionar
             </Button>
           )}
 
           {cartItems.includes(_id) && isLoggedIn && (
             <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-              <RemoveCircleIcon fontSize='large' onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color='neutral' />
-              <Typography variant='span' sx={{ fontSize: '20px' }} color='neutral'>
+              <RemoveCircleIcon fontSize={componentProps.fontSize.large} onClick={handleDecrease} sx={{ cursor: 'pointer', mr: 1 }} color={componentProps.color.neutral} />
+              <Typography variant='span' sx={{ fontSize: '20px' }} color={componentProps.color.neutral}>
                 {amount}
               </Typography>
-              <AddCircleIcon fontSize='large' onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color='neutral' />
+              <AddCircleIcon fontSize={componentProps.fontSize.large} onClick={handleIncrease} sx={{ cursor: 'pointer', ml: 1 }} color={componentProps.color.neutral} />
             </Box>
           )}
 
           {isLoggedIn && (
             <Box>
               {!cartItems.includes(_id) && (
-                <Button size='small' variant='contained' sx={{ cursor: 'pointer', fontWeight: 'bold' }} color='neutral' onClick={() => dispatch(addToCart({ id: _id }))}>
+                <Button
+                  size={componentProps.size.small}
+                  variant={componentProps.variant.contained}
+                  sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+                  color={componentProps.color.neutral}
+                  onClick={() => dispatch(addToCart({ id: _id }))}
+                >
                   Adicionar
                 </Button>
               )}
@@ -160,11 +173,11 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
             onClick={() => console.log('Shared successfully!')}
           >
             <IconButton aria-label='share'>
-              <ShareIcon color='neutral' />
+              <ShareIcon color={componentProps.color.neutral} />
             </IconButton>
           </RWebShare>
           <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded} aria-label='show more'>
-            <ExpandMoreIcon color='neutral' />
+            <ExpandMoreIcon color={componentProps.color.neutral} />
           </ExpandMore>
         </CardActions>
       )}
@@ -173,7 +186,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
           <Typography paragraph color='textSecondary' sx={{ textAlign: 'left' }}>
             {description}
           </Typography>
-          <Typography paragraph sx={{ textAlign: 'left', fontWeight: 'bold' }} color='primary'>
+          <Typography paragraph sx={{ textAlign: 'left', fontWeight: 'bold' }} color={componentProps.color.primary}>
             Ingredientes:
           </Typography>
           {ingredientsList.length > 0 &&

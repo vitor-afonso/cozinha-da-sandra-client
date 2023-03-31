@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from '../components/ShopOrder';
 import { AuthContext } from '../context/auth.context';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { profileClasses } from '../utils/app.styleClasses';
+import { componentProps, profileClasses } from '../utils/app.styleClasses';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
@@ -58,20 +58,19 @@ const ProfilePage = () => {
     <Box sx={profileClasses.container}>
       {profileOwner && shopOrders && (
         <>
-          <Typography variant='h2' color='primary' sx={{ my: '25px' }}>
+          <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
             PERFIL
           </Typography>
 
           <Box sx={profileClasses.formContainer}>
             <Box sx={profileClasses.form}>
               <Box sx={{ maxWidth: '150px', mx: 'auto' }}>
-                <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
+                <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ maxWidth: '100%', height: 'auto', mb: 4 }} />
               </Box>
 
               <Box sx={{ width: '100%' }}>
                 <TextField
-                  id='outlined-read-only-input'
-                  type='text'
+                  type={componentProps.type.text}
                   label='Username'
                   value={profileOwner.username}
                   InputProps={{
@@ -79,12 +78,11 @@ const ProfilePage = () => {
                   }}
                   sx={profileClasses.formField}
                   fullWidth
-                  size='small'
+                  size={componentProps.size.small}
                 />
 
                 <TextField
-                  id='outlined-read-only-input'
-                  type='text'
+                  type={componentProps.type.text}
                   label='Email'
                   value={profileOwner.email}
                   InputProps={{
@@ -92,12 +90,11 @@ const ProfilePage = () => {
                   }}
                   sx={profileClasses.formField}
                   fullWidth
-                  size='small'
+                  size={componentProps.size.small}
                 />
 
                 <TextField
-                  id='outlined-read-only-input'
-                  type='text'
+                  type={componentProps.type.text}
                   label='Password'
                   value={'********'}
                   InputProps={{
@@ -105,12 +102,11 @@ const ProfilePage = () => {
                   }}
                   sx={profileClasses.formField}
                   fullWidth
-                  size='small'
+                  size={componentProps.size.small}
                 />
 
                 <TextField
-                  id='outlined-read-only-input'
-                  type='text'
+                  type={componentProps.type.text}
                   label='Contacto'
                   value={profileOwner.contact ? profileOwner.contact : 'Sem número'}
                   InputProps={{
@@ -118,13 +114,12 @@ const ProfilePage = () => {
                   }}
                   sx={profileClasses.formField}
                   fullWidth
-                  size='small'
+                  size={componentProps.size.small}
                 />
 
                 {user.userType === 'admin' && (
                   <TextField
-                    id='outlined-read-only-input'
-                    type='text'
+                    type={componentProps.type.text}
                     label='Notas'
                     value={profileOwner.info}
                     InputProps={{
@@ -132,7 +127,7 @@ const ProfilePage = () => {
                     }}
                     sx={profileClasses.formField}
                     fullWidth
-                    size='small'
+                    size={componentProps.size.small}
                     multiline
                     placeholder='Clique "Editar" para adicionar nota'
                     rows={4}
@@ -145,7 +140,7 @@ const ProfilePage = () => {
             </Box>
           </Box>
 
-          <Button sx={{ mt: '16px', mb: '25px' }} variant='outlined' onClick={showOrders}>
+          <Button sx={{ mt: 3, mb: 4 }} variant={componentProps.variant.outlined} onClick={showOrders}>
             Histórico de pedidos
           </Button>
 

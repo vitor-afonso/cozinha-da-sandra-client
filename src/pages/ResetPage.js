@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
 import resetImage from '../images/reset.svg';
-import { resetClasses } from '../utils/app.styleClasses';
+import { componentProps, resetClasses } from '../utils/app.styleClasses';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -50,7 +50,7 @@ const ResetPage = () => {
               <img src={resetImage} alt='Reset password' className='auth-images' />
             </Box>
 
-            <Typography variant='h4' sx={{ my: 4 }} color={theme.palette.neutral.main}>
+            <Typography variant={componentProps.variant.h4} sx={{ my: 4 }} color={theme.palette.neutral.main}>
               Repor password
             </Typography>
 
@@ -63,7 +63,7 @@ const ResetPage = () => {
               <TextField
                 label='Nova Password'
                 type='password'
-                variant='outlined'
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={resetClasses.field}
@@ -75,7 +75,7 @@ const ResetPage = () => {
               <TextField
                 label='Repetir Password'
                 type='password'
-                variant='outlined'
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={resetClasses.field}
@@ -84,12 +84,12 @@ const ResetPage = () => {
               />
 
               {errorMessage && (
-                <Typography sx={{ marginBottom: 4 }} color='error'>
+                <Typography sx={{ marginBottom: 4 }} color={componentProps.color.error}>
                   {errorMessage}
                 </Typography>
               )}
 
-              <Button variant='contained' type='submit'>
+              <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
                 Repor
               </Button>
             </form>

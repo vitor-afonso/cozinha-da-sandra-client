@@ -12,7 +12,7 @@ import { ShopItem } from '../components/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
 import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
-import { editOrderPageClasses } from '../utils/app.styleClasses';
+import { componentProps, editOrderPageClasses } from '../utils/app.styleClasses';
 import { CustomModal } from '../components/CustomModal';
 
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
@@ -277,7 +277,7 @@ const EditOrderPage = () => {
 
   return (
     <Box sx={editOrderPageClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         EDITAR
       </Typography>
       {order && !successMessage && (
@@ -299,7 +299,7 @@ const EditOrderPage = () => {
             <PopupState variant='popover' popupId='demo-popup-menu'>
               {(popupState) => (
                 <React.Fragment>
-                  <Button variant='contained' {...bindTrigger(popupState)} sx={{ my: 2 }}>
+                  <Button variant={componentProps.variant.contained} {...bindTrigger(popupState)} sx={{ my: 2 }}>
                     Adicionar Item
                   </Button>
                   <Menu {...bindMenu(popupState)}>
@@ -308,7 +308,7 @@ const EditOrderPage = () => {
                         return (
                           <MenuItem key={index} onClick={() => dispatch(addToCart({ id: item._id }))}>
                             <Box sx={editOrderPageClasses.listItem}>
-                              <Typography color='primary' sx={{ fontWeight: 'bold' }}>
+                              <Typography color={componentProps.color.primary} sx={{ fontWeight: 'bold' }}>
                                 {item.name}
                               </Typography>
                               <AddOutlinedIcon />
@@ -354,10 +354,10 @@ const EditOrderPage = () => {
           <Box sx={editOrderPageClasses.infoContainer}>
             {user._id !== order.userId._id && (
               <Box sx={editOrderPageClasses.infoField}>
-                <Typography variant='body1' color={theme.palette.neutral.main} onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
+                <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} onClick={() => navigate(`/profile/edit/${order.userId._id}`)}>
                   <b>Autor de pedido:</b>
                 </Typography>
-                <Typography variant='body1' color={theme.palette.neutral.main} gutterBottom>
+                <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} gutterBottom>
                   {order.userId.username}
                 </Typography>
               </Box>
@@ -367,7 +367,7 @@ const EditOrderPage = () => {
               <>
                 {shouldShowDeliveryMessage() && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
-                    <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
+                    <Typography variant={componentProps.variant.body2} color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                       Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery + APP.currency : order.amountForFreeDelivery + APP.currency}. Valor em falta:
                       {getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) + APP.currency}.
                     </Typography>
@@ -375,24 +375,24 @@ const EditOrderPage = () => {
                 )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: shouldShowDeliveryMessage() ? 0 : 4 }}>
-                  <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                  <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Items no carrinho:
                   </Typography>
-                  <Typography variant='body1' color={theme.palette.neutral.main}>
+                  <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
                     {cartTotal.toFixed(2) + APP.currency}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                  <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                     Taxa de entrega:
                   </Typography>
 
-                  <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+                  <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
                     {getDeliveryFee() + APP.currency}
                   </Typography>
 
                   {isElegibleForFreeDelivery() && (
-                    <Typography variant='body1' color={theme.palette.neutral.main} sx={{ mr: 1 }}>
+                    <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} sx={{ mr: 1 }}>
                       0{APP.currency}
                     </Typography>
                   )}
@@ -401,10 +401,10 @@ const EditOrderPage = () => {
               </>
             )}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+              <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
                 Total:
               </Typography>
-              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
+              <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
                 {calculateCartTotalToShow() + APP.currency}
               </Typography>
             </Box>
@@ -427,13 +427,13 @@ const EditOrderPage = () => {
 
         {!successMessage && !isLoading && (
           <>
-            <Button sx={{ mr: 1 }} type='button' color='error' variant='outlined' onClick={handleOpen}>
+            <Button sx={{ mr: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
               Apagar
             </Button>
 
             <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteOrder} question='Apagar Pedido?' buttonText='Apagar' />
 
-            <Button type='button' variant='contained' onClick={() => submitForm.current.click()}>
+            <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitForm.current.click()}>
               Actualizar
             </Button>
           </>

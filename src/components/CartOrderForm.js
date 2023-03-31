@@ -7,7 +7,7 @@ import { APP, getMissingAmountForFreeDelivery, handleCustomDeliveryFee } from '.
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import TooltipDeliveryFee from './TooltipDeliveryFee';
-import { cartFormClasses } from '../utils/app.styleClasses';
+import { cartFormClasses, componentProps } from '../utils/app.styleClasses';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -63,15 +63,15 @@ export const CartOrderForm = ({
 
   return (
     <Box sx={isNotVisible ? cartFormClasses.notVisible : null} ref={formRef}>
-      <Typography variant='h4' color={theme.palette.neutral.main} sx={{ my: 2 }}>
+      <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 2 }}>
         Dados de entrega
       </Typography>
       <Box sx={cartFormClasses.form}>
         <form onSubmit={submitOrder} noValidate style={cartFormClasses.innerForm}>
           <TextField
             label='Telefone'
-            type='text'
-            variant='outlined'
+            type={componentProps.type.text}
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={cartFormClasses.formField}
@@ -85,7 +85,7 @@ export const CartOrderForm = ({
           <TextField
             label='Data & Hora de entrega'
             type={IS_MOBILE ? 'datetime-local' : inputType}
-            variant='outlined'
+            variant={componentProps.variant.outlined}
             fullWidth
             required
             sx={cartFormClasses.formField}
@@ -117,8 +117,8 @@ export const CartOrderForm = ({
           {user.userType === 'admin' && haveExtraFee && (
             <TextField
               label='Taxa de entrega'
-              type='text'
-              variant='outlined'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
               fullWidth
               required
               sx={cartFormClasses.formField}
@@ -130,13 +130,13 @@ export const CartOrderForm = ({
             />
           )}
           <Box sx={isAddressNotVisible ? cartFormClasses.notVisible : null} ref={orderAddressRef}>
-            <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mb: 2 }}>
+            <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mb: 2 }}>
               Morada
             </Typography>
             <TextField
               label='Rua'
-              type='text'
-              variant='outlined'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
               fullWidth
               required={requiredInput}
               sx={cartFormClasses.formField}
@@ -149,8 +149,8 @@ export const CartOrderForm = ({
 
             <TextField
               label='Código Postal'
-              type='text'
-              variant='outlined'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
               fullWidth
               required={requiredInput}
               sx={cartFormClasses.formField}
@@ -163,8 +163,8 @@ export const CartOrderForm = ({
 
             <TextField
               label='Cidade'
-              type='text'
-              variant='outlined'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
               fullWidth
               required={requiredInput}
               sx={cartFormClasses.formField}
@@ -193,13 +193,13 @@ export const CartOrderForm = ({
               sx={{
                 mb: 4,
               }}
-              color='error'
+              color={componentProps.color.error}
             >
               {errorMessage}
             </Typography>
           )}
 
-          <button type='submit' ref={submitBtnRef} hidden>
+          <button type={componentProps.type.submit} ref={submitBtnRef} hidden>
             Encomendar
           </button>
         </form>
@@ -208,22 +208,22 @@ export const CartOrderForm = ({
           <Box sx={{ mb: 2 }}>
             {isElegibleForFreeDelivery() && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
-                <Typography variant='body2' color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
+                <Typography variant={componentProps.variant.body2} color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta:{getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) + APP.currency}.
                 </Typography>
               </Box>
             )}
 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography variant='h6' color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1, textAlign: 'left' }}>
+              <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1, textAlign: 'left' }}>
                 Entrega desde:
               </Typography>
-              <Typography variant='body1' color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
+              <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main} sx={{ textDecoration: isElegibleForFreeDelivery() && 'line-through', mr: 1 }}>
                 {haveExtraFee ? customDeliveryFee : orderDeliveryFee}
                 {APP.currency}
               </Typography>
               {isElegibleForFreeDelivery() && (
-                <Typography variant='body1' color={theme.palette.neutral.main}>
+                <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
                   0{APP.currency}
                 </Typography>
               )}
@@ -231,10 +231,10 @@ export const CartOrderForm = ({
               {user.userType === 'user' && <TooltipDeliveryFee />}
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
+              <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
                 Total:
               </Typography>
-              <Typography variant='h4' color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
+              <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2 }}>
                 {calculateCartTotalToShow()}
               </Typography>
             </Box>
@@ -248,7 +248,7 @@ export const CartOrderForm = ({
             Voltar
           </Button>
 
-          <Button type='button' variant='contained' onClick={() => submitBtnRef.current.click()}>
+          <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitBtnRef.current.click()}>
             Encomendar
           </Button>
         </Box>

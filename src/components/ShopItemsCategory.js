@@ -1,6 +1,6 @@
 import { Box, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { homeClasses } from '../utils/app.styleClasses';
+import { componentProps, homeClasses } from '../utils/app.styleClasses';
 import { ShopItem } from './ShopItemCard';
 
 const ShopItemsCategory = ({ categoryItems, categoryName, categoryStyles }) => {
@@ -18,7 +18,7 @@ const ShopItemsCategory = ({ categoryItems, categoryName, categoryStyles }) => {
         })}
       </Grid>
 
-      <Button variant='outlined' sx={homeClasses.seeMoreBtn} onClick={() => navigate(`/${categoryName}`)}>
+      <Button variant={componentProps.variant.outlined} sx={homeClasses.seeMoreBtn} onClick={() => navigate(`/${categoryName}`)}>
         Ver mais...
       </Button>
     </Box>

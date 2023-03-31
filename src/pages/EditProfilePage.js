@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
-import { editProfileClasses } from '../utils/app.styleClasses';
+import { componentProps, editProfileClasses } from '../utils/app.styleClasses';
 import { handleFileUpload } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
 
@@ -171,7 +171,7 @@ const EditProfilePage = () => {
 
   return (
     <Box sx={editProfileClasses.container}>
-      <Typography variant='h2' color='primary' sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
         EDITAR
       </Typography>
 
@@ -183,8 +183,8 @@ const EditProfilePage = () => {
 
               <TextField
                 label='Username'
-                type='text'
-                variant='outlined'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
@@ -198,8 +198,8 @@ const EditProfilePage = () => {
 
               <TextField
                 label='Email'
-                type='email'
-                variant='outlined'
+                type={componentProps.type.email}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 required
                 sx={editProfileClasses.nameField}
@@ -212,8 +212,8 @@ const EditProfilePage = () => {
 
               <TextField
                 label='Contacto'
-                type='text'
-                variant='outlined'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
                 fullWidth
                 sx={editProfileClasses.nameField}
                 onChange={validateContact}
@@ -228,7 +228,7 @@ const EditProfilePage = () => {
                   <TextField
                     label='Nova Password'
                     type='password'
-                    variant='outlined'
+                    variant={componentProps.variant.outlined}
                     fullWidth
                     sx={editProfileClasses.nameField}
                     onChange={(e) => setNewPassword(e.target.value)}
@@ -241,7 +241,7 @@ const EditProfilePage = () => {
                   <TextField
                     label='Repetir Password'
                     type='password'
-                    variant='outlined'
+                    variant={componentProps.variant.outlined}
                     fullWidth
                     sx={editProfileClasses.nameField}
                     onChange={(e) => setNewPassword2(e.target.value)}
@@ -267,13 +267,13 @@ const EditProfilePage = () => {
               )}
 
               {errorMessage && (
-                <Typography paragraph sx={{ mb: 4 }} color='error'>
+                <Typography paragraph sx={{ mb: 4 }} color={componentProps.color.error}>
                   {errorMessage}
                 </Typography>
               )}
 
               <div>
-                <button type='submit' hidden ref={submitFormButton}>
+                <button type={componentProps.type.submit} hidden ref={submitFormButton}>
                   Actualizar
                 </button>
               </div>
@@ -300,7 +300,7 @@ const EditProfilePage = () => {
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
             {shouldShowDeleteButton && (
-              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' color='error' variant='outlined' onClick={handleOpen}>
+              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
                 Apagar
               </Button>
             )}
@@ -308,18 +308,30 @@ const EditProfilePage = () => {
             <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteUser} question='Apagar Utilizador?' buttonText='Apagar' />
 
             {profileOwner && profileOwner.deleted && (
-              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} variant='outlined' color='success' type='button' onClick={handleActivateUser}>
+              <Button
+                sx={{ mr: 1, mt: { xs: 1, sm: 0 } }}
+                variant={componentProps.variant.outlined}
+                color={componentProps.color.success}
+                type={componentProps.type.button}
+                onClick={handleActivateUser}
+              >
                 Activar
               </Button>
             )}
             <>
               {isProfileOwner && (
-                <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type='button' variant='outlined' endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button
+                  sx={{ mr: 1, mt: { xs: 1, sm: 0 } }}
+                  type={componentProps.type.button}
+                  variant={componentProps.variant.outlined}
+                  endIcon={<AddIcon />}
+                  onClick={() => inputFileUpload.current.click()}
+                >
                   Imagem
                 </Button>
               )}
 
-              <Button type='button' variant='contained' sx={{ mt: { xs: 1, sm: 0 } }} onClick={() => submitFormButton.current.click()}>
+              <Button type={componentProps.type.button} variant={componentProps.variant.contained} sx={{ mt: { xs: 1, sm: 0 } }} onClick={() => submitFormButton.current.click()}>
                 Actualizar
               </Button>
             </>
