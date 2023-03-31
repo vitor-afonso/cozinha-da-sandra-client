@@ -179,7 +179,7 @@ const EditProfilePage = () => {
         <Box sx={editProfileClasses.formContainer}>
           <Box sx={editProfileClasses.form}>
             <form onSubmit={handleSubmit} noValidate>
-              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: 4 }} />}</Box>
+              <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
               <TextField
                 label='Username'

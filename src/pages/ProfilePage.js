@@ -65,7 +65,7 @@ const ProfilePage = () => {
           <Box sx={profileClasses.formContainer}>
             <Box sx={profileClasses.form}>
               <Box sx={{ maxWidth: '150px', mx: 'auto' }}>
-                <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ maxWidth: '100%', height: 'auto', mb: 4 }} />
+                <img src={profileOwner.imageUrl} alt={profileOwner.username} style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />
               </Box>
 
               <Box sx={{ width: '100%' }}>
