@@ -1,9 +1,10 @@
 // jshint esversion:9
 
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
+import TermsModal from '../components/TermsModal';
 import signupImage from '../images/signup.svg';
 import { componentProps, signupClasses } from '../utils/app.styleClasses';
 
@@ -17,8 +18,13 @@ const SignupPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
+  const [conditionsAccepted, setConditionsAccepted] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +41,11 @@ const SignupPage = () => {
       setPasswordError(true);
       return;
     }
+    if (!conditionsAccepted) {
+      handleOpen();
+      return;
+    }
+
     setIsLoading(true);
     try {
       const requestBody = { email, password, username };
@@ -141,6 +152,7 @@ const SignupPage = () => {
           {isLoading && <CircularProgress size='80px' sx={{ my: 2 }} />}
         </form>
       </Box>
+      <TermsModal isModalOpen={open} handleCloseModal={handleClose} conditionsAccepted={conditionsAccepted} setConditionsAccepted={setConditionsAccepted} />
     </Box>
   );
 };
