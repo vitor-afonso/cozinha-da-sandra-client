@@ -738,6 +738,24 @@ export const modalStyle = {
   flexDirection: 'column',
   alignItems: 'center',
 };
+export const termsModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '90%',
+  maxWidth: 500,
+  maxHeight: '90%',
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  overflow: 'scroll',
+  overflowX: 'hidden',
+};
 
 export const componentProps = {
   type: {

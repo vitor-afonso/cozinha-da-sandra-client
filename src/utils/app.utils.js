@@ -18,6 +18,7 @@ export const APP = {
     doces: 'doces',
     salgados: 'salgados',
   },
+  dataInicioActividade: '2 Maio de 2023',
 };
 
 export const capitalizeAppName = () => {
