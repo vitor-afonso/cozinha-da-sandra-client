@@ -22,9 +22,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ const SignupPage = () => {
       return;
     }
     if (!conditionsAccepted) {
-      handleOpen();
+      setIsModalOpen(true);
       return;
     }
 
@@ -152,7 +150,7 @@ const SignupPage = () => {
           {isLoading && <CircularProgress size='80px' sx={{ my: 2 }} />}
         </form>
       </Box>
-      <TermsModal isModalOpen={open} handleCloseModal={handleClose} conditionsAccepted={conditionsAccepted} setConditionsAccepted={setConditionsAccepted} />
+      <TermsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} conditionsAccepted={conditionsAccepted} setConditionsAccepted={setConditionsAccepted} />
     </Box>
   );
 };

@@ -3,14 +3,14 @@ import { Box, Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography }
 import { componentProps, termsModalStyle } from '../utils/app.styleClasses';
 import { APP, capitalizeAppName } from '../utils/app.utils';
 
-const TermsModal = ({ isModalOpen, handleCloseModal, conditionsAccepted, setConditionsAccepted }) => {
+const TermsModal = ({ isModalOpen, setIsModalOpen, conditionsAccepted, setConditionsAccepted }) => {
   const handleConditions = () => {
     if (conditionsAccepted) {
-      handleCloseModal();
+      setIsModalOpen(false);
     }
   };
   return (
-    <Modal open={isModalOpen} onClose={handleCloseModal}>
+    <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Box sx={termsModalStyle}>
         <Typography variant={componentProps.variant.h5} sx={{ mb: 2 }}>
           Termos e Condições
@@ -22,14 +22,12 @@ const TermsModal = ({ isModalOpen, handleCloseModal, conditionsAccepted, setCond
         <Typography variant={componentProps.variant.h6} sx={{ alignSelf: 'start', my: 1 }}>
           Informações que recolhemos
         </Typography>
-        <Typography variant={componentProps.variant.body1}>
-          Quando você visita a nossa loja ou usa nossos serviços, podemos recolher as seguintes informações:
-          <ul>
-            <li>Informações pessoais, como seu nome, endereço, número de telefone e endereço de e-mail, quando você cria uma conta, faz um pedido ou entra em contacto connosco.</li>
-            <li>Informações de pagamento, como o número do seu cartão de crédito, quando você faz uma compra.</li>
-            <li>Informações sobre o uso de nossa loja, como endereço IP, tipo de navegador e sistema operacional.</li>
-          </ul>
-        </Typography>
+        <Typography variant={componentProps.variant.body1}>Quando você visita a nossa loja ou usa nossos serviços, podemos recolher as seguintes informações:</Typography>
+        <ul>
+          <li>Informações pessoais, como seu nome, endereço, número de telefone e endereço de e-mail, quando você cria uma conta, faz um pedido ou entra em contacto connosco.</li>
+          <li>Informações de pagamento, como o número do seu cartão de crédito, quando você faz uma compra.</li>
+          <li>Informações sobre o uso de nossa loja, como endereço IP, tipo de navegador e sistema operacional.</li>
+        </ul>
         <Typography variant={componentProps.variant.h6} sx={{ alignSelf: 'start' }}>
           Como usamos suas informações
         </Typography>
