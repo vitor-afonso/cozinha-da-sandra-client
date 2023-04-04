@@ -239,6 +239,9 @@ export const aboutClasses = {
     backgroundPosition: 'center',
   },
   social: {
+    display: 'flex',
+    justifyContent: { xs: 'center', md: 'space-between' },
+    flexDirection: { xs: 'column', md: 'row' },
     width: '100%',
     py: 1,
     px: 3,
@@ -254,8 +257,13 @@ export const aboutClasses = {
   socialTitle: {
     fontWeight: 'bold',
     color: '#031D44',
-    pb: 1,
     textAlign: 'left',
+  },
+  terms: {
+    cursor: 'pointer',
+    padding: 0,
+    mb: { xs: 1 },
+    alignSelf: { xs: 'start', md: 'center' },
   },
 };
 
