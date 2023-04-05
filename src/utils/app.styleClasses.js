@@ -260,7 +260,6 @@ export const aboutClasses = {
     textAlign: 'left',
   },
   terms: {
-    cursor: 'pointer',
     padding: 0,
     mb: { xs: 1 },
     alignSelf: { xs: 'start', md: 'center' },
