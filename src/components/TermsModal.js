@@ -2,8 +2,10 @@ import React from 'react';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@mui/material';
 import { componentProps, termsModalStyle } from '../utils/app.styleClasses';
 import { APP, capitalizeAppName } from '../utils/app.utils';
+import { useLocation } from 'react-router-dom';
 
 const TermsModal = ({ isModalOpen, setIsModalOpen, conditionsAccepted, setConditionsAccepted }) => {
+  const location = useLocation();
   const handleConditions = () => {
     if (conditionsAccepted) {
       setIsModalOpen(false);
@@ -74,17 +76,21 @@ const TermsModal = ({ isModalOpen, setIsModalOpen, conditionsAccepted, setCondit
           Data Efectiva: {APP.dataInicioActividade}
         </Typography>
 
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox color={componentProps.color.primary} checked={conditionsAccepted} onChange={() => setConditionsAccepted(!conditionsAccepted)} />}
-            label='Li e aceito os termos e condições.'
-            sx={{ my: 2 }}
-          />
-        </FormGroup>
+        {location.pathname.includes('signup') && (
+          <>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox color={componentProps.color.primary} checked={conditionsAccepted} onChange={() => setConditionsAccepted(!conditionsAccepted)} />}
+                label='Li e aceito os termos e condições.'
+                sx={{ my: 2 }}
+              />
+            </FormGroup>
 
-        <Button type={componentProps.type.button} color={componentProps.color.primary} variant={componentProps.variant.contained} onClick={handleConditions}>
-          Continuar
-        </Button>
+            <Button type={componentProps.type.button} color={componentProps.color.primary} variant={componentProps.variant.contained} onClick={handleConditions}>
+              Continuar
+            </Button>
+          </>
+        )}
       </Box>
     </Modal>
   );
