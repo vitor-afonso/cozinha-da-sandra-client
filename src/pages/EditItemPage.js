@@ -11,17 +11,17 @@ import { APP } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
 import { handleFileUpload } from '../utils/app.utils';
 
-import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, TextField, Typography, useTheme } from '@mui/material';
-import Radio from '@mui/material/Radio';
+import { Box, Button, CircularProgress, Typography, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import ItemForm from '../components/ItemForm';
 
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [itemToEdit, setItemToEdit] = useState(null);
-  const [name, setName] = useState('');
-  const [nameError, setNameError] = useState(false);
+  const [title, setTitle] = useState('');
+  const [titleError, setTitleError] = useState(false);
   const [category, setCategory] = useState('');
   const [categoryError, setCategoryError] = useState(false);
   const [description, setDescription] = useState('');
@@ -32,11 +32,11 @@ const EditItemPage = () => {
   const [priceError, setPriceError] = useState(false);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [tempImageUrl, setTempImageUrl] = useState('');
-  const inputFileUpload = useRef(null);
+  const inputFileUploadRef = useRef(null);
   const [btnLoading, setBtnLoading] = useState(false);
   const { itemId } = useParams();
   const effectRan = useRef(false);
-  const submitFormButtom = useRef(null);
+  const submitFormRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -51,7 +51,7 @@ const EditItemPage = () => {
 
       setItemToEdit(item);
       setTempImageUrl(item.imageUrl);
-      setName(item.name);
+      setTitle(item.name);
       setCategory(item.category);
       setDescription(item.description);
       setIngredients(item.ingredients);
@@ -63,6 +63,10 @@ const EditItemPage = () => {
     }
   }, [itemId, shopItems]);
 
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+  };
+
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
     const re = /^[0-9]*\.?[0-9]*$/;
@@ -70,6 +74,17 @@ const EditItemPage = () => {
     if (e.target.value === '' || re.test(e.target.value)) {
       setPrice(e.target.value);
     }
+  };
+
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const handleDescription = (e) => {
+    setDescription(e.target.value);
+  };
+  const handleIngredients = (e) => {
+    setIngredients(e.target.value);
   };
 
   const handleDeleteItem = async () => {
@@ -86,12 +101,12 @@ const EditItemPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
-      setNameError(true);
+    if (!title) {
+      setTitleError(true);
       setErrorMessage('Por favor introduza titulo.');
       return;
     }
-    setNameError(false);
+    setTitleError(false);
 
     if (!category) {
       setCategoryError(true);
@@ -135,7 +150,7 @@ const EditItemPage = () => {
 
         let { fileUrl } = await uploadImage(uploadData);
 
-        const requestBody = { name, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
+        const requestBody = { name: title, category, imageUrl: fileUrl, description, ingredients, price: Number(price) };
 
         let { data } = await updateItem(requestBody, itemId);
 
@@ -145,7 +160,7 @@ const EditItemPage = () => {
 
         setBtnLoading(false);
       } else {
-        const requestBody = { name, category, description, ingredients, price: Number(price) };
+        const requestBody = { name: title, category, description, ingredients, price: Number(price) };
 
         let { data } = await updateItem(requestBody, itemId);
 
@@ -168,88 +183,36 @@ const EditItemPage = () => {
           </Typography>
 
           <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
-            {name}
+            {title}
           </Typography>
 
           {!successMessage && (
             <Box sx={editItemClasses.formContainer}>
               <Box sx={editItemClasses.form}>
-                <form onSubmit={handleSubmit} noValidate>
-                  <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: 4 }} />}</Box>
-
-                  <TextField
-                    label='Titulo'
-                    type={componentProps.type.text}
-                    variant={componentProps.variant.outlined}
-                    fullWidth
-                    required
-                    sx={editItemClasses.nameField}
-                    onChange={(e) => setName(e.target.value)}
-                    error={nameError}
-                    value={name}
-                  />
-
-                  <Box>
-                    <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
-                      <FormLabel>Categoria</FormLabel>
-                      <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
-                        <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' checked={category === APP.categories.doces} />
-                        <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' checked={category === APP.categories.salgados} />
-                      </RadioGroup>
-                    </FormControl>
-                  </Box>
-
-                  <TextField
-                    label='Preço'
-                    type={componentProps.type.text}
-                    variant={componentProps.variant.outlined}
-                    fullWidth
-                    required
-                    sx={editItemClasses.formField}
-                    onChange={(e) => handlePrice(e)}
-                    error={priceError}
-                    value={price}
-                    autoComplete='true'
-                  />
-
-                  <TextField
-                    label='Descrição'
-                    multiline
-                    maxRows={4}
-                    sx={editItemClasses.formTextArea}
-                    onChange={(e) => setDescription(e.target.value)}
-                    value={description}
-                    required
-                    placeholder='Escreva aqui a descrição'
-                    error={descriptionError}
-                  />
-
-                  <TextField
-                    label='Ingredientes'
-                    multiline
-                    maxRows={4}
-                    sx={editItemClasses.formTextArea}
-                    onChange={(e) => setIngredients(e.target.value)}
-                    value={ingredients}
-                    required
-                    placeholder='Escreva aqui os ingredientes separados por virgula'
-                    error={ingredientsError}
-                  />
-
-                  {errorMessage && (
-                    <Typography paragraph sx={{ mb: 4 }} color={componentProps.color.error}>
-                      {errorMessage}
-                    </Typography>
-                  )}
-
-                  <div>
-                    <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
-
-                    <button type={componentProps.type.submit} ref={submitFormButtom} hidden>
-                      Actualizar
-                    </button>
-                  </div>
-                </form>
+                <ItemForm
+                  handleSubmit={handleSubmit}
+                  tempImageUrl={tempImageUrl}
+                  handleTitle={handleTitle}
+                  titleError={titleError}
+                  title={title}
+                  category={category}
+                  categoryError={categoryError}
+                  handleCategory={handleCategory}
+                  handlePrice={handlePrice}
+                  priceError={priceError}
+                  price={price}
+                  handleDescription={handleDescription}
+                  description={description}
+                  descriptionError={descriptionError}
+                  handleIngredients={handleIngredients}
+                  ingredients={ingredients}
+                  ingredientsError={ingredientsError}
+                  errorMessage={errorMessage}
+                  inputFileUploadRef={inputFileUploadRef}
+                  setTempImageUrl={setTempImageUrl}
+                  setObjImageToUpload={setObjImageToUpload}
+                  submitFormRef={submitFormRef}
+                />
               </Box>
             </Box>
           )}
@@ -273,10 +236,10 @@ const EditItemPage = () => {
                   Apagar
                 </Button>
 
-                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUpload.current.click()}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUploadRef.current.click()}>
                   Imagem
                 </Button>
-                <Button sx={{ mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitFormButtom.current.click()}>
+                <Button sx={{ mt: 1 }} type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitFormRef.current.click()}>
                   Actualizar
                 </Button>
               </>

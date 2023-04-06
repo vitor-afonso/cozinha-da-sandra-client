@@ -503,7 +503,7 @@ export const newItemClasses = {
     marginBottom: 5,
     display: 'block',
   },
-  nameField: {
+  titleField: {
     marginTop: 0,
     marginBottom: 2,
     display: 'block',
