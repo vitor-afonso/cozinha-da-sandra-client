@@ -34,7 +34,7 @@ const ItemForm = ({
       <form onSubmit={handleSubmit} noValidate>
         <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-        <TextInput label='Titulo' variant={componentProps.variant.outlined} handleOnChange={handleTitle} error={titleError} value={title} autoComplete='true' style={newItemClasses.titleField} />
+        <TextInput label='Titulo' variant={componentProps.variant.outlined} handleChange={handleTitle} error={titleError} value={title} autoComplete='true' style={newItemClasses.titleField} />
 
         <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
           <FormLabel>Categoria</FormLabel>
@@ -44,7 +44,7 @@ const ItemForm = ({
           </RadioGroup>
         </FormControl>
 
-        <TextInput label='Preço' variant={componentProps.variant.outlined} handleOnChange={handlePrice} error={priceError} value={price} autoComplete='true' style={newItemClasses.formField} />
+        <TextInput label='Preço' variant={componentProps.variant.outlined} handleChange={handlePrice} error={priceError} value={price} autoComplete='true' style={newItemClasses.formField} />
 
         <TextAreaInput
           label='Descrição'
