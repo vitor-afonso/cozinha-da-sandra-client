@@ -75,7 +75,7 @@ export const CartOrderForm = ({
             fullWidth
             required
             sx={cartFormClasses.formField}
-            onChange={(e) => validateContact(e)}
+            onChange={validateContact}
             error={contactError}
             value={contact}
             autoComplete='true'
