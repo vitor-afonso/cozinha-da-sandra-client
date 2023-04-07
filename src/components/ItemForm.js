@@ -1,26 +1,24 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import React from 'react';
-import TextInput from './TextInput';
 import { componentProps, newItemClasses } from '../utils/app.styleClasses';
-import TextAreaInput from './TextAreaInput';
 import { APP, handleFileUpload } from '../utils/app.utils';
 
 const ItemForm = ({
   handleSubmit,
   tempImageUrl,
-  handleTitle,
+  setTitle,
   titleError,
   title,
   category,
   categoryError,
-  handleCategory,
+  setCategory,
   handlePrice,
   priceError,
   price,
-  handleDescription,
+  setDescription,
   description,
   descriptionError,
-  handleIngredients,
+  setIngredients,
   ingredients,
   ingredientsError,
   errorMessage,
@@ -33,37 +31,61 @@ const ItemForm = ({
     <Box sx={newItemClasses.form}>
       <form onSubmit={handleSubmit} noValidate>
         <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
-
-        <TextInput label='Titulo' variant={componentProps.variant.outlined} handleChange={handleTitle} error={titleError} value={title} autoComplete='true' style={newItemClasses.titleField} />
+        <TextField
+          label='Titulo'
+          type={componentProps.type.text}
+          variant={componentProps.variant.outlined}
+          fullWidth
+          required
+          sx={newItemClasses.titleField}
+          onChange={(e) => setTitle(e.target.value)}
+          error={titleError}
+          value={title}
+          autoComplete='true'
+          autoFocus
+        />
 
         <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
           <FormLabel>Categoria</FormLabel>
-          <RadioGroup row name='row-radio-buttons-group' onChange={handleCategory}>
+          <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
             <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' checked={category === APP.categories.doces} />
             <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' checked={category === APP.categories.salgados} />
           </RadioGroup>
         </FormControl>
 
-        <TextInput label='Preço' variant={componentProps.variant.outlined} handleChange={handlePrice} error={priceError} value={price} autoComplete='true' style={newItemClasses.formField} />
+        <TextField
+          label='Preço'
+          type={componentProps.type.text}
+          variant={componentProps.variant.outlined}
+          fullWidth
+          required
+          sx={newItemClasses.formField}
+          onChange={handlePrice}
+          error={priceError}
+          value={price}
+          autoComplete='true'
+        />
 
-        <TextAreaInput
+        <TextField
           label='Descrição'
           maxRows={4}
-          style={newItemClasses.formTextArea}
-          handleChange={handleDescription}
+          multiline
+          sx={newItemClasses.formTextArea}
+          onChange={(e) => setDescription(e.target.value)}
           value={description}
-          required={true}
+          required
           placeholder='Escreva aqui a descrição...'
           error={descriptionError}
         />
 
-        <TextAreaInput
+        <TextField
           label='Ingredientes'
           maxRows={4}
-          style={newItemClasses.formTextArea}
-          handleChange={handleIngredients}
+          multiline
+          sx={newItemClasses.formTextArea}
+          onChange={(e) => setIngredients(e.target.value)}
           value={ingredients}
-          required={true}
+          required
           placeholder='Escreva aqui os ingredientes separados por virgula...'
           error={ingredientsError}
         />

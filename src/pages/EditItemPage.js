@@ -7,9 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItem, updateItem, uploadImage } from '../api';
 import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
 import { componentProps, editItemClasses } from '../utils/app.styleClasses';
-import { APP } from '../utils/app.utils';
 import { CustomModal } from '../components/CustomModal';
-import { handleFileUpload } from '../utils/app.utils';
 
 import { Box, Button, CircularProgress, Typography, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -63,10 +61,6 @@ const EditItemPage = () => {
     }
   }, [itemId, shopItems]);
 
-  const handleTitle = (e) => {
-    setTitle(e.target.value);
-  };
-
   const handlePrice = (e) => {
     //regEx to prevent from typing letters
     const re = /^[0-9]*\.?[0-9]*$/;
@@ -74,17 +68,6 @@ const EditItemPage = () => {
     if (e.target.value === '' || re.test(e.target.value)) {
       setPrice(e.target.value);
     }
-  };
-
-  const handleCategory = (e) => {
-    setCategory(e.target.value);
-  };
-
-  const handleDescription = (e) => {
-    setDescription(e.target.value);
-  };
-  const handleIngredients = (e) => {
-    setIngredients(e.target.value);
   };
 
   const handleDeleteItem = async () => {
@@ -192,19 +175,19 @@ const EditItemPage = () => {
                 <ItemForm
                   handleSubmit={handleSubmit}
                   tempImageUrl={tempImageUrl}
-                  handleTitle={handleTitle}
+                  setTitle={setTitle}
                   titleError={titleError}
                   title={title}
                   category={category}
                   categoryError={categoryError}
-                  handleCategory={handleCategory}
+                  setCategory={setCategory}
                   handlePrice={handlePrice}
                   priceError={priceError}
                   price={price}
-                  handleDescription={handleDescription}
+                  setDescription={setDescription}
                   description={description}
                   descriptionError={descriptionError}
-                  handleIngredients={handleIngredients}
+                  setIngredients={setIngredients}
                   ingredients={ingredients}
                   ingredientsError={ingredientsError}
                   errorMessage={errorMessage}
