@@ -1,39 +1,17 @@
 // jshint esversion:9
+import { useEffect } from 'react';
+import { ShopItem } from '../components/ShopItemCard';
+import { componentProps } from '../utils/app.styleClasses';
+import useItemDetailsPage from '../hooks/useItemDetailsPage';
 
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { ShopItem } from '../components/ShopItemCard';
-import { getShopItems } from '../redux/features/items/itemsSlice';
-import { componentProps } from '../utils/app.styleClasses';
 
 const ItemDetailsPage = () => {
-  const { shopItems, isLoading } = useSelector((store) => store.items);
-  const dispatch = useDispatch();
-  const [oneItem, setOneItem] = useState(null);
-  const { itemId } = useParams();
-  const effectRan = useRef(false);
-
-  useEffect(() => {
-    if (effectRan.current === false) {
-      dispatch(getShopItems());
-      return () => {
-        effectRan.current = true;
-      };
-    }
-  }, [dispatch]);
+  const { oneItem, isLoading } = useItemDetailsPage();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    if (itemId) {
-      let itemToDisplay = shopItems.find((item) => item._id === itemId);
-      setOneItem(itemToDisplay);
-    }
-  }, [itemId, shopItems]);
 
   return (
     <Box sx={{ my: 4 }}>
