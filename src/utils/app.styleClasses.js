@@ -769,6 +769,8 @@ export const componentProps = {
     button: 'button',
     text: 'text',
     submit: 'submit',
+    password: 'password',
+    email: 'email',
   },
   variant: {
     contained: 'contained',
