@@ -8,6 +8,7 @@ import { componentProps, signupClasses } from '../utils/app.styleClasses';
 import TermsModal from '../components/TermsModal';
 import { useForm, Controller } from 'react-hook-form';
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
+import ErrorMessage from '../components/ErrorMessage';
 
 const SignupPage = () => {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -168,31 +169,11 @@ const SignupPage = () => {
             </Box>
           )}
 
-          {errorMessage && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errorMessage}
-            </Typography>
-          )}
-          {errors.username && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errors.username.message}
-            </Typography>
-          )}
-          {errors.email && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errors.email.message}
-            </Typography>
-          )}
-          {errors.password && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errors.password.message}
-            </Typography>
-          )}
-          {errors.password2 && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errors.password2.message}
-            </Typography>
-          )}
+          {errorMessage && <ErrorMessage message={errorMessage} />}
+          {errors.username && <ErrorMessage message={errors.username.message} />}
+          {errors.email && <ErrorMessage message={errors.email.message} />}
+          {errors.password && <ErrorMessage message={errors.password.message} />}
+          {errors.password2 && <ErrorMessage message={errors.password2.message} />}
 
           {!isLoading && (
             <Button type={componentProps.type.submit} variant={componentProps.variant.contained}>
