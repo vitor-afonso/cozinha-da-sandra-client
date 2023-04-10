@@ -1,41 +1,38 @@
 // jshint esversion:9
 
-import { Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
 import { login } from '../api';
 import { AuthContext } from '../context/auth.context';
 import loginImage from '../images/login.svg';
 import { componentProps, loginClasses } from '../utils/app.styleClasses';
+import ErrorMessage from '../components/ErrorMessage';
+import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    setErrorMessage(undefined);
-
-    email === '' ? setEmailError(true) : setEmailError(false);
-    password === '' ? setPasswordError(true) : setPasswordError(false);
-
+  const handleLoginSubmit = async ({ email, password }) => {
     setIsLoading(true);
 
     try {
-      const requestBody = { email, password };
-
-      let response = await login(requestBody);
-
-      // console.log('JWT token', response.data.authToken);
+      let response = await login({ email, password });
 
       storeToken(response.data.authToken);
 
@@ -47,6 +44,7 @@ const LoginPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -80,38 +78,51 @@ const LoginPage = () => {
         </Box>
       </Box>
       <Box sx={loginClasses.form}>
-        <form noValidate autoComplete='off' onSubmit={handleLoginSubmit}>
-          <TextField
-            label='Email'
-            type={componentProps.type.email}
-            variant={componentProps.variant.outlined}
-            fullWidth
-            required
-            sx={loginClasses.field}
-            onChange={(e) => setEmail(e.target.value)}
-            error={emailError}
-            disabled={isLoading}
-            autoComplete='true'
-            autoFocus
+        <form noValidate onSubmit={handleSubmit(handleLoginSubmit)}>
+          <Controller
+            name={componentProps.name.email}
+            control={control}
+            rules={{
+              required: 'Endereço de email em falta',
+            }}
+            render={({ field }) => (
+              <TextField
+                label='Email'
+                type={componentProps.type.email}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                sx={loginClasses.field}
+                error={errors.email ? true : false}
+                disabled={isLoading}
+                autoComplete='true'
+                {...field}
+              />
+            )}
           />
 
-          <TextField
-            label='Password'
-            type='password'
-            variant={componentProps.variant.outlined}
-            fullWidth
-            required
-            sx={loginClasses.field}
-            onChange={(e) => setPassword(e.target.value)}
-            error={passwordError}
-            disabled={isLoading}
+          <Controller
+            name={componentProps.name.password}
+            control={control}
+            rules={{
+              required: 'Password em falta',
+            }}
+            render={({ field }) => (
+              <TextField
+                label='Password'
+                type={componentProps.type.password}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                sx={loginClasses.field}
+                error={errors.password ? true : false}
+                disabled={isLoading}
+                {...field}
+              />
+            )}
           />
 
-          {errorMessage && (
-            <Typography color={componentProps.color.error} sx={{ mb: 2 }}>
-              {errorMessage}
-            </Typography>
-          )}
+          {errorMessage && <ErrorMessage message={errorMessage} />}
+          {errors.email && <ErrorMessage message={errors.email.message} />}
+          {errors.password && <ErrorMessage message={errors.password.message} />}
 
           {!isLoading && (
             <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
