@@ -32,9 +32,7 @@ const SignupPage = () => {
     },
   });
 
-  console.log('oiii');
-
-  const handleSignupSubmit = async ({ username, email, password, password2 }) => {
+  const handleSignupSubmit = async ({ username, email, password }) => {
     if (!conditionsAccepted) {
       setIsModalOpen(true);
       return;
