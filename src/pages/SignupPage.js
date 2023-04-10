@@ -1,22 +1,17 @@
 // jshint esversion:9
 
-import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api';
-import TermsModal from '../components/TermsModal';
 import signupImage from '../images/signup.svg';
 import { componentProps, signupClasses } from '../utils/app.styleClasses';
+import TermsModal from '../components/TermsModal';
+import { useForm, Controller } from 'react-hook-form';
+import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
+import ErrorMessage from '../components/ErrorMessage';
 
 const SignupPage = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [usernameError, setUsernameError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [conditionsAccepted, setConditionsAccepted] = useState(false);
   const navigate = useNavigate();
@@ -24,21 +19,20 @@ const SignupPage = () => {
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  const handleSignupSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      password2: '',
+    },
+  });
 
-    setErrorMessage(undefined);
-
-    username === '' ? setUsernameError(true) : setUsernameError(false);
-    email === '' ? setEmailError(true) : setEmailError(false);
-    password === '' ? setPasswordError(true) : setPasswordError(false);
-    password2 === '' ? setPasswordError(true) : setPasswordError(false);
-
-    if (password !== password2) {
-      setErrorMessage('Por favor insira a mesma password nos 2 campos.');
-      setPasswordError(true);
-      return;
-    }
+  const handleSignupSubmit = async ({ username, email, password }) => {
     if (!conditionsAccepted) {
       setIsModalOpen(true);
       return;
@@ -52,6 +46,7 @@ const SignupPage = () => {
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -81,66 +76,102 @@ const SignupPage = () => {
         </Box>
       </Box>
       <Box sx={signupClasses.form}>
-        <form noValidate autoComplete='off' onSubmit={handleSignupSubmit}>
-          <TextField
-            label='Username'
-            type={componentProps.type.text}
-            variant={componentProps.variant.outlined}
-            fullWidth
-            required
-            sx={signupClasses.field}
-            onChange={(e) => setUsername(e.target.value)}
-            error={usernameError}
-            disabled={isLoading}
-            autoComplete='true'
-            autoFocus
+        <form noValidate onSubmit={handleSubmit(handleSignupSubmit)}>
+          <Controller
+            name='username'
+            control={control}
+            rules={{ required: 'Username em falta' }}
+            render={({ field }) => (
+              <TextField
+                label='Username'
+                type={componentProps.type.text}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                sx={signupClasses.field}
+                error={errors.username ? true : false}
+                disabled={isLoading}
+                autoComplete='true'
+                autoFocus
+                {...field}
+              />
+            )}
           />
 
-          <TextField
-            label='Email'
-            type={componentProps.type.email}
-            variant={componentProps.variant.outlined}
-            fullWidth
-            required
-            sx={signupClasses.field}
-            onChange={(e) => setEmail(e.target.value)}
-            error={emailError}
-            disabled={isLoading}
-            autoComplete='true'
+          <Controller
+            name='email'
+            control={control}
+            rules={{
+              required: 'Endereço de email em falta',
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: 'Endereço de email invalido',
+              },
+            }}
+            render={({ field }) => (
+              <TextField
+                label='Email'
+                type={componentProps.type.email}
+                variant={componentProps.variant.outlined}
+                fullWidth
+                sx={signupClasses.field}
+                error={errors.email ? true : false}
+                disabled={isLoading}
+                autoComplete='true'
+                {...field}
+              />
+            )}
           />
+
           {!isLoading && (
             <Box>
-              <TextField
-                label='Password'
-                type='password'
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={signupClasses.field}
-                onChange={(e) => setPassword(e.target.value)}
-                error={passwordError}
-                disabled={isLoading}
+              <Controller
+                name={componentProps.type.password}
+                control={control}
+                rules={{
+                  required: 'Password em falta',
+                  pattern: {
+                    value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/,
+                    message: 'A password deve ter pelo menos 6 caracteres e conter pelo menos um número, uma letra minúscula e uma letra maiúscula.',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    label='Password'
+                    type={componentProps.type.password}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={signupClasses.field}
+                    error={errors.password ? true : false}
+                    disabled={isLoading}
+                    {...field}
+                  />
+                )}
               />
-
-              <TextField
-                label='Repetir Password'
-                type='password'
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={signupClasses.field}
-                onChange={(e) => setPassword2(e.target.value)}
-                error={passwordError}
-                disabled={isLoading}
+              <Controller
+                name='password2'
+                control={control}
+                rules={{ required: 'Password em falta', validate: (value) => value === control._fields.password._f.value || 'Insira a mesma password nos 2 campos' }}
+                render={({ field }) => (
+                  <TextField
+                    label='Repetir Password'
+                    type={componentProps.type.password}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={signupClasses.field}
+                    error={errors.password2 ? true : false}
+                    disabled={isLoading}
+                    {...field}
+                  />
+                )}
               />
             </Box>
           )}
 
-          {errorMessage && (
-            <Typography sx={{ marginBottom: '20px' }} color={componentProps.color.error}>
-              {errorMessage}
-            </Typography>
-          )}
+          {errorMessage && <ErrorMessage message={errorMessage} />}
+          {errors.username && <ErrorMessage message={errors.username.message} />}
+          {errors.email && <ErrorMessage message={errors.email.message} />}
+          {errors.password && <ErrorMessage message={errors.password.message} />}
+          {errors.password2 && <ErrorMessage message={errors.password2.message} />}
 
           {!isLoading && (
             <Button type={componentProps.type.submit} variant={componentProps.variant.contained}>
