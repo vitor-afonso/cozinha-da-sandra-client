@@ -78,7 +78,7 @@ const SignupPage = () => {
       <Box sx={signupClasses.form}>
         <form noValidate onSubmit={handleSubmit(handleSignupSubmit)}>
           <Controller
-            name='username'
+            name={componentProps.name.username}
             control={control}
             rules={{ required: 'Username em falta' }}
             render={({ field }) => (
@@ -98,7 +98,7 @@ const SignupPage = () => {
           />
 
           <Controller
-            name='email'
+            name={componentProps.name.email}
             control={control}
             rules={{
               required: 'Endereço de email em falta',
@@ -125,7 +125,7 @@ const SignupPage = () => {
           {!isLoading && (
             <Box>
               <Controller
-                name={componentProps.type.password}
+                name={componentProps.name.password}
                 control={control}
                 rules={{
                   required: 'Password em falta',
@@ -148,7 +148,7 @@ const SignupPage = () => {
                 )}
               />
               <Controller
-                name='password2'
+                name={componentProps.name.password2}
                 control={control}
                 rules={{ required: 'Password em falta', validate: (value) => value === control._fields.password._f.value || 'Insira a mesma password nos 2 campos' }}
                 render={({ field }) => (

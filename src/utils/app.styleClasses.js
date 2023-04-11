@@ -772,6 +772,12 @@ export const componentProps = {
     password: 'password',
     email: 'email',
   },
+  name: {
+    username: 'username',
+    email: 'email',
+    password: 'password',
+    password2: 'password2',
+  },
   variant: {
     contained: 'contained',
     outlined: 'outlined',
