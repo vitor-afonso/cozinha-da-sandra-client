@@ -12,26 +12,18 @@ import { CustomModal } from '../components/CustomModal';
 import { Box, Button, CircularProgress, Typography, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ItemForm from '../components/ItemForm';
+import { useForm } from 'react-hook-form';
+import SuccessMessage from '../components/SuccessMessage';
 
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [itemToEdit, setItemToEdit] = useState(null);
-  const [title, setTitle] = useState('');
-  const [titleError, setTitleError] = useState(false);
-  const [category, setCategory] = useState('');
-  const [categoryError, setCategoryError] = useState(false);
-  const [description, setDescription] = useState('');
-  const [descriptionError, setDescriptionError] = useState(false);
-  const [ingredients, setIngredients] = useState('');
-  const [ingredientsError, setIngredientsError] = useState(false);
-  const [price, setPrice] = useState('');
-  const [priceError, setPriceError] = useState(false);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [tempImageUrl, setTempImageUrl] = useState('');
   const inputFileUploadRef = useRef(null);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { itemId } = useParams();
   const effectRan = useRef(false);
   const submitFormRef = useRef(null);
@@ -43,34 +35,33 @@ const EditItemPage = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   useEffect(() => {
-    if (effectRan.current === false && itemId) {
+    if (effectRan.current === false && itemId && control) {
       let item = shopItems.find((item) => item._id === itemId);
 
       setItemToEdit(item);
       setTempImageUrl(item.imageUrl);
-      setTitle(item.name);
-      setCategory(item.category);
-      setDescription(item.description);
-      setIngredients(item.ingredients);
-      setPrice(item.price);
+
+      control._formValues.title = item.name;
+      control._formValues.category = item.category;
+      control._formValues.description = item.description;
+      control._formValues.ingredients = item.ingredients;
+      control._formValues.price = item.price;
 
       return () => {
         effectRan.current = true;
       };
     }
-  }, [itemId, shopItems]);
-
-  const handlePrice = (e) => {
-    //regEx to prevent from typing letters
-    const re = /^[0-9]*\.?[0-9]*$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setPrice(e.target.value);
-    }
-  };
+  }, [itemId, shopItems, control]);
 
   const handleDeleteItem = async () => {
+    setIsLoading(true);
     try {
       await deleteItem(itemId);
 
@@ -78,53 +69,18 @@ const EditItemPage = () => {
       setSuccessMessage('Item apagado com sucesso.');
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title) {
-      setTitleError(true);
-      setErrorMessage('Por favor introduza titulo.');
-      return;
-    }
-    setTitleError(false);
-
-    if (!category) {
-      setCategoryError(true);
-      setErrorMessage('Por favor escolha categoria.');
-      return;
-    }
-    setCategoryError(false);
-
-    if (!price) {
-      setPriceError(true);
-      setErrorMessage('Por favor introduza preço.');
-      return;
-    }
-    setPriceError(false);
-
-    if (!description) {
-      setDescriptionError(true);
-      setErrorMessage('Por favor introduza descrição.');
-      return;
-    }
-    setDescriptionError(false);
-
-    if (!ingredients) {
-      setIngredientsError(true);
-      setErrorMessage('Por favor introduza ingredientes.');
-      return;
-    }
-    setIngredientsError(false);
-
+  const handleEditItemSubmit = async ({ title, price, category, description, ingredients }) => {
     if (!objImageToUpload && !tempImageUrl) {
       setErrorMessage('Por favor adicione imagem.');
       return;
     }
 
-    setBtnLoading(true);
+    setIsLoading(true);
     try {
       if (objImageToUpload) {
         const uploadData = new FormData();
@@ -141,7 +97,7 @@ const EditItemPage = () => {
 
         setSuccessMessage('Item actualizado com sucesso.');
 
-        setBtnLoading(false);
+        setIsLoading(false);
       } else {
         const requestBody = { name: title, category, description, ingredients, price: Number(price) };
 
@@ -153,7 +109,8 @@ const EditItemPage = () => {
       }
     } catch (error) {
       setErrorMessage(error.message);
-      setBtnLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -166,30 +123,18 @@ const EditItemPage = () => {
           </Typography>
 
           <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
-            {title}
+            {control._formValues.title}
           </Typography>
 
           {!successMessage && (
             <Box sx={editItemClasses.formContainer}>
               <Box sx={editItemClasses.form}>
                 <ItemForm
-                  handleSubmit={handleSubmit}
+                  handleRHFSubmit={handleSubmit}
+                  handleItemSubmit={handleEditItemSubmit}
+                  control={control}
+                  errors={errors}
                   tempImageUrl={tempImageUrl}
-                  setTitle={setTitle}
-                  titleError={titleError}
-                  title={title}
-                  category={category}
-                  categoryError={categoryError}
-                  setCategory={setCategory}
-                  handlePrice={handlePrice}
-                  priceError={priceError}
-                  price={price}
-                  setDescription={setDescription}
-                  description={description}
-                  descriptionError={descriptionError}
-                  setIngredients={setIngredients}
-                  ingredients={ingredients}
-                  ingredientsError={ingredientsError}
                   errorMessage={errorMessage}
                   inputFileUploadRef={inputFileUploadRef}
                   setTempImageUrl={setTempImageUrl}
@@ -200,20 +145,16 @@ const EditItemPage = () => {
             </Box>
           )}
 
-          {successMessage && (
-            <Typography paragraph sx={{ my: 4 }}>
-              {successMessage}
-            </Typography>
-          )}
+          {successMessage && <SuccessMessage message={successMessage} />}
 
           <Box>
-            {!btnLoading && (
+            {!isLoading && (
               <Button sx={{ mr: 1, mt: 1 }} onClick={() => navigate(-1)}>
                 Voltar
               </Button>
             )}
 
-            {!successMessage && !btnLoading && (
+            {!successMessage && !isLoading && (
               <>
                 <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
                   Apagar
@@ -227,7 +168,7 @@ const EditItemPage = () => {
                 </Button>
               </>
             )}
-            {btnLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
+            {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
           </Box>
         </>
       )}

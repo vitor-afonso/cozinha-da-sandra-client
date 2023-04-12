@@ -107,6 +107,12 @@ export const handleFileUpload = async (e, setTempImageUrl, setObjImageToUpload) 
   }
 };
 
+export const validatePrice = (value) => {
+  //regEx to prevent from typing letters
+  const re = /^[0-9]*\.?[0-9]*$/;
+  return value === '' || re.test(value);
+};
+
 const parseDateToShow = (dateToParse) => {
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   let dateMinutes;
