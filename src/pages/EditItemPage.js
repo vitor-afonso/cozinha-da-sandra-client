@@ -19,7 +19,6 @@ const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [itemToEdit, setItemToEdit] = useState(null);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [tempImageUrl, setTempImageUrl] = useState('');
   const inputFileUploadRef = useRef(null);
@@ -30,35 +29,34 @@ const EditItemPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     control,
     handleSubmit,
+    reset,
+    watch,
     formState: { errors },
   } = useForm();
 
+  // Watches value changes in the title field
+  const itemTitle = watch('title');
+
   useEffect(() => {
-    if (effectRan.current === false && itemId && control) {
-      let item = shopItems.find((item) => item._id === itemId);
+    if (!effectRan.current && itemId && control) {
+      let oneItem = shopItems.find((item) => item._id === itemId);
+      let initialFormValues = { title: oneItem.name, price: oneItem.price, category: oneItem.category, description: oneItem.description, ingredients: oneItem.ingredients };
 
-      setItemToEdit(item);
-      setTempImageUrl(item.imageUrl);
+      setTempImageUrl(oneItem.imageUrl);
 
-      control._formValues.title = item.name;
-      control._formValues.category = item.category;
-      control._formValues.description = item.description;
-      control._formValues.ingredients = item.ingredients;
-      control._formValues.price = item.price;
+      // Sets the initial values to the form fields
+      reset(initialFormValues);
 
       return () => {
         effectRan.current = true;
       };
     }
-  }, [itemId, shopItems, control]);
+  }, [itemId, shopItems, control, reset]);
 
   const handleDeleteItem = async () => {
     setIsLoading(true);
@@ -116,14 +114,14 @@ const EditItemPage = () => {
 
   return (
     <Box sx={editItemClasses.container}>
-      {itemToEdit && (
+      {tempImageUrl && (
         <>
           <Typography variant={componentProps.variant.h2} color={theme.palette.primary.main} sx={{ my: 4 }}>
             EDITAR
           </Typography>
 
           <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
-            {control._formValues.title}
+            {itemTitle}
           </Typography>
 
           {!successMessage && (
@@ -156,7 +154,7 @@ const EditItemPage = () => {
 
             {!successMessage && !isLoading && (
               <>
-                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={setIsModalOpen}>
                   Apagar
                 </Button>
 
@@ -172,7 +170,7 @@ const EditItemPage = () => {
           </Box>
         </>
       )}
-      <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteItem} question='Apagar Item?' buttonText='Apagar' />
+      <CustomModal isModalOpen={isModalOpen} handleCloseModal={setIsModalOpen} mainFunction={handleDeleteItem} question='Apagar Item?' buttonText='Apagar' />
     </Box>
   );
 };
