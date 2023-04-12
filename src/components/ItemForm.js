@@ -1,100 +1,113 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import React from 'react';
+import { Controller } from 'react-hook-form';
 import { componentProps, newItemClasses } from '../utils/app.styleClasses';
 import { APP, handleFileUpload } from '../utils/app.utils';
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import ErrorMessage from './ErrorMessage';
 
-const ItemForm = ({
-  handleSubmit,
-  tempImageUrl,
-  setTitle,
-  titleError,
-  title,
-  category,
-  categoryError,
-  setCategory,
-  handlePrice,
-  priceError,
-  price,
-  setDescription,
-  description,
-  descriptionError,
-  setIngredients,
-  ingredients,
-  ingredientsError,
-  errorMessage,
-  inputFileUploadRef,
-  setTempImageUrl,
-  setObjImageToUpload,
-  submitFormRef,
-}) => {
+const ItemForm = ({ handleItemSubmit, handleRHFSubmit, tempImageUrl, control, errors, errorMessage, inputFileUploadRef, setTempImageUrl, setObjImageToUpload, submitFormRef }) => {
   return (
     <Box sx={newItemClasses.form}>
-      <form onSubmit={handleSubmit} noValidate>
+      <form noValidate onSubmit={handleRHFSubmit(handleItemSubmit)}>
         <Box sx={{ maxWidth: '250px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
-        <TextField
-          label='Titulo'
-          type={componentProps.type.text}
-          variant={componentProps.variant.outlined}
-          fullWidth
-          required
-          sx={newItemClasses.titleField}
-          onChange={(e) => setTitle(e.target.value)}
-          error={titleError}
-          value={title}
-          autoComplete='true'
-          autoFocus
+
+        <Controller
+          name={componentProps.name.title}
+          control={control}
+          rules={{ required: 'Titulo em falta' }}
+          render={({ field }) => (
+            <TextField
+              label='Titulo'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
+              fullWidth
+              sx={newItemClasses.titleField}
+              error={errors.title ? true : false}
+              autoComplete='true'
+              autoFocus
+              {...field}
+            />
+          )}
         />
 
-        <FormControl sx={{ mb: 2 }} align='left' fullWidth={true} error={categoryError}>
+        <FormControl sx={errors.category ? { mb: 2, outline: '1px solid #d32f2f', padding: 2, borderRadius: '3px' } : { mb: 2 }} align='left' fullWidth error={errors.category ? true : false}>
           <FormLabel>Categoria</FormLabel>
-          <RadioGroup row name='row-radio-buttons-group' onChange={(e) => setCategory(e.target.value)}>
-            <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' checked={category === APP.categories.doces} />
-            <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' checked={category === APP.categories.salgados} />
-          </RadioGroup>
+          <Controller
+            name={componentProps.name.category}
+            control={control}
+            rules={{ required: 'Categoria em falta' }}
+            render={({ field }) => (
+              <RadioGroup row name='row-radio-buttons-group' {...field}>
+                <FormControlLabel value={APP.categories.doces} control={<Radio />} label='Doces' />
+                <FormControlLabel value={APP.categories.salgados} control={<Radio />} label='Salgados' />
+              </RadioGroup>
+            )}
+          />
         </FormControl>
 
-        <TextField
-          label='Preço'
-          type={componentProps.type.text}
-          variant={componentProps.variant.outlined}
-          fullWidth
-          required
-          sx={newItemClasses.formField}
-          onChange={handlePrice}
-          error={priceError}
-          value={price}
-          autoComplete='true'
+        <Controller
+          name={componentProps.name.price}
+          control={control}
+          rules={{
+            required: 'Preço em falta',
+            pattern: { value: /^[0-9]*\.?[0-9]*$/, message: 'Valor inválido' },
+          }}
+          render={({ field }) => (
+            <TextField
+              label='Preço'
+              type={componentProps.type.text}
+              variant={componentProps.variant.outlined}
+              fullWidth
+              sx={newItemClasses.formField}
+              error={errors.price ? true : false}
+              autoComplete='true'
+              {...field}
+            />
+          )}
         />
 
-        <TextField
-          label='Descrição'
-          maxRows={4}
-          multiline
-          sx={newItemClasses.formTextArea}
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          required
-          placeholder='Escreva aqui a descrição...'
-          error={descriptionError}
+        <Controller
+          name={componentProps.name.description}
+          control={control}
+          rules={{ required: 'Descrição em falta' }}
+          render={({ field }) => (
+            <TextField
+              label='Descrição'
+              maxRows={4}
+              multiline
+              sx={newItemClasses.formTextArea}
+              placeholder='Escreva aqui a descrição'
+              error={errors.description ? true : false}
+              autoComplete='true'
+              {...field}
+            />
+          )}
         />
 
-        <TextField
-          label='Ingredientes'
-          maxRows={4}
-          multiline
-          sx={newItemClasses.formTextArea}
-          onChange={(e) => setIngredients(e.target.value)}
-          value={ingredients}
-          required
-          placeholder='Escreva aqui os ingredientes separados por virgula...'
-          error={ingredientsError}
+        <Controller
+          name={componentProps.name.ingredients}
+          control={control}
+          rules={{ required: 'Ingredientes em falta' }}
+          render={({ field }) => (
+            <TextField
+              label='Ingredientes'
+              maxRows={4}
+              multiline
+              sx={newItemClasses.formTextArea}
+              placeholder='Escreva aqui os ingredientes separados por virgula. Ex: "ovos,farinha,fermento"'
+              error={errors.ingredients ? true : false}
+              autoComplete='true'
+              {...field}
+            />
+          )}
         />
 
-        {errorMessage && (
-          <Typography paragraph sx={{ my: 4 }} color={componentProps.color.error}>
-            {errorMessage}
-          </Typography>
-        )}
+        {errorMessage && <ErrorMessage message={errorMessage} />}
+        {errors.title && <ErrorMessage message={errors.title.message} />}
+        {errors.category && <ErrorMessage message={errors.category.message} />}
+        {errors.price && <ErrorMessage message={errors.price.message} />}
+        {errors.description && <ErrorMessage message={errors.description.message} />}
+        {errors.ingredients && <ErrorMessage message={errors.ingredients.message} />}
 
         <div>
           <input ref={inputFileUploadRef} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />

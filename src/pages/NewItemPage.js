@@ -11,85 +11,45 @@ import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { componentProps, newItemClasses } from '../utils/app.styleClasses';
 import ItemForm from '../components/ItemForm';
+import { useForm } from 'react-hook-form';
+import SuccessMessage from '../components/SuccessMessage';
 
 const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [title, setTitle] = useState('');
-  const [titleError, setTitleError] = useState(false);
-  const [category, setCategory] = useState('');
-  const [categoryError, setCategoryError] = useState(false);
   const [tempImageUrl, setTempImageUrl] = useState('');
-  const [description, setDescription] = useState('');
-  const [descriptionError, setDescriptionError] = useState(false);
-  const [ingredients, setIngredients] = useState('');
-  const [ingredientsError, setIngredientsError] = useState(false);
-  const [price, setPrice] = useState('');
-  const [priceError, setPriceError] = useState(false);
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const inputFileUploadRef = useRef(null);
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const submitFormRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      title: '',
+      category: '',
+      price: '',
+      description: '',
+      ingredients: '',
+    },
+  });
 
   useEffect(() => {
     setTempImageUrl(defaultProductImage);
   }, []);
 
-  const handlePrice = (e) => {
-    //regEx to prevent from typing letters
-    const re = /^[0-9]*\.?[0-9]*$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setPrice(e.target.value);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title) {
-      setTitleError(true);
-      setErrorMessage('Por favor introduza Titulo.');
-      return;
-    }
-    setTitleError(false);
-
-    if (!category) {
-      setCategoryError(true);
-      setErrorMessage('Por favor escolha categoria.');
-      return;
-    }
-    setCategoryError(false);
-
-    if (!price) {
-      setPriceError(true);
-      setErrorMessage('Por favor introduza preço.');
-      return;
-    }
-    setPriceError(false);
-
-    if (!description) {
-      setDescriptionError(true);
-      setErrorMessage('Por favor introduza descrição.');
-      return;
-    }
-    setDescriptionError(false);
-
-    if (!ingredients) {
-      setIngredientsError(true);
-      setErrorMessage('Por favor introduza ingredientes.');
-      return;
-    }
-    setIngredientsError(false);
-
+  const handleItemSubmit = async ({ title, price, category, description, ingredients }) => {
     if (!objImageToUpload) {
       setErrorMessage('Por favor adicione imagem.');
       return;
     }
 
-    setBtnLoading(true);
+    setIsLoading(true);
 
     try {
       const uploadData = new FormData();
@@ -106,10 +66,11 @@ const NewItemPage = () => {
 
       setSuccessMessage('Item criado com sucesso.');
 
-      setBtnLoading(false);
+      setIsLoading(false);
     } catch (error) {
       setErrorMessage(error.message);
-      setBtnLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,23 +83,11 @@ const NewItemPage = () => {
       {!successMessage && (
         <Box sx={newItemClasses.formContainer}>
           <ItemForm
-            handleSubmit={handleSubmit}
+            handleRHFSubmit={handleSubmit}
+            handleItemSubmit={handleItemSubmit}
+            control={control}
+            errors={errors}
             tempImageUrl={tempImageUrl}
-            setTitle={setTitle}
-            titleError={titleError}
-            title={title}
-            category={category}
-            categoryError={categoryError}
-            setCategory={setCategory}
-            handlePrice={handlePrice}
-            priceError={priceError}
-            price={price}
-            setDescription={setDescription}
-            description={description}
-            descriptionError={descriptionError}
-            setIngredients={setIngredients}
-            ingredients={ingredients}
-            ingredientsError={ingredientsError}
             errorMessage={errorMessage}
             inputFileUploadRef={inputFileUploadRef}
             setTempImageUrl={setTempImageUrl}
@@ -148,16 +97,16 @@ const NewItemPage = () => {
         </Box>
       )}
 
-      {successMessage && <p>{successMessage}</p>}
+      {successMessage && <SuccessMessage message={successMessage} />}
 
       <Box>
-        {!btnLoading && (
+        {!isLoading && (
           <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
           </Button>
         )}
 
-        {!successMessage && !btnLoading && (
+        {!successMessage && !isLoading && (
           <>
             <Button sx={{ mr: 1 }} type={componentProps.type.button} variant={componentProps.variant.outlined} endIcon={<AddIcon />} onClick={() => inputFileUploadRef.current.click()}>
               Imagem
@@ -167,7 +116,7 @@ const NewItemPage = () => {
             </Button>
           </>
         )}
-        {btnLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mb: 2 }} />}
       </Box>
     </Box>
   );

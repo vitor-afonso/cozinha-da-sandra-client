@@ -771,12 +771,18 @@ export const componentProps = {
     submit: 'submit',
     password: 'password',
     email: 'email',
+    number: 'number',
   },
   name: {
     username: 'username',
     email: 'email',
     password: 'password',
     password2: 'password2',
+    title: 'title',
+    price: 'price',
+    category: 'category',
+    description: 'description',
+    ingredients: 'ingredients',
   },
   variant: {
     contained: 'contained',
