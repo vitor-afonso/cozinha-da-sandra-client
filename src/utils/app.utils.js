@@ -108,8 +108,16 @@ export const handleFileUpload = async (e, setTempImageUrl, setObjImageToUpload) 
 };
 
 export const validatePrice = (value) => {
-  //regEx to prevent from typing letters
+  // prevents from typing letters
+
   const re = /^[0-9]*\.?[0-9]*$/;
+  return value === '' || re.test(value);
+};
+
+export const validateContact = (value) => {
+  // prevents from typing letters and adding limit of 14 digits
+  const re = /^[0-9]{0,14}$/;
+
   return value === '' || re.test(value);
 };
 

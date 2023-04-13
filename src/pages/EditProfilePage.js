@@ -12,6 +12,9 @@ import { CustomModal } from '../components/CustomModal';
 
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { Controller, useForm } from 'react-hook-form';
+import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
 
 const EditProfilePage = () => {
   const { user, logOutUser } = useContext(AuthContext);
@@ -22,59 +25,45 @@ const EditProfilePage = () => {
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [objImageToUpload, setObjImageToUpload] = useState(null);
   const [profileOwner, setProfileOwner] = useState(null);
-  const [username, setUsername] = useState('');
-  const [usernameError, setUsernameError] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [newPassword2, setNewPassword2] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [contact, setContact] = useState('');
-  const [info, setInfo] = useState('');
   const [disabledInput, setDisabledInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const inputFileUpload = useRef(null);
-  const submitFormButton = useRef();
+  const submitFormButton = useRef(null);
   const { userId } = useParams();
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isProfileOwner = user._id === userId ? true : false;
   const shouldShowDeleteButton = profileOwner && !profileOwner.deleted && profileOwner.userType === 'user';
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
+
+  // Watches value changes in fields
+  let newPassword = watch('password');
+  let newPassword2 = watch('password2');
+
   useEffect(() => {
     if (userId) {
       let owner = shopUsers.find((user) => user._id === userId);
+      let initialFormValues = { username: owner.username, email: owner.email, contact: owner.contact ? owner.contact : '', password: '', password2: '', info: owner.info ? owner.info : '' };
 
       setProfileOwner(owner);
       setTempImageUrl(owner.imageUrl);
-      setUsername(owner.username);
-      setEmail(owner.email);
-      if (owner.contact) {
-        setContact(owner.contact);
-      }
-      if (owner.info) {
-        setInfo(owner.info);
-      }
+      reset(initialFormValues);
+
       if (user.userType === 'admin' && !isProfileOwner) {
         setDisabledInput(true);
       }
     }
-  }, [userId, shopUsers, user, isProfileOwner]);
-
-  const validateContact = (e) => {
-    if (!isProfileOwner) return;
-
-    //regEx to prevent from typing letters and adding limit of 14 digits
-    const re = /^[0-9]{0,14}$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setContact(e.target.value);
-    }
-  };
+  }, [userId, shopUsers, user, isProfileOwner, reset]);
 
   const handleActivateUser = async () => {
     try {
@@ -101,35 +90,23 @@ const EditProfilePage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const isFieldRequired = (value) => {
+    return value !== '' ? true : false;
+  };
 
-    if (!username) {
-      setUsernameError(true);
-      setErrorMessage('Por favor introduza username.');
-      return;
+  const updateError = (value) => {
+    if (value === '' && newPassword === '') {
+      clearErrors('password');
     }
-    setUsernameError(false);
-
-    if (!email) {
-      setEmailError(true);
-      setErrorMessage('Por favor introduza email.');
-      return;
+    if (value === '' && newPassword2 === '') {
+      clearErrors('password2');
     }
-    setEmailError(false);
+  };
 
-    if (newPassword && newPassword !== newPassword2) {
-      setPasswordError(true);
-      setErrorMessage('Por favor insira a mesma password nos 2 campos.');
-      return;
-    }
-    setPasswordError(false);
-
+  const handleEditProfileSubmit = async ({ username, email, password, contact, info }) => {
     setIsLoading(true);
 
     try {
-      const passwordBody = { password: newPassword };
-
       if (objImageToUpload) {
         const uploadData = new FormData();
 
@@ -139,32 +116,30 @@ const EditProfilePage = () => {
 
         const requestBody = { username, email, contact, imageUrl: fileUrl, info };
 
-        if (newPassword !== '') {
-          let response = await Promise.all([updateUser(requestBody, userId), resetPassword(passwordBody, userId)]);
-          dispatch(updateShopUser(response[1].data));
-        } else {
+        if (password === '') {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
+        } else {
+          let response = await Promise.all([updateUser(requestBody, userId), resetPassword({ password }, userId)]);
+          dispatch(updateShopUser(response[1].data));
         }
-        setIsLoading(false);
       } else {
         const requestBody = { username, email, contact, info };
 
-        if (newPassword !== '') {
-          let response = await Promise.all([updateUser(requestBody, userId), resetPassword(passwordBody, userId)]);
-          dispatch(updateShopUser(response[1].data));
-        } else {
+        if (password === '') {
           let userResponse = await updateUser(requestBody, userId);
           dispatch(updateShopUser(userResponse.data.updatedUser));
+        } else {
+          let response = await Promise.all([updateUser(requestBody, userId), resetPassword({ password }, userId)]);
+          dispatch(updateShopUser(response[1].data));
         }
-        setIsLoading(false);
       }
 
       setSuccessMessage('Perfil actualizado com sucesso.');
     } catch (error) {
-      console.log('error in editProfile', error);
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -178,99 +153,152 @@ const EditProfilePage = () => {
       {!successMessage && profileOwner && (
         <Box sx={editProfileClasses.formContainer}>
           <Box sx={editProfileClasses.form}>
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit(handleEditProfileSubmit)} noValidate>
               <Box sx={{ maxWidth: '150px', mx: 'auto' }}>{tempImageUrl && <img src={tempImageUrl} alt='Novo item' style={{ maxWidth: '100%', height: 'auto', marginBottom: '25px' }} />}</Box>
 
-              <TextField
-                label='Username'
-                type={componentProps.type.text}
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={editProfileClasses.nameField}
-                onChange={(e) => setUsername(isProfileOwner && e.target.value)}
-                error={usernameError}
-                value={username}
-                disabled={disabledInput}
-                autoComplete='true'
-                autoFocus
+              <Controller
+                name={componentProps.name.username}
+                control={control}
+                rules={{ required: 'Username em falta' }}
+                render={({ field }) => (
+                  <TextField
+                    label='Username'
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={editProfileClasses.nameField}
+                    error={errors.username ? true : false}
+                    disabled={disabledInput}
+                    autoComplete='true'
+                    autoFocus
+                    {...field}
+                  />
+                )}
               />
 
-              <TextField
-                label='Email'
-                type={componentProps.type.email}
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={editProfileClasses.nameField}
-                onChange={(e) => setEmail(isProfileOwner && e.target.value)}
-                error={emailError}
-                value={email}
-                disabled={disabledInput}
-                autoComplete='true'
+              <Controller
+                name={componentProps.name.email}
+                control={control}
+                rules={{
+                  required: 'Endereço de email em falta',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Endereço de email invalido',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    label='Email'
+                    type={componentProps.type.email}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    required
+                    sx={editProfileClasses.nameField}
+                    error={errors.email ? true : false}
+                    disabled={disabledInput}
+                    autoComplete='true'
+                    {...field}
+                  />
+                )}
               />
 
-              <TextField
-                label='Contacto'
-                type={componentProps.type.text}
-                variant={componentProps.variant.outlined}
-                fullWidth
-                sx={editProfileClasses.nameField}
-                onChange={validateContact}
-                value={contact}
-                disabled={disabledInput}
-                placeholder='912345678'
-                autoComplete='true'
+              <Controller
+                name={componentProps.name.contact}
+                control={control}
+                rules={{
+                  pattern: { value: /^[0-9]{0,14}$/, message: 'Contacto inválido' },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    label='Contacto'
+                    type={componentProps.type.text}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={editProfileClasses.nameField}
+                    error={errors.contact ? true : false}
+                    disabled={disabledInput}
+                    placeholder='912345678'
+                    autoComplete='true'
+                    {...field}
+                  />
+                )}
               />
 
               {isProfileOwner && !isLoading && (
                 <>
-                  <TextField
-                    label='Nova Password'
-                    type='password'
-                    variant={componentProps.variant.outlined}
-                    fullWidth
-                    sx={editProfileClasses.nameField}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    error={passwordError}
-                    value={newPassword}
-                    disabled={disabledInput}
-                    placeholder='********'
+                  <Controller
+                    name={componentProps.name.password}
+                    control={control}
+                    rules={{
+                      required: { value: isFieldRequired(newPassword2), message: 'Password em falta' },
+                      pattern: {
+                        value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/,
+                        message: 'A password deve ter pelo menos 6 caracteres e conter pelo menos um número, uma letra minúscula e uma letra maiúscula.',
+                      },
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        label='Nova Password'
+                        type={componentProps.type.password}
+                        error={errors.password ? true : false}
+                        {...field}
+                        variant={componentProps.variant.outlined}
+                        fullWidth
+                        sx={editProfileClasses.nameField}
+                        disabled={disabledInput}
+                        placeholder='********'
+                        value={field.value}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateError(value);
+                          field.onChange(value);
+                        }}
+                      />
+                    )}
                   />
-
-                  <TextField
-                    label='Repetir Password'
-                    type='password'
-                    variant={componentProps.variant.outlined}
-                    fullWidth
-                    sx={editProfileClasses.nameField}
-                    onChange={(e) => setNewPassword2(e.target.value)}
-                    error={passwordError}
-                    value={newPassword2}
-                    disabled={disabledInput}
-                    placeholder='********'
+                  <Controller
+                    name={componentProps.name.password2}
+                    control={control}
+                    rules={{
+                      required: { value: isFieldRequired(newPassword), message: 'Password em falta' },
+                      validate: (value) => value === newPassword || 'Insira a mesma password nos 2 campos',
+                    }}
+                    render={({ field }) => (
+                      <TextField
+                        label='Repetir Password'
+                        type={componentProps.type.password}
+                        variant={componentProps.variant.outlined}
+                        error={errors.password2 ? true : false}
+                        fullWidth
+                        sx={editProfileClasses.nameField}
+                        disabled={disabledInput}
+                        placeholder='********'
+                        value={field.value}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateError(value);
+                          field.onChange(value);
+                        }}
+                      />
+                    )}
                   />
                 </>
               )}
 
               {user.userType === 'admin' && (
-                <TextField
-                  id='outlined-multiline-flexible'
-                  label='Notas'
-                  multiline
-                  maxRows={4}
-                  sx={editProfileClasses.formTextArea}
-                  onChange={(e) => setInfo(e.target.value)}
-                  value={info}
-                  placeholder='Escreva aqui a descrição'
+                <Controller
+                  name={componentProps.name.info}
+                  control={control}
+                  render={({ field }) => <TextField label='Notas' multiline maxRows={4} sx={editProfileClasses.formTextArea} placeholder='Escreva aqui as suas notas...' {...field} />}
                 />
               )}
 
-              {errorMessage && (
-                <Typography paragraph sx={{ mb: 4 }} color={componentProps.color.error}>
-                  {errorMessage}
-                </Typography>
-              )}
+              {errorMessage && <ErrorMessage message={errorMessage} />}
+              {errors.username && <ErrorMessage message={errors.username.message} />}
+              {errors.email && <ErrorMessage message={errors.email.message} />}
+              {errors.contact && <ErrorMessage message={errors.contact.message} />}
+              {errors.password && <ErrorMessage message={errors.password.message} />}
+              {errors.password2 && <ErrorMessage message={errors.password2.message} />}
 
               <div>
                 <button type={componentProps.type.submit} hidden ref={submitFormButton}>
@@ -282,11 +310,7 @@ const EditProfilePage = () => {
         </Box>
       )}
 
-      {successMessage && (
-        <Typography paragraph sx={{ my: 4 }}>
-          {successMessage}
-        </Typography>
-      )}
+      {successMessage && <SuccessMessage message={successMessage} />}
 
       <Box>
         {!isLoading && (
@@ -300,12 +324,12 @@ const EditProfilePage = () => {
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
             {shouldShowDeleteButton && (
-              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
+              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={setIsModalOpen}>
                 Apagar
               </Button>
             )}
 
-            <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteUser} question='Apagar Utilizador?' buttonText='Apagar' />
+            <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleDeleteUser} question='Apagar utilizador?' buttonText='Apagar' />
 
             {profileOwner && profileOwner.deleted && (
               <Button
