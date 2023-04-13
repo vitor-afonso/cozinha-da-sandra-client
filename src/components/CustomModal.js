@@ -10,7 +10,7 @@ export function CustomModal({ isModalOpen, setIsModalOpen, mainFunction, questio
   return (
     <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Box sx={modalStyle}>
-        <Typography variant={componentProps.variant.h6} component='h2'>
+        <Typography variant={componentProps.variant.h6} component={componentProps.variant.h2}>
           {question}
         </Typography>
         <Box
