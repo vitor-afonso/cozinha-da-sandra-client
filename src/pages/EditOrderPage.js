@@ -20,6 +20,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import SuccessMessage from '../components/SuccessMessage';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -410,11 +411,7 @@ const EditOrderPage = () => {
         </>
       )}
 
-      {successMessage && (
-        <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color={theme.palette.neutral.main}>
-          {successMessage}
-        </Typography>
-      )}
+      {successMessage && <SuccessMessage message={successMessage} />}
 
       <div>
         {!isLoading && (

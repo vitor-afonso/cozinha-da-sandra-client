@@ -17,6 +17,7 @@ import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 import { cartClasses, componentProps } from '../utils/app.styleClasses';
+import SuccessMessage from '../components/SuccessMessage';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
@@ -356,9 +357,7 @@ const CartPage = () => {
 
       {successMessage && (
         <>
-          <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color={theme.palette.neutral.main}>
-            {successMessage}
-          </Typography>
+          <SuccessMessage message={successMessage} />
 
           <Button variant={componentProps.variant.outlined} onClick={() => navigate(`/profile/${user._id}`)}>
             Perfil

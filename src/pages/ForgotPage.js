@@ -6,6 +6,7 @@ import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
 import { componentProps, forgotClasses } from '../utils/app.styleClasses';
 import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -88,7 +89,7 @@ const ForgotPage = () => {
           <Box sx={forgotClasses.image}>
             <img src={forgotImage} alt='Forgot password' className='auth-images' />
           </Box>
-          <Typography sx={{ mt: 4, mx: 3 }}>{successMessage}</Typography>
+          <SuccessMessage message={successMessage} />
         </Box>
       )}
     </Box>

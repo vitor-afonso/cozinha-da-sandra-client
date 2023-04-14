@@ -8,6 +8,7 @@ import { ShopOrder } from '../components/ShopOrder';
 import { componentProps, sendEmailClasses } from '../utils/app.styleClasses';
 import { parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
 import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
 
 const APP_NAME = capitalizeAppName();
 const APP_EMAIL = APP.email;
@@ -157,11 +158,7 @@ const SendEmailPage = () => {
         </Box>
       )}
 
-      {successMessage && (
-        <Typography paragraph sx={{ my: 4 }}>
-          {successMessage}
-        </Typography>
-      )}
+      {successMessage && <SuccessMessage message={successMessage} />}
 
       <div>
         {!btnLoading && (
