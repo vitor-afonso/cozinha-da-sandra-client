@@ -324,7 +324,13 @@ const EditProfilePage = () => {
             <input ref={inputFileUpload} hidden type='file' onChange={(e) => handleFileUpload(e, setTempImageUrl, setObjImageToUpload)} />
 
             {shouldShowDeleteButton && (
-              <Button sx={{ mr: 1, mt: { xs: 1, sm: 0 } }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={setIsModalOpen}>
+              <Button
+                sx={{ mr: 1, mt: { xs: 1, sm: 0 } }}
+                type={componentProps.type.button}
+                color={componentProps.color.error}
+                variant={componentProps.variant.outlined}
+                onClick={() => setIsModalOpen(true)}
+              >
                 Apagar
               </Button>
             )}
