@@ -776,6 +776,7 @@ export const componentProps = {
   name: {
     username: 'username',
     email: 'email',
+    contact: 'contact',
     password: 'password',
     password2: 'password2',
     title: 'title',
@@ -783,6 +784,7 @@ export const componentProps = {
     category: 'category',
     description: 'description',
     ingredients: 'ingredients',
+    info: 'info',
   },
   variant: {
     contained: 'contained',

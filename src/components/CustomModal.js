@@ -1,16 +1,16 @@
 import { componentProps, modalStyle } from '../utils/app.styleClasses';
 import { Box, Button, Modal, Typography } from '@mui/material';
 
-export function CustomModal({ isModalOpen, handleCloseModal, mainFunction, question, buttonText }) {
-  const runModalMainFunction = () => {
+export function CustomModal({ isModalOpen, setIsModalOpen, mainFunction, question, buttonText }) {
+  const runMainFunction = () => {
     mainFunction();
-    handleCloseModal();
+    setIsModalOpen(false);
   };
 
   return (
-    <Modal open={isModalOpen} onClose={handleCloseModal} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+    <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Box sx={modalStyle}>
-        <Typography id='modal-modal-title' variant={componentProps.variant.h6} component='h2'>
+        <Typography variant={componentProps.variant.h6} component={componentProps.variant.h2}>
           {question}
         </Typography>
         <Box
@@ -23,11 +23,11 @@ export function CustomModal({ isModalOpen, handleCloseModal, mainFunction, quest
               mr: 1,
             }}
             variant={componentProps.variant.outlined}
-            onClick={handleCloseModal}
+            onClick={() => setIsModalOpen(false)}
           >
             Cancelar
           </Button>
-          <Button type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.contained} onClick={runModalMainFunction}>
+          <Button type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.contained} onClick={runMainFunction}>
             {buttonText}
           </Button>
         </Box>
