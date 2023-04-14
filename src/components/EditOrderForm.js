@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 
-import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import { handleCustomDeliveryFee } from '../utils/app.utils';
 import { componentProps, editOrderClasses } from '../utils/app.styleClasses';
+import ErrorMessage from './ErrorMessage';
 
 export function EditOrderForm({
   handleSubmit,
@@ -116,17 +117,7 @@ export function EditOrderForm({
 
           <TextField label='Mensagem' value={message} sx={editOrderClasses.formTextArea} multiline maxRows={4} onChange={(e) => setMessage(e.target.value)} placeholder='Escreva aqui a sua mensagem' />
 
-          {errorMessage && (
-            <Typography
-              paragraph
-              sx={{
-                my: 4,
-              }}
-              color={componentProps.color.error}
-            >
-              {errorMessage}
-            </Typography>
-          )}
+          {errorMessage && <ErrorMessage message={errorMessage} />}
 
           <button type={componentProps.type.submit} ref={submitForm} hidden>
             Actualizar

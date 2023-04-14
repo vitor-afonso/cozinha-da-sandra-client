@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { resetPassword } from '../api';
 import resetImage from '../images/reset.svg';
 import { componentProps, resetClasses } from '../utils/app.styleClasses';
+import ErrorMessage from '../components/ErrorMessage';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -83,11 +84,7 @@ const ResetPage = () => {
                 error={passwordError}
               />
 
-              {errorMessage && (
-                <Typography sx={{ marginBottom: 4 }} color={componentProps.color.error}>
-                  {errorMessage}
-                </Typography>
-              )}
+              {errorMessage && <ErrorMessage message={errorMessage} />}
 
               <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
                 Repor
