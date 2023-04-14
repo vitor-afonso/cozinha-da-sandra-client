@@ -8,6 +8,7 @@ import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel
 import Radio from '@mui/material/Radio';
 import TooltipDeliveryFee from './TooltipDeliveryFee';
 import { cartFormClasses, componentProps } from '../utils/app.styleClasses';
+import ErrorMessage from './ErrorMessage';
 
 // When on mobile inputType is not being toggled
 // so we check if its mobile or not
@@ -187,17 +188,7 @@ export const CartOrderForm = ({
             placeholder='Escreva aqui a sua mensagem...'
           />
 
-          {errorMessage && (
-            <Typography
-              paragraph
-              sx={{
-                mb: 4,
-              }}
-              color={componentProps.color.error}
-            >
-              {errorMessage}
-            </Typography>
-          )}
+          {errorMessage && <ErrorMessage message={errorMessage} />}
 
           <button type={componentProps.type.submit} ref={submitBtnRef} hidden>
             Encomendar

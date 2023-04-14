@@ -7,6 +7,7 @@ import { getOneOrder, sendEmail } from '../api';
 import { ShopOrder } from '../components/ShopOrder';
 import { componentProps, sendEmailClasses } from '../utils/app.styleClasses';
 import { parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
+import ErrorMessage from '../components/ErrorMessage';
 
 const APP_NAME = capitalizeAppName();
 const APP_EMAIL = APP.email;
@@ -146,11 +147,7 @@ const SendEmailPage = () => {
                 error={messageError}
               />
 
-              {errorMessage && (
-                <Typography paragraph sx={{ my: 4 }} color={componentProps.color.error}>
-                  {errorMessage}
-                </Typography>
-              )}
+              {errorMessage && <ErrorMessage message={errorMessage} />}
 
               <button type={componentProps.type.submit} ref={submitForm} hidden>
                 Enviar

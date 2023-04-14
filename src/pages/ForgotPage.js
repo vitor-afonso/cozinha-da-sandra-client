@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { forgotPassword } from '../api';
 import forgotImage from '../images/forgot.svg';
 import { componentProps, forgotClasses } from '../utils/app.styleClasses';
+import ErrorMessage from '../components/ErrorMessage';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -70,11 +71,7 @@ const ForgotPage = () => {
                 autoFocus
               />
 
-              {errorMessage && (
-                <Typography sx={{ marginBottom: 2 }} color={componentProps.color.error}>
-                  {errorMessage}
-                </Typography>
-              )}
+              {errorMessage && <ErrorMessage message={errorMessage} />}
 
               {!isLoading && (
                 <Button variant={componentProps.variant.contained} type={componentProps.type.submit} sx={{ mb: 4 }}>
