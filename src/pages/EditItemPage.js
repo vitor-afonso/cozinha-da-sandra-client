@@ -154,7 +154,7 @@ const EditItemPage = () => {
 
             {!successMessage && !isLoading && (
               <>
-                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={setIsModalOpen}>
+                <Button sx={{ mr: 1, mt: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={() => setIsModalOpen(true)}>
                   Apagar
                 </Button>
 
@@ -170,7 +170,7 @@ const EditItemPage = () => {
           </Box>
         </>
       )}
-      <CustomModal isModalOpen={isModalOpen} handleCloseModal={setIsModalOpen} mainFunction={handleDeleteItem} question='Apagar Item?' buttonText='Apagar' />
+      <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleDeleteItem} question='Apagar Item?' buttonText='Apagar' />
     </Box>
   );
 };
