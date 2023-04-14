@@ -35,13 +35,9 @@ export function ShopOrder({ order }) {
   const isOrderPending = order.orderStatus === 'pending' ? true : false;
 
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [openPaid, setOpenPaid] = React.useState(false);
-  const handleOpenPaid = () => setOpenPaid(true);
-  const handleClosePaid = () => setOpenPaid(false);
 
   useEffect(() => {
     if (order) {
@@ -89,7 +85,7 @@ export function ShopOrder({ order }) {
 
       await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
       dispatch(confirmOrder({ id: order._id }));
-      handleClose();
+      setIsModalOpen(false);
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -106,7 +102,7 @@ export function ShopOrder({ order }) {
       await updateOrder(requestBody, order._id);
 
       dispatch(confirmPayment({ id: order._id }));
-      handleClosePaid();
+      setOpenPaid(false);
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -270,13 +266,13 @@ export function ShopOrder({ order }) {
             {translateStatus(order.orderStatus)}
 
             {shouldShowConfirmButton && (
-              <Button size={componentProps.size.small} onClick={handleOpen}>
+              <Button size={componentProps.size.small} onClick={() => setIsModalOpen(true)}>
                 Confirmar
               </Button>
             )}
           </Typography>
 
-          <ConfirmOrderModal open={open} handleConfirmOrder={handleConfirmOrder} handleClose={handleClose} isConfirmLoading={isConfirmLoading} />
+          <ConfirmOrderModal isModalOpen={isModalOpen} handleConfirmOrder={handleConfirmOrder} setIsModalOpen={setIsModalOpen} isConfirmLoading={isConfirmLoading} />
         </Box>
 
         <Box sx={shopOrderClasses.infoField}>
@@ -286,13 +282,13 @@ export function ShopOrder({ order }) {
           <Typography>
             {order.paid ? 'Sim' : 'Não'}
             {!order.paid && isCurrentUserAdmin && (
-              <Button size={componentProps.size.small} onClick={handleOpenPaid}>
+              <Button size={componentProps.size.small} onClick={() => setOpenPaid(true)}>
                 Confirmar
               </Button>
             )}
           </Typography>
 
-          <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} handleClosePaid={handleClosePaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
+          <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} setOpenPaid={setOpenPaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
         </Box>
         <Box sx={shopOrderClasses.infoField}>
           <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>

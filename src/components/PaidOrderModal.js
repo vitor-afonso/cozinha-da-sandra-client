@@ -2,28 +2,28 @@ import { Box, Button, CircularProgress, Modal, Typography } from '@mui/material'
 import React from 'react';
 import { componentProps, modalStyle } from '../utils/app.styleClasses';
 
-const PaidOrderModal = ({ isOrderPending, isPaidLoading, handleConfirmPayment, handleClosePaid, openPaid }) => {
+const PaidOrderModal = ({ isOrderPending, isPaidLoading, handleConfirmPayment, setOpenPaid, openPaid }) => {
   return (
-    <Modal open={openPaid} onClose={handleClosePaid} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+    <Modal open={openPaid} onClose={() => setOpenPaid(false)}>
       <Box sx={modalStyle}>
         {isOrderPending ? (
           <>
-            <Typography id='modal-modal-title' variant={componentProps.variant.body1} sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
+            <Typography variant={componentProps.variant.body1} sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
               Confirme status do pedido antes.
             </Typography>
-            <Button variant={componentProps.variant.outlined} onClick={handleClosePaid}>
+            <Button variant={componentProps.variant.outlined} onClick={() => setOpenPaid(false)}>
               Voltar
             </Button>
           </>
         ) : (
           <>
-            <Typography id='modal-modal-title' variant={componentProps.variant.h6} component='h2'>
+            <Typography variant={componentProps.variant.h6} component={componentProps.variant.h2}>
               Confirmar pago?
             </Typography>
             <Box sx={{ mt: 2 }}>
               {!isPaidLoading && (
                 <>
-                  <Button sx={{ mr: 1 }} variant={componentProps.variant.outlined} onClick={handleClosePaid}>
+                  <Button sx={{ mr: 1 }} variant={componentProps.variant.outlined} onClick={() => setOpenPaid(false)}>
                     Cancelar
                   </Button>
                   <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={handleConfirmPayment}>
@@ -31,7 +31,7 @@ const PaidOrderModal = ({ isOrderPending, isPaidLoading, handleConfirmPayment, h
                   </Button>
                 </>
               )}
-              {isPaidLoading && <CircularProgress size='20px' />}
+              {isPaidLoading && <CircularProgress size='50px' />}
             </Box>
           </>
         )}
