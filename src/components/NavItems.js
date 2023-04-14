@@ -26,12 +26,10 @@ export const NavItems = () => {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleLogout = () => {
-    handleClose();
+    setIsModalOpen(false);
     logOutUser();
   };
 
@@ -166,7 +164,7 @@ export const NavItems = () => {
             </ListItemButton>
           </ListItem>
 
-          <ListItem disablePadding onClick={handleOpen}>
+          <ListItem disablePadding onClick={() => setIsModalOpen(true)}>
             <ListItemButton>
               <ListItemIcon sx={{ display: { md: 'none' } }}>
                 <LogoutOutlinedIcon color={componentProps.color.primary} />
@@ -184,7 +182,7 @@ export const NavItems = () => {
             </ListItemButton>
           </ListItem>
 
-          <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleLogout} question='Sair?' buttonText='Sair' />
+          <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleLogout} question='Sair?' buttonText='Sair' />
         </>
       )}
     </List>

@@ -2,17 +2,17 @@ import { Box, Button, CircularProgress, Modal, Typography } from '@mui/material'
 import React from 'react';
 import { componentProps, modalStyle } from '../utils/app.styleClasses';
 
-const ConfirmOrderModal = ({ isConfirmLoading, handleConfirmOrder, handleClose, open }) => {
+const ConfirmOrderModal = ({ isConfirmLoading, handleConfirmOrder, setIsModalOpen, isModalOpen }) => {
   return (
-    <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+    <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Box sx={modalStyle}>
-        <Typography id='modal-modal-title' variant={componentProps.variant.body1} sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
+        <Typography variant={componentProps.variant.body1} sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}>
           Enviar email de confirmação?
         </Typography>
         <Box sx={{ mt: 2 }}>
           {!isConfirmLoading && (
             <>
-              <Button sx={{ mr: 1 }} variant={componentProps.variant.outlined} onClick={handleClose}>
+              <Button sx={{ mr: 1 }} variant={componentProps.variant.outlined} onClick={() => setIsModalOpen(false)}>
                 Cancelar
               </Button>
               <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={handleConfirmOrder}>
@@ -20,7 +20,7 @@ const ConfirmOrderModal = ({ isConfirmLoading, handleConfirmOrder, handleClose, 
               </Button>
             </>
           )}
-          {isConfirmLoading && <CircularProgress size='20px' />}
+          {isConfirmLoading && <CircularProgress size='50px' />}
         </Box>
       </Box>
     </Modal>

@@ -56,9 +56,7 @@ const CartPage = () => {
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -291,7 +289,7 @@ const CartPage = () => {
                   </Typography>
                 </Box>
               )}
-              <Button sx={{ mt: 2 }} variant={componentProps.variant.outlined} endIcon={<DeleteIcon />} onClick={handleOpenModal}>
+              <Button sx={{ mt: 2 }} variant={componentProps.variant.outlined} endIcon={<DeleteIcon />} onClick={() => setIsModalOpen(true)}>
                 Limpar
               </Button>
 
@@ -367,7 +365,7 @@ const CartPage = () => {
           </Button>
         </>
       )}
-      <CustomModal isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} mainFunction={handleClearCart} question='Limpar carrinho?' buttonText='Limpar' />
+      <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleClearCart} question='Limpar carrinho?' buttonText='Limpar' />
     </Box>
   );
 };

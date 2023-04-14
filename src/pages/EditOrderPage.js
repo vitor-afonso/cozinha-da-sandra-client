@@ -50,9 +50,7 @@ const EditOrderPage = () => {
   const navigate = useNavigate();
 
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (adminEffectRan.current === false && orderId) {
@@ -427,11 +425,11 @@ const EditOrderPage = () => {
 
         {!successMessage && !isLoading && (
           <>
-            <Button sx={{ mr: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={handleOpen}>
+            <Button sx={{ mr: 1 }} type={componentProps.type.button} color={componentProps.color.error} variant={componentProps.variant.outlined} onClick={() => setIsModalOpen(true)}>
               Apagar
             </Button>
 
-            <CustomModal isModalOpen={open} handleCloseModal={handleClose} mainFunction={handleDeleteOrder} question='Apagar Pedido?' buttonText='Apagar' />
+            <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleDeleteOrder} question='Apagar Pedido?' buttonText='Apagar' />
 
             <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitForm.current.click()}>
               Actualizar
