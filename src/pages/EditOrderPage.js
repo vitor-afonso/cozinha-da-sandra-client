@@ -221,7 +221,7 @@ const EditOrderPage = () => {
     }
     setDeliveryDateError(false);
 
-    if (!isValidDeliveryDate(deliveryDate) && user.userType === 'user') {
+    if (!isValidDeliveryDate(deliveryDate, user.userType)) {
       setDeliveryDateError(true);
       setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
       return;

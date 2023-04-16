@@ -772,6 +772,7 @@ export const componentProps = {
     password: 'password',
     email: 'email',
     number: 'number',
+    datetimeLocal: 'datetime-local',
   },
   name: {
     username: 'username',
@@ -785,6 +786,14 @@ export const componentProps = {
     description: 'description',
     ingredients: 'ingredients',
     info: 'info',
+    deliveryDate: 'deliveryDate',
+    deliveryMethod: 'deliveryMethod',
+    haveExtraFee: 'haveExtraFee',
+    customDeliveryFee: 'customDeliveryFee',
+    addressStreet: 'addressStreet',
+    addressCode: 'addressCode',
+    addressCity: 'addressCity',
+    message: 'message',
   },
   variant: {
     contained: 'contained',
