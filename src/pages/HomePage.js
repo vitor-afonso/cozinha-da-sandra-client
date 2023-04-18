@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { homeClasses } from '../utils/app.styleClasses';
+import { componentProps, homeClasses } from '../utils/app.styleClasses';
 import useHomePageItems from '../hooks/useHomePageItems';
 import HomePageHero from '../components/HomeHero';
 import ShopItemsCategory from '../components/ShopItemsCategory';
@@ -41,7 +41,7 @@ const HomePage = () => {
       {isLoading && (
         <>
           <CircularProgress sx={{ mt: 4 }} size='80px' />
-          <Typography paragraph variant='body1' ref={msgRef} sx={{ mt: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
+          <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ mt: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
         </>
       )}
     </Box>
