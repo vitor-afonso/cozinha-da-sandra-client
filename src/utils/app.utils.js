@@ -54,10 +54,16 @@ export const handleCustomDeliveryFee = (value, setValue) => {
   if (isValid) setValue(value);
 };
 
-export const isValidDeliveryDate = (deliveryDate) => {
+export const isValidDeliveryDate = (deliveryDate, userType) => {
   //delivery date must be min 2 days from actual date
   const minDate = new Date(+new Date() + minDays).toISOString().slice(0, -8);
-  return new Date(deliveryDate) > new Date(minDate);
+  const isUser = userType === 'user';
+  return new Date(deliveryDate) > new Date(isUser && minDate);
+};
+export const validateAddressCode = (value) => {
+  // 8800-123
+  const re = /^[0-9]{0,4}(?:-[0-9]{0,3})?$/;
+  return re.test(value) || value === '';
 };
 
 export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderDeliveryDiscount) => {
