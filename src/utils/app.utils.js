@@ -57,11 +57,8 @@ export const handleCustomDeliveryFee = (value, setValue) => {
 export const isValidDeliveryDate = (deliveryDate, userType) => {
   //delivery date must be min 2 days from actual date
   const minDate = new Date(+new Date() + minDays).toISOString().slice(0, -8);
-  if (userType === 'user') {
-    return new Date(deliveryDate) > new Date(minDate);
-  } else {
-    return new Date(deliveryDate) > new Date();
-  }
+  const isUser = userType === 'user';
+  return new Date(deliveryDate) > new Date(isUser && minDate);
 };
 export const validateAddressCode = (value) => {
   // 8800-123
