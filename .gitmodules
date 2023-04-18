@@ -1,0 +1,3 @@
+[submodule "cozinha-da-sandra-server"]
+	path = cozinha-da-sandra-server
+	url = git@github.com:vitor-afonso/cozinha-da-sandra-server.git
