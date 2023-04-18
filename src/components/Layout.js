@@ -42,7 +42,7 @@ function ElevationScroll(props) {
 export const Layout = (props) => {
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { cartAmount, cartTotal } = useSelector((store) => store.items);
+  const { isLoading, cartAmount, cartTotal } = useSelector((store) => store.items);
   const navigate = useNavigate();
   const location = useLocation();
   const cartButtonLocations = ['/', '/doces', '/salgados'];
@@ -135,7 +135,7 @@ export const Layout = (props) => {
         <Box component='main' sx={layoutStyle.page}>
           <Toolbar />
           {children}
-          {cartButtonLocations.includes(location.pathname) && (
+          {cartButtonLocations.includes(location.pathname) && !isLoading && (
             <Button
               variant={componentProps.variant.contained}
               startIcon={<ShoppingCartOutlinedIcon fontSize={componentProps.fontSize.large} />}
