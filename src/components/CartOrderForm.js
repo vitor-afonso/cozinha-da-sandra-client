@@ -231,10 +231,10 @@ export const CartOrderForm = ({
           {errors.contact && <ErrorMessage message={errors.contact.message} />}
           {errors.deliveryDate && <ErrorMessage message={errors.deliveryDate.message} />}
           {errors.deliveryMethod && <ErrorMessage message={errors.deliveryMethod.message} />}
-          {errors.customDeliveryFee && isDelivery && <ErrorMessage message={errors.customDeliveryFee.message} />}
-          {errors.addressStreet && isDelivery && <ErrorMessage message={errors.addressStreet.message} />}
-          {errors.addressCode && isDelivery && <ErrorMessage message={errors.addressCode.message} />}
-          {errors.addressCity && isDelivery && <ErrorMessage message={errors.addressCity.message} />}
+          {errors.customDeliveryFee && <ErrorMessage message={errors.customDeliveryFee.message} />}
+          {errors.addressStreet && <ErrorMessage message={errors.addressStreet.message} />}
+          {errors.addressCode && <ErrorMessage message={errors.addressCode.message} />}
+          {errors.addressCity && <ErrorMessage message={errors.addressCity.message} />}
 
           <button type={componentProps.type.submit} ref={submitBtnRef} hidden>
             Encomendar
