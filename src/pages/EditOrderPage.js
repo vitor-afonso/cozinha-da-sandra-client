@@ -1,7 +1,6 @@
 // jshint esversion:9
 
-import * as React from 'react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from '../api';
@@ -10,16 +9,16 @@ import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
 import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from '../redux/features/items/itemsSlice';
 import { ShopItem } from '../components/ShopItemCard';
 import { EditOrderForm } from './../components/EditOrderForm';
-import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, isValidDeliveryDate, parseDateToEdit } from '../utils/app.utils';
+import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, parseDateToEdit } from '../utils/app.utils';
 import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
 import { componentProps, editOrderPageClasses } from '../utils/app.styleClasses';
 import { CustomModal } from '../components/CustomModal';
-
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { useForm } from 'react-hook-form';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -29,50 +28,58 @@ const EditOrderPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [order, setOrder] = useState(null);
-  const [deliveryDate, setDeliveryDate] = useState('');
-  const [contact, setContact] = useState('');
-  const [customDeliveryFee, setCustomDeliveryFee] = useState('');
-  const [contactError, setContactError] = useState(false);
-  const [customDeliveryFeeError, setCustomDeliveryFeeError] = useState(false);
-  const [fullAddress, setFullAddress] = useState('');
-  const [message, setMessage] = useState('');
-  const [deliveryMethod, setDeliveryMethod] = useState('');
-  const [deliveryDateError, setDeliveryDateError] = useState(false);
-  const [addressError, setAddressError] = useState(false);
-  const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
-  const [requiredInput, setRequiredInput] = useState(false);
+  const [isAddressVisible, setIsAddressVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [haveExtraFee, setHaveExtraFee] = useState(false);
   const adminEffectRan = useRef(false);
-  const addressRef = useRef();
-  const submitForm = useRef();
+  const submitBtnRef = useRef(null);
   const { orderId } = useParams();
   const navigate = useNavigate();
-
-  const theme = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const theme = useTheme();
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  let deliveryMethod = watch('deliveryMethod');
+  let haveExtraFee = watch('haveExtraFee');
+  let customDeliveryFee = watch('customDeliveryFee');
+  let isDelivery = deliveryMethod === 'delivery';
+  const isAdmin = user.userType === 'admin';
 
   useEffect(() => {
-    if (adminEffectRan.current === false && orderId) {
-      dispatch(clearCart());
+    if (adminEffectRan.current === false && orderId && control) {
       window.scrollTo(0, 0);
 
       let orderToEdit = shopOrders.find((item) => item._id === orderId);
       setOrder(orderToEdit);
+
+      let initialFormValues = {
+        contact: orderToEdit.contact,
+        deliveryDate: parseDateToEdit(orderToEdit.deliveryDate),
+        deliveryMethod: orderToEdit.deliveryMethod,
+        haveExtraFee: orderToEdit.haveExtraDeliveryFee,
+        customDeliveryFee: orderToEdit.deliveryFee > 0 ? orderToEdit.deliveryFee : orderDeliveryFee,
+        fullAddress: orderToEdit.address,
+        message: orderToEdit.message,
+      };
+
+      // Sets the initial values to the form fields
+      reset(initialFormValues);
+
+      setIsAddressVisible(orderToEdit.deliveryMethod === 'delivery' ? true : false);
 
       return () => {
         adminEffectRan.current = true;
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId, shopOrders]);
-
-  useEffect(() => {
-    if (order) {
-      setOrderDetails(order);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order]);
+  }, [orderId, shopOrders, control, reset]);
 
   useEffect(() => {
     if (order) {
@@ -90,59 +97,29 @@ const EditOrderPage = () => {
   useEffect(() => {
     // only runs on unmount
     return () => {
-      clearInputs();
       dispatch(clearCart());
     };
   }, [dispatch]);
 
-  const setOrderDetails = (order) => {
-    setContact(order.contact);
-    setDeliveryDate(parseDateToEdit(order.deliveryDate));
-    setDeliveryMethod(order.deliveryMethod);
-    setCustomDeliveryFee(order.deliveryFee > 0 ? order.deliveryFee : orderDeliveryFee);
-
-    // converts the a value to a boolean if not already a boolean,
-    // sets that boolean to HaveExtraFee
-    setHaveExtraFee(!!order.haveExtraDeliveryFee);
-
-    if (!wasTakeAwayOrder()) {
-      setIsAddressNotVisible(false);
-      setFullAddress(order.address);
+  const handleDeliveryRadio = (value, field) => {
+    field.onChange(value);
+    if (value === 'delivery') {
+      setIsAddressVisible(true);
+      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
     }
-    if (order.message !== '') {
-      setMessage(order.message);
-    }
-  };
-
-  const validateContact = (e) => {
-    //regEx to prevent from typing letters and adding limit of 9 digits
-    const re = /^[0-9]{0,14}$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setContact(e.target.value);
-    }
-  };
-
-  const handleRadioClick = (e) => {
-    setDeliveryMethod(e.target.value);
-    if (e.target.value === 'delivery') {
-      setIsAddressNotVisible(false);
-      setRequiredInput(true);
-      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
-    } else {
-      setIsAddressNotVisible(true);
-      setRequiredInput(false);
-      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
-      setHaveExtraFee(false);
+    if (value === 'takeAway') {
+      setIsAddressVisible(false);
+      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
+      setValue('haveExtraFee', false);
     }
   };
 
   const clearInputs = () => {
-    setContact('');
-    setDeliveryDate('');
-    setDeliveryMethod('');
-    setFullAddress('');
-    setMessage('');
+    setValue('contact', '');
+    setValue('deliveryDate', '');
+    setValue('deliveryMethod', '');
+    setValue('fullAddress', '');
+    setValue('message', '');
   };
 
   const handleDeleteOrder = async () => {
@@ -156,16 +133,12 @@ const EditOrderPage = () => {
     }
   };
 
-  function wasTakeAwayOrder() {
-    return order.deliveryMethod === 'takeAway';
-  }
-
   const calculateCartTotalToShow = () => {
     if (haveExtraFee) {
       return (cartTotal + Number(customDeliveryFee)).toFixed(2);
     }
-    if (deliveryMethod === 'delivery') {
-      if (!wasTakeAwayOrder()) {
+    if (isDelivery) {
+      if (order.deliveryMethod === 'delivery') {
         return cartTotal < order.amountForFreeDelivery && !order.deliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
       }
 
@@ -175,7 +148,7 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && deliveryMethod === 'delivery') || (order.deliveryDiscount && !wasTakeAwayOrder())) && !haveExtraFee;
+    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && isDelivery) || (order.deliveryDiscount && order.deliveryMethod === 'delivery')) && !haveExtraFee;
   };
 
   const getDeliveryFee = () => {
@@ -183,66 +156,27 @@ const EditOrderPage = () => {
       return customDeliveryFee;
     }
 
-    if (wasTakeAwayOrder() && user.userType === 'user') {
-      return deliveryMethod === 'delivery' ? customDeliveryFee : 0;
+    if (!order.deliveryMethod === 'delivery' && !isAdmin) {
+      return isDelivery ? customDeliveryFee : 0;
     }
 
     if (order.deliveryMethod === 'delivery' && order.total >= order.amountForFreeDelivery) {
       return order.deliveryFee;
     }
 
-    return deliveryMethod === 'delivery' ? order.deliveryFee : 0;
+    return isDelivery ? order.deliveryFee : 0;
   };
 
   const shouldShowDeliveryMessage = () => {
     return !isElegibleForFreeDelivery() && getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) > 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleEditOrderSubmit = async ({ contact, deliveryDate, fullAddress, haveExtraFee, message }) => {
     setErrorMessage(undefined);
 
     if (!user._id) {
       return;
     }
-
-    if (!contact) {
-      setContactError(true);
-      setErrorMessage('Por favor adicione contacto.');
-      return;
-    }
-    setContactError(false);
-
-    if (!deliveryDate) {
-      setDeliveryDateError(true);
-      setErrorMessage('Por favor escolha data de entrega.');
-      return;
-    }
-    setDeliveryDateError(false);
-
-    if (!isValidDeliveryDate(deliveryDate, user.userType)) {
-      setDeliveryDateError(true);
-      setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
-      return;
-    }
-    setDeliveryDateError(false);
-
-    if (deliveryMethod === 'delivery' && !fullAddress) {
-      setAddressError(true);
-      setErrorMessage('Por favor adicione morada para entrega.');
-      return;
-    }
-
-    setAddressError(false);
-
-    if (!customDeliveryFee) {
-      setCustomDeliveryFeeError(true);
-      setErrorMessage('Por favor adicione taxa de entrega.');
-      return;
-    }
-
-    setCustomDeliveryFeeError(false);
 
     setIsLoading(true);
 
@@ -250,13 +184,13 @@ const EditOrderPage = () => {
       let requestBody = {
         deliveryDate: new Date(deliveryDate),
         contact,
-        address: deliveryMethod === 'delivery' ? fullAddress : '',
+        address: isDelivery ? fullAddress : '',
         deliveryFee: Number(getDeliveryFee()),
         haveExtraDeliveryFee: haveExtraFee,
         deliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.deliveryDiscount),
         message,
         deliveryMethod,
-        amountForFreeDelivery: wasTakeAwayOrder() ? amountForFreeDelivery : order.amountForFreeDelivery,
+        amountForFreeDelivery: order.deliveryMethod === 'delivery' ? order.amountForFreeDelivery : amountForFreeDelivery,
         items: cartItems,
         total: cartTotal.toFixed(2), // only items price
       };
@@ -324,29 +258,17 @@ const EditOrderPage = () => {
 
           <EditOrderForm
             handleSubmit={handleSubmit}
-            validateContact={validateContact}
-            contactError={contactError}
-            contact={contact}
-            setDeliveryDate={setDeliveryDate}
-            deliveryDate={deliveryDate}
-            handleRadioClick={handleRadioClick}
-            deliveryMethod={deliveryMethod}
-            isAddressNotVisible={isAddressNotVisible}
-            requiredInput={requiredInput}
-            setFullAddress={setFullAddress}
-            fullAddress={fullAddress}
-            addressRef={addressRef}
-            message={message}
-            setMessage={setMessage}
+            handleOrderSubmit={handleEditOrderSubmit}
+            control={control}
+            errors={errors}
+            handleDeliveryRadio={handleDeliveryRadio}
+            isAddressVisible={isAddressVisible}
             errorMessage={errorMessage}
-            submitForm={submitForm}
-            customDeliveryFee={customDeliveryFee}
-            deliveryDateError={deliveryDateError}
-            customDeliveryFeeError={customDeliveryFeeError}
-            setCustomDeliveryFee={setCustomDeliveryFee}
-            addressError={addressError}
+            submitBtnRef={submitBtnRef}
             haveExtraFee={haveExtraFee}
-            setHaveExtraFee={setHaveExtraFee}
+            deliveryMethod={deliveryMethod}
+            isDelivery={isDelivery}
+            isAdmin={isAdmin}
           />
 
           <Box sx={editOrderPageClasses.infoContainer}>
@@ -361,12 +283,12 @@ const EditOrderPage = () => {
               </Box>
             )}
 
-            {deliveryMethod === 'delivery' && (
+            {isDelivery && (
               <>
                 {shouldShowDeliveryMessage() && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1, mt: 4 }}>
                     <Typography variant={componentProps.variant.body2} color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
-                      Entrega grátis a partir de {wasTakeAwayOrder() ? amountForFreeDelivery + APP.currency : order.amountForFreeDelivery + APP.currency}. Valor em falta:
+                      Entrega grátis a partir de {order.deliveryMethod === 'delivery' ? order.amountForFreeDelivery + APP.currency : amountForFreeDelivery + APP.currency}. Valor em falta:
                       {getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) + APP.currency}.
                     </Typography>
                   </Box>
@@ -394,7 +316,7 @@ const EditOrderPage = () => {
                       0{APP.currency}
                     </Typography>
                   )}
-                  {user.userType === 'user' && <TooltipDeliveryFee />}
+                  {!isAdmin && <TooltipDeliveryFee />}
                 </Box>
               </>
             )}
@@ -431,7 +353,7 @@ const EditOrderPage = () => {
 
             <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleDeleteOrder} question='Apagar Pedido?' buttonText='Apagar' />
 
-            <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitForm.current.click()}>
+            <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitBtnRef.current.click()}>
               Actualizar
             </Button>
           </>

@@ -790,6 +790,7 @@ export const componentProps = {
     deliveryMethod: 'deliveryMethod',
     haveExtraFee: 'haveExtraFee',
     customDeliveryFee: 'customDeliveryFee',
+    fullAddress: 'fullAddress',
     addressStreet: 'addressStreet',
     addressCode: 'addressCode',
     addressCity: 'addressCity',
