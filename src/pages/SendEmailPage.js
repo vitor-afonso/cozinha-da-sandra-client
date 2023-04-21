@@ -81,12 +81,10 @@ const SendEmailPage = () => {
         Detalhes de pedido
       </Typography>
 
-      {order && !successMessage && <ShopOrder order={order} />}
-
-      {!order && <CircularProgress sx={{ my: 4 }} size='80px' />}
-
-      {!successMessage && order && (
+      {order && !successMessage && (
         <Box sx={sendEmailClasses.formContainer}>
+          <ShopOrder order={order} />
+
           <Box sx={sendEmailClasses.form}>
             <form onSubmit={handleSubmit(handleEmailSubmit)} noValidate>
               <TextField
