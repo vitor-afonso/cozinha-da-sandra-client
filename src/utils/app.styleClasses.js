@@ -794,6 +794,8 @@ export const componentProps = {
     addressCode: 'addressCode',
     addressCity: 'addressCity',
     message: 'message',
+    to: 'to',
+    subject: 'subject',
   },
   variant: {
     contained: 'contained',
