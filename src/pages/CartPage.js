@@ -11,13 +11,13 @@ import { CustomModal } from '../components/CustomModal';
 import { clearCart, handleFreeDelivery } from '../redux/features/items/itemsSlice';
 import { updateShopUser } from '../redux/features/users/usersSlice';
 import emptyCartImage from '../images/emptyCart.svg';
-import { APP, isElegibleForGlobalDiscount, isValidDeliveryDate } from '../utils/app.utils';
-
+import { APP, isElegibleForGlobalDiscount } from '../utils/app.utils';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getShopOrders } from '../redux/features/orders/ordersSlice';
 import { cartClasses, componentProps } from '../utils/app.styleClasses';
 import SuccessMessage from '../components/SuccessMessage';
+import { useForm } from 'react-hook-form';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
@@ -26,24 +26,9 @@ const CartPage = () => {
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [deliveryDate, setDeliveryDate] = useState('');
-  const [deliveryDateError, setDeliveryDateError] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState('');
-  const [deliveryMethodError, setDeliveryMethodError] = useState(false);
-  const [contact, setContact] = useState('');
-  const [contactError, setContactError] = useState(false);
-  const [addressStreet, setAddressStreet] = useState('');
-  const [addressStreetError, setAddressStreetError] = useState(false);
-  const [addressCity, setAddressCity] = useState('');
-  const [addressCityError, setAddressCityError] = useState(false);
-  const [addressCode, setAddressCode] = useState('');
-  const [addressCodeError, setAddressCodeError] = useState(false);
-  const [customDeliveryFee, setCustomDeliveryFee] = useState(orderDeliveryFee);
-  const [customDeliveryFeeError, setCustomDeliveryFeeError] = useState(false);
-  const [message, setMessage] = useState('');
-  const [haveExtraFee, setHaveExtraFee] = useState(false);
-  const [isNotVisible, setIsNotVisible] = useState(true);
-  const [isAddressNotVisible, setIsAddressNotVisible] = useState(true);
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isAddressVisible, setIsAddressVisible] = useState(false);
   const [requiredInput, setRequiredInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -52,16 +37,38 @@ const CartPage = () => {
   const orderAddressRef = useRef(null);
   const effectRan = useRef(false);
   const theme = useTheme();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      contact: '',
+      deliveryDate: '',
+      deliveryMethod: '',
+      haveExtraFee: false,
+      customDeliveryFee: orderDeliveryFee,
+      addressStreet: '',
+      addressCode: '',
+      addressCity: '',
+      message: '',
+    },
+  });
+
+  let deliveryMethod = watch('deliveryMethod');
+  let haveExtraFee = watch('haveExtraFee');
+  let customDeliveryFee = watch('customDeliveryFee');
 
   const shouldPayForDeliveryFee = canHaveFreeDelivery && cartTotal < amountForFreeDelivery && !globalDeliveryDiscount && !haveExtraFee;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    setIsAddressNotVisible(true);
   }, []);
 
   useEffect(() => {
@@ -75,7 +82,7 @@ const CartPage = () => {
   }, [dispatch]);
 
   const toggleForm = () => {
-    setIsNotVisible(!isNotVisible);
+    setIsFormVisible(!isFormVisible);
     setTimeout(() => scrollToOrderInfo(formRef), 300);
   };
 
@@ -93,36 +100,19 @@ const CartPage = () => {
     });
   };
 
-  const validateContact = (e) => {
-    //regEx to prevent from typing letters and adding limit of 9 digits
-    const re = /^[0-9]{0,14}$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setContact(e.target.value);
-    }
-  };
-
-  const validateAddressCode = (e) => {
-    const re = /^[0-9]{0,4}(?:-[0-9]{0,3})?$/;
-
-    if (e.target.value === '' || re.test(e.target.value)) {
-      setAddressCode(e.target.value);
-    }
-  };
-
-  const handleRadioClick = (e) => {
-    setDeliveryMethod(e.target.value);
-    if (e.target.value === 'delivery') {
-      setIsAddressNotVisible(false);
+  const handleDeliveryRadio = (value, field) => {
+    field.onChange(value);
+    if (value === 'delivery') {
+      setIsAddressVisible(true);
       setRequiredInput(true);
-      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
+      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
       setTimeout(() => scrollToOrderAddress(formRef), 300);
     }
-    if (e.target.value === 'takeAway') {
-      setIsAddressNotVisible(true);
+    if (value === 'takeAway') {
+      setIsAddressVisible(false);
       setRequiredInput(false);
-      dispatch(handleFreeDelivery({ deliveryMethod: e.target.value }));
-      setHaveExtraFee(false);
+      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
+      setValue('haveExtraFee', false);
     }
   };
 
@@ -154,70 +144,12 @@ const CartPage = () => {
     dispatch(clearCart());
   }
 
-  const submitOrder = async (e) => {
-    e.preventDefault();
-
+  const handleOrderSubmit = async ({ contact, deliveryDate, deliveryMethod, addressStreet, addressCode, addressCity, message }) => {
     setErrorMessage(undefined);
 
     if (!user._id) {
       return;
     }
-    if (!contact) {
-      setContactError(true);
-      setErrorMessage('Por favor adicione telefone.');
-      return;
-    }
-    setContactError(false);
-
-    if (!deliveryDate) {
-      setDeliveryDateError(true);
-      setErrorMessage('Por favor escolha data de entrega.');
-      return;
-    }
-    setDeliveryDateError(false);
-
-    if (!isValidDeliveryDate(deliveryDate) && user.userType === 'user') {
-      setDeliveryDateError(true);
-      setErrorMessage('Data de entrega invalida, escolha data com um minimo de 48h.');
-      return;
-    }
-    setDeliveryDateError(false);
-
-    if (!deliveryMethod) {
-      setDeliveryMethodError(true);
-      setErrorMessage('Por favor escolha método de entrega.');
-      return;
-    }
-    setDeliveryMethodError(false);
-
-    if (deliveryMethod === 'delivery' && !addressStreet) {
-      setAddressStreetError(true);
-      setErrorMessage('Morada incompleta.');
-      return;
-    }
-    setAddressStreetError(false);
-
-    if (deliveryMethod === 'delivery' && !addressCode) {
-      setAddressCodeError(true);
-      setErrorMessage('Morada incompleta.');
-      return;
-    }
-    setAddressCodeError(false);
-
-    if (deliveryMethod === 'delivery' && !addressCity) {
-      setAddressCityError(true);
-      setErrorMessage('Morada incompleta.');
-      return;
-    }
-    setAddressCityError(false);
-
-    if (!customDeliveryFee) {
-      setCustomDeliveryFeeError(true);
-      setErrorMessage('Por favor adicione taxa de entrega.');
-      return;
-    }
-
-    setCustomDeliveryFeeError(false);
 
     setIsLoading(true);
 
@@ -294,7 +226,7 @@ const CartPage = () => {
                 Limpar
               </Button>
 
-              {isNotVisible && (
+              {!isFormVisible && (
                 <Button variant={componentProps.variant.contained} sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
                   Continuar
                 </Button>
@@ -303,42 +235,24 @@ const CartPage = () => {
               <CartOrderForm
                 formRef={formRef}
                 orderAddressRef={orderAddressRef}
-                isNotVisible={isNotVisible}
-                submitOrder={submitOrder}
-                contact={contact}
-                validateContact={validateContact}
-                deliveryDate={deliveryDate}
-                setDeliveryDate={setDeliveryDate}
+                isFormVisible={isFormVisible}
+                handleSubmit={handleSubmit}
+                handleOrderSubmit={handleOrderSubmit}
+                control={control}
+                errors={errors}
                 deliveryMethod={deliveryMethod}
-                handleRadioClick={handleRadioClick}
-                isAddressNotVisible={isAddressNotVisible}
+                handleDeliveryRadio={handleDeliveryRadio}
+                isAddressVisible={isAddressVisible}
                 requiredInput={requiredInput}
-                addressStreet={addressStreet}
-                setAddressStreet={setAddressStreet}
-                addressCode={addressCode}
-                validateAddressCode={validateAddressCode}
-                addressCity={addressCity}
-                setAddressCity={setAddressCity}
-                message={message}
-                setMessage={setMessage}
                 errorMessage={errorMessage}
                 navigate={navigate}
-                contactError={contactError}
-                deliveryDateError={deliveryDateError}
-                deliveryMethodError={deliveryMethodError}
-                addressStreetError={addressStreetError}
-                addressCityError={addressCityError}
-                addressCodeError={addressCodeError}
                 submitBtnRef={submitBtnRef}
                 successMessage={successMessage}
                 isLoading={isLoading}
                 user={user}
                 calculateCartTotalToShow={calculateCartTotalToShow}
                 haveExtraFee={haveExtraFee}
-                setHaveExtraFee={setHaveExtraFee}
                 customDeliveryFee={customDeliveryFee}
-                customDeliveryFeeError={customDeliveryFeeError}
-                setCustomDeliveryFee={setCustomDeliveryFee}
               />
             </>
           ) : (

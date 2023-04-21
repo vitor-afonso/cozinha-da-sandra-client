@@ -54,10 +54,16 @@ export const handleCustomDeliveryFee = (value, setValue) => {
   if (isValid) setValue(value);
 };
 
-export const isValidDeliveryDate = (deliveryDate) => {
+export const isValidDeliveryDate = (deliveryDate, userType) => {
   //delivery date must be min 2 days from actual date
   const minDate = new Date(+new Date() + minDays).toISOString().slice(0, -8);
-  return new Date(deliveryDate) > new Date(minDate);
+  const isUser = userType === 'user';
+  return new Date(deliveryDate) > new Date(isUser && minDate);
+};
+export const validateAddressCode = (value) => {
+  // 8800-123
+  const re = /^[0-9]{0,4}(?:-[0-9]{0,3})?$/;
+  return re.test(value) || value === '';
 };
 
 export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderDeliveryDiscount) => {
@@ -120,6 +126,18 @@ export const validateContact = (value) => {
 
   return value === '' || re.test(value);
 };
+
+export default function showLoadingMessage(msgRef, index, interval) {
+  const message =
+    'Due to this application hosting plan being free, the first time we make a request will take a little longer. Please be patient and wait for the connection with our servers to be established =)';
+
+  if (index < message.length) {
+    msgRef.current.innerHTML += message[index++];
+    setTimeout(() => {
+      showLoadingMessage(msgRef, index, interval);
+    }, interval);
+  }
+}
 
 const parseDateToShow = (dateToParse) => {
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
