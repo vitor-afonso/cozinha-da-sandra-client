@@ -7,6 +7,7 @@ import { resetPassword } from '../api';
 import resetImage from '../images/reset.svg';
 import { componentProps, resetClasses } from '../utils/app.styleClasses';
 import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -98,7 +99,7 @@ const ResetPage = () => {
           <Box sx={resetClasses.image}>
             <img src={resetImage} alt='Forgot password' className='auth-images' />
           </Box>
-          <Typography sx={{ marginTop: '25px' }}>{successMessage}</Typography>
+          <SuccessMessage message={successMessage} />
         </Box>
       )}
     </Box>

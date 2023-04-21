@@ -13,12 +13,15 @@ import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlob
 import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
 import { componentProps, editOrderPageClasses } from '../utils/app.styleClasses';
 import { CustomModal } from '../components/CustomModal';
+import { useForm } from 'react-hook-form';
+import SuccessMessage from '../components/SuccessMessage';
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import { useForm } from 'react-hook-form';
+
+
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -332,11 +335,7 @@ const EditOrderPage = () => {
         </>
       )}
 
-      {successMessage && (
-        <Typography paragraph sx={{ my: 4, maxWidth: '600px', mx: 'auto' }} color={theme.palette.neutral.main}>
-          {successMessage}
-        </Typography>
-      )}
+      {successMessage && <SuccessMessage message={successMessage} />}
 
       <div>
         {!isLoading && (
