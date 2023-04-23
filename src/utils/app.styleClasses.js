@@ -598,18 +598,18 @@ export const sendEmailClasses = {
     pb: 3,
   },
   formContainer: {
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 4,
+    marginBottom: 4,
   },
   form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginTop: 4,
+    mx: 'auto',
     minWidth: 300,
     maxWidth: 600,
   },
   formField: {
     marginTop: 0,
-    marginBottom: 5,
+    marginBottom: 4,
     display: 'block',
   },
   formTextArea: {
@@ -795,6 +795,8 @@ export const componentProps = {
     addressCode: 'addressCode',
     addressCity: 'addressCity',
     message: 'message',
+    to: 'to',
+    subject: 'subject',
   },
   variant: {
     contained: 'contained',
