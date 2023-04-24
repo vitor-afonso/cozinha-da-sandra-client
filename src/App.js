@@ -14,6 +14,7 @@ import { Layout } from './components/Layout';
 import { Box, CircularProgress } from '@mui/material';
 import { IsAdmin } from './components/IsAdmin';
 import { IsUser } from './components/IsUser';
+import { IsOrderOwner } from './components/IsOrderOwner';
 
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -33,6 +34,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const EditProfilePage = lazy(() => import('./pages/EditProfilePage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const CreateReviewPage = lazy(() => import('./pages/CreateReviewPage'));
 
 // to update mui default values
 const theme = createTheme({
@@ -92,7 +94,7 @@ function App() {
             <Routes>
               <Route path='/' element={<HomePage />} />
               <Route path='/signup' element={<SignupPage />} />
-              <Route path='/login' element={<LoginPage />} />
+              <Route path='/login/:orderId?' element={<LoginPage />} />
               <Route path='/doces' element={<DocesPage />} />
               <Route path='/salgados' element={<SalgadosPage />} />
               <Route path='/items/:itemId' element={<ItemDetailsPage />} />
@@ -151,6 +153,14 @@ function App() {
                   <IsUser>
                     <EditProfilePage />
                   </IsUser>
+                }
+              />
+              <Route
+                path='/reviews/create/:orderId'
+                element={
+                  <IsOrderOwner>
+                    <CreateReviewPage />
+                  </IsOrderOwner>
                 }
               />
               <Route path='/cart' element={<CartPage />} />
