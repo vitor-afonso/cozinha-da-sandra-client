@@ -112,6 +112,18 @@ export const deleteOrder = (orderId) => {
   );
 };
 
+/************************* REVIEWS *****************************/
+
+export const createReview = (review) => {
+  return axios.post(`${API_URL}/reviews`, review, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
+
+export const getAllReviews = () => {
+  return axios.get(`${API_URL}/reviews`);
+};
+
 /************************* UPLOAD IMAGE *****************************/
 
 export const uploadImage = async (file) => {
