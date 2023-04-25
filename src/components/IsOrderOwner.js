@@ -2,8 +2,8 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../context/auth.context';
-import { CircularProgress } from '@mui/material';
-import ErrorMessage from './ErrorMessage';
+import { Box, CircularProgress } from '@mui/material';
+import SuccessMessage from './SuccessMessage';
 
 export const IsOrderOwner = ({ children }) => {
   const { isLoggedIn, isLoading, user } = useContext(AuthContext);
@@ -15,14 +15,14 @@ export const IsOrderOwner = ({ children }) => {
     if (user._id !== order?.userId._id) {
       return 'Utilizador inválido.';
     } else {
-      return 'Já existe review para este pedido. Obrigado.';
+      return 'Review para este pedido já foi submetido. Obrigado.';
     }
   };
 
   useEffect(() => {
     if (shopOrders.length > 0 && orderId) {
-      let orderToEdit = shopOrders.find((item) => item._id === orderId);
-      setOrder(orderToEdit);
+      let orderToReview = shopOrders.find((item) => item._id === orderId);
+      setOrder(orderToReview);
     }
   }, [shopOrders, orderId]);
 
@@ -38,5 +38,9 @@ export const IsOrderOwner = ({ children }) => {
     return <Navigate to={`/login/${orderId}`} />;
   }
   // If user is logged in but not owner of order or review already exists
-  return <ErrorMessage message={messageToDisplay()} />;
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'end', height: '100%' }}>
+      <SuccessMessage message={messageToDisplay()} />
+    </Box>
+  );
 };

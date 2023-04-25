@@ -1,15 +1,16 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { createReview } from '../api';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { componentProps } from '../utils/app.styleClasses';
-import { Typography, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { Controller, useForm } from 'react-hook-form';
+import { addReviewPageClasses, componentProps } from '../utils/app.styleClasses';
+import ErrorMessage from '../components/ErrorMessage';
+import SuccessMessage from '../components/SuccessMessage';
+import { Box, Button, CircularProgress, Rating, TextField, Typography } from '@mui/material';
+import { ShopOrder } from '../components/ShopOrder';
 
 const CreateReviewPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -18,9 +19,11 @@ const CreateReviewPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [order, setOrder] = useState(null);
+  const [ratingError, setRatingError] = useState(false);
+  const [ratingValue, setRatingValue] = useState(0);
+  const submitBtnRef = useRef(null);
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const {
     control,
@@ -30,7 +33,6 @@ const CreateReviewPage = () => {
     defaultValues: {
       title: '',
       content: '',
-      rating: '',
     },
   });
 
@@ -41,15 +43,29 @@ const CreateReviewPage = () => {
     }
   }, [shopOrders, orderId]);
 
-  const handleReviewSubmit = async ({ title, content, rating }) => {
+  const handleRatingChange = (event, value) => {
+    setRatingValue(value);
+    setRatingError(false);
+    setErrorMessage(undefined);
+  };
+
+  const handleReviewSubmit = async ({ title, content }) => {
     setErrorMessage(undefined);
     setIsLoading(true);
+
+    if (ratingValue === 0) {
+      setRatingError(true);
+      setErrorMessage('Avaliação em falta.');
+      setIsLoading(false);
+      return;
+    }
+    setRatingError(false);
 
     try {
       const requestBody = {
         title,
         content,
-        rating: Number(rating),
+        rating: ratingValue,
         userId: user._id,
         orderId,
       };
@@ -65,12 +81,77 @@ const CreateReviewPage = () => {
       setIsLoading(false);
     }
   };
+
   return (
-    <div>
-      <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main}>
-        Review
+    <Box sx={addReviewPageClasses.container}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
+        REVIEW
       </Typography>
-    </div>
+      {order && !successMessage && (
+        <Box sx={addReviewPageClasses.form}>
+          <ShopOrder order={order} />
+          <form onSubmit={handleSubmit(handleReviewSubmit)} noValidate>
+            <Box sx={ratingError ? addReviewPageClasses.ratingError : addReviewPageClasses.rating} align='left'>
+              <Typography component='legend'>Avaliação</Typography>
+              <Rating name='rating-controlled' onChange={handleRatingChange} value={ratingValue} />
+            </Box>
+            <Controller
+              name={componentProps.name.title}
+              control={control}
+              rules={{ required: 'Titulo em falta' }}
+              render={({ field }) => (
+                <TextField
+                  label='Titulo'
+                  type={componentProps.type.text}
+                  variant={componentProps.variant.outlined}
+                  fullWidth
+                  sx={addReviewPageClasses.formField}
+                  error={!!errors.title}
+                  autoComplete='true'
+                  autoFocus
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
+              name={componentProps.name.content}
+              control={control}
+              rules={{ required: 'Descrição em falta', minLength: { value: 30, message: 'Avaliação deve conter pelo menos 25 caracteres.' } }}
+              render={({ field }) => (
+                <TextField label='Descrição' maxRows={4} multiline sx={addReviewPageClasses.formTextArea} placeholder='Escreva aqui a descrição...' error={!!errors.content} {...field} />
+              )}
+            />
+
+            <button type={componentProps.type.submit} ref={submitBtnRef} hidden>
+              Enviar
+            </button>
+          </form>
+        </Box>
+      )}
+
+      {successMessage && <SuccessMessage message={successMessage} />}
+      {errorMessage && <ErrorMessage message={errorMessage} />}
+      {errors.rating && <ErrorMessage message={errors.contact.message} />}
+      {errors.title && <ErrorMessage message={errors.title.message} />}
+      {errors.content && <ErrorMessage message={errors.content.message} />}
+
+      <Box sx={{ mt: 4 }}>
+        {!isLoading && successMessage && (
+          <Button sx={{ mr: 1 }} onClick={() => navigate('/')}>
+            Voltar
+          </Button>
+        )}
+
+        {!successMessage && !isLoading && (
+          <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitBtnRef.current.click()}>
+            Enviar
+          </Button>
+        )}
+
+        {isLoading && !successMessage && <CircularProgress size='80px' sx={{ mt: 2, mb: 2 }} />}
+      </Box>
+    </Box>
   );
 };
 

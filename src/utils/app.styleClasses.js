@@ -59,6 +59,37 @@ export const cartFormClasses = {
   },
 };
 
+export const addReviewPageClasses = {
+  container: {
+    px: 3,
+    pb: 8,
+  },
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 300,
+    maxWidth: 600,
+    mb: 4,
+  },
+  rating: {
+    mb: 2,
+    mt: 4,
+  },
+  ratingError: {
+    p: 1,
+    outline: '2px solid #d32f2f',
+    borderRadius: '3px',
+    my: 4,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 4,
+    display: 'block',
+  },
+  formTextArea: {
+    minWidth: '100%',
+  },
+};
 export const editOrderPageClasses = {
   container: {
     px: 3,
@@ -797,6 +828,8 @@ export const componentProps = {
     message: 'message',
     to: 'to',
     subject: 'subject',
+    content: 'content',
+    rating: 'rating',
   },
   variant: {
     contained: 'contained',

@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 
 const ErrorMessage = ({ message }) => {
   return (
-    <Typography sx={{ marginBottom: 4 }} color={componentProps.color.error}>
+    <Typography sx={{ marginBottom: 2 }} color={componentProps.color.error}>
       {message}
     </Typography>
   );
