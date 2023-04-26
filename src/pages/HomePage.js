@@ -41,7 +41,7 @@ const HomePage = () => {
       {isLoading && (
         <>
           <CircularProgress sx={{ mt: 4 }} size='80px' />
-          <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ mt: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
+          <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ my: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
         </>
       )}
     </Box>
