@@ -9,12 +9,14 @@ import loginImage from '../images/login.svg';
 import { componentProps, loginClasses } from '../utils/app.styleClasses';
 import ErrorMessage from '../components/ErrorMessage';
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 const LoginPage = () => {
   const { storeToken, authenticateUser } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { orderId } = useParams();
   const theme = useTheme();
 
   const {
@@ -29,6 +31,7 @@ const LoginPage = () => {
   });
 
   const handleLoginSubmit = async ({ email, password }) => {
+    setErrorMessage(undefined);
     setIsLoading(true);
 
     try {
@@ -38,9 +41,9 @@ const LoginPage = () => {
 
       // Verify the token by sending a request
       // to the server's JWT validation endpoint.
-      authenticateUser();
+      await authenticateUser();
 
-      navigate('/');
+      navigate(orderId ? `/reviews/create/${orderId}` : '/');
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);

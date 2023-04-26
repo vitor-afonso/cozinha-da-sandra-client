@@ -20,7 +20,7 @@ export const IsUser = ({ children }) => {
   };
 
   // If the authentication is still loading
-  if (isLoading) return <CircularProgress sx={{ mt: 20 }} />;
+  if (isLoading) return <CircularProgress sx={{ mt: 20 }} size={80} />;
 
   if ((user && location.pathname.includes(user._id)) || (user && userOwnsOrder()) || (user && user.userType === 'admin')) {
     // If the user is logged in, allow to see the page
