@@ -67,6 +67,91 @@ function App() {
   const effectRan = useRef(false);
   const userEffectRan = useRef(false);
 
+  const routes = [
+    { path: '/', element: <HomePage /> },
+    { path: '/signup', element: <SignupPage /> },
+    { path: '/login/:orderId?', element: <LoginPage /> },
+    { path: '/doces', element: <DocesPage /> },
+    { path: '/salgados', element: <SalgadosPage /> },
+    { path: '/items/:itemId', element: <ItemDetailsPage /> },
+    { path: '/cart', element: <CartPage /> },
+    { path: '/about', element: <AboutPage /> },
+    { path: '/forgot', element: <ForgotPage /> },
+    { path: '/reset/:userId', element: <ResetPage /> },
+    {
+      path: '/profile/:userId',
+      element: (
+        <IsUser>
+          <ProfilePage />
+        </IsUser>
+      ),
+    },
+    {
+      path: '/profile/edit/:userId',
+      element: (
+        <IsUser>
+          <EditProfilePage />
+        </IsUser>
+      ),
+    },
+    {
+      path: '/orders/edit/:orderId',
+      element: (
+        <IsUser>
+          <EditOrderPage />
+        </IsUser>
+      ),
+    },
+    {
+      path: '/users',
+      element: (
+        <IsAdmin>
+          <UsersPage />
+        </IsAdmin>
+      ),
+    },
+    {
+      path: '/orders',
+      element: (
+        <IsAdmin>
+          <OrdersPage />
+        </IsAdmin>
+      ),
+    },
+    {
+      path: '/items/add',
+      element: (
+        <IsAdmin>
+          <NewItemPage />
+        </IsAdmin>
+      ),
+    },
+    {
+      path: '/items/edit/:itemId',
+      element: (
+        <IsAdmin>
+          <EditItemPage />
+        </IsAdmin>
+      ),
+    },
+    {
+      path: '/send-email/orders/:orderId',
+      element: (
+        <IsAdmin>
+          <SendEmailPage />
+        </IsAdmin>
+      ),
+    },
+    {
+      path: '/reviews/create/:orderId',
+      element: (
+        <IsOrderOwner>
+          <CreateReviewPage />
+        </IsOrderOwner>
+      ),
+    },
+  ];
+
   useEffect(() => {
     if (effectRan.current === false) {
       dispatch(getShopItems());
@@ -92,89 +177,9 @@ function App() {
         <Layout>
           <Suspense fallback={<CircularProgress sx={{ mt: 24 }} size='100px' />}>
             <Routes>
-              <Route path='/' element={<HomePage />} />
-              <Route path='/signup' element={<SignupPage />} />
-              <Route path='/login/:orderId?' element={<LoginPage />} />
-              <Route path='/doces' element={<DocesPage />} />
-              <Route path='/salgados' element={<SalgadosPage />} />
-              <Route path='/items/:itemId' element={<ItemDetailsPage />} />
-
-              <Route
-                path='/users'
-                element={
-                  <IsAdmin>
-                    <UsersPage />
-                  </IsAdmin>
-                }
-              />
-              <Route
-                path='/orders'
-                element={
-                  <IsAdmin>
-                    <OrdersPage />
-                  </IsAdmin>
-                }
-              />
-              <Route
-                path='/orders/edit/:orderId'
-                element={
-                  <IsUser>
-                    <EditOrderPage />
-                  </IsUser>
-                }
-              />
-              <Route
-                path='/items/add'
-                element={
-                  <IsAdmin>
-                    <NewItemPage />
-                  </IsAdmin>
-                }
-              />
-              <Route
-                path='/items/edit/:itemId'
-                element={
-                  <IsAdmin>
-                    <EditItemPage />
-                  </IsAdmin>
-                }
-              />
-              <Route
-                path='/profile/:userId'
-                element={
-                  <IsUser>
-                    <ProfilePage />
-                  </IsUser>
-                }
-              />
-              <Route
-                path='/profile/edit/:userId'
-                element={
-                  <IsUser>
-                    <EditProfilePage />
-                  </IsUser>
-                }
-              />
-              <Route
-                path='/reviews/create/:orderId'
-                element={
-                  <IsOrderOwner>
-                    <CreateReviewPage />
-                  </IsOrderOwner>
-                }
-              />
-              <Route path='/cart' element={<CartPage />} />
-              <Route path='/about' element={<AboutPage />} />
-              <Route path='/forgot' element={<ForgotPage />} />
-              <Route path='/reset/:userId' element={<ResetPage />} />
-              <Route
-                path='/send-email/orders/:orderId'
-                element={
-                  <IsAdmin>
-                    <SendEmailPage />
-                  </IsAdmin>
-                }
-              />
+              {routes.map((route, i) => (
+                <Route path={route.path} element={route.element} key={i} />
+              ))}
             </Routes>
           </Suspense>
         </Layout>

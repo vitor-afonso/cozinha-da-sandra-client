@@ -14,9 +14,8 @@ export const IsOrderOwner = ({ children }) => {
   let messageToDisplay = () => {
     if (user._id !== order?.userId._id) {
       return 'Utilizador inválido.';
-    } else {
-      return 'Review para este pedido já foi submetido. Obrigado.';
     }
+    return 'Review para este pedido já foi submetido. Obrigado.';
   };
 
   useEffect(() => {
