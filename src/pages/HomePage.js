@@ -36,7 +36,7 @@ const HomePage = () => {
 
   return (
     <Box className='HomePage' sx={homeClasses.container}>
-      <HomePageHero>{reviewsData && <RatingAverage setIsModalOpen={setIsModalOpen} reviewsData={reviewsData} />}</HomePageHero>
+      <HomePageHero>{reviewsData && <RatingAverage setIsModalOpen={setIsModalOpen} />}</HomePageHero>
       <Box className='shop-items-container' sx={homeClasses.itemsContainer}>
         {docesData?.categoryItems?.length > 0 && <ShopItemsCategory {...docesData} categoryStyles={homeClasses.docesContainer} />}
         {salgadosData?.categoryItems?.length > 0 && <ShopItemsCategory {...salgadosData} categoryStyles={homeClasses.salgadosContainer} />}

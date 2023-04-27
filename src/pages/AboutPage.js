@@ -38,7 +38,7 @@ const AboutPage = () => {
               <i>{APP.ownerName}</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
             </Typography>
           </Box>
-          {reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} reviewsData={reviewsData} />}
+          {reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} />}
         </Box>
       </Box>
 
