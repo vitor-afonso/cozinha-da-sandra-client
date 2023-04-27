@@ -11,6 +11,13 @@ const initialState = {
   isLoading: true,
 };
 
+function calculateReviewsData(data) {
+  const ratingTotal = data.reduce((accumulator, review) => accumulator + review.rating, 0);
+  const averageRating = Math.round(ratingTotal / data.length / 0.5) * 0.5;
+  const numberOfReviews = data.length;
+  return { averageRating, numberOfReviews };
+}
+
 export const getShopReviews = createAsyncThunk('items/getShopReviews', async (dataFromComponent, thunkAPI) => {
   try {
     //console.log('optional data from component =>', dataFromComponent);
@@ -20,9 +27,7 @@ export const getShopReviews = createAsyncThunk('items/getShopReviews', async (da
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = await getAllReviews();
-    const ratingTotal = data.reduce((accumulator, review) => accumulator + review.rating, 0);
-    const averageRating = Math.round(ratingTotal / data.length / 0.5) * 0.5;
-    const numberOfReviews = data.length;
+    const { averageRating, numberOfReviews } = calculateReviewsData(data);
     // console.log('getShopReviews data in reviewsSlice', data);
     return { data, averageRating, numberOfReviews }; // we return a promise that is being handled by extraReducers in reviewsSlice
   } catch (error) {
@@ -42,7 +47,10 @@ const reviewsSlice = createSlice({
       //console.log('current shop reviews  =>', current(state).shopReviews);
     },
     addNewShopReview: (state, { payload }) => {
-      state.shopReviews.push(payload);
+      state.shopReviews.unshift(payload);
+      const { averageRating, numberOfReviews } = calculateReviewsData(state.shopReviews);
+      state.averageRating = averageRating;
+      state.numberOfReviews = numberOfReviews;
       //console.log('reviewsSlice - current shop reviews after adding new review =>', current(state).shopReviews);
     },
     deleteShopReview: (state, { payload }) => {
@@ -61,7 +69,7 @@ const reviewsSlice = createSlice({
       })
       .addCase(getShopReviews.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopReviews = payload.data;
+        state.shopReviews = payload.data.reverse();
         state.averageRating = payload.averageRating;
         state.numberOfReviews = payload.numberOfReviews;
       })
