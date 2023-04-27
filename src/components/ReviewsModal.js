@@ -15,7 +15,7 @@ const ReviewsModal = ({ isModalOpen, setIsModalOpen, reviewsData }) => {
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography variant={componentProps.variant.h6} sx={{ fontSize: 18 }}>
-                        {reviewsData.averageRating}
+                        {review.rating}
                       </Typography>
                       <Rating name='read-only' defaultValue={review.rating} size='small' />
                     </Box>
