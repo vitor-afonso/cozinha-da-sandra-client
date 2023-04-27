@@ -3,19 +3,17 @@ import { useSelector } from 'react-redux';
 import { APP, getHomePageCategoryItems } from '../utils/app.utils';
 
 export default function useHomePageItems() {
-  const { shopOrders } = useSelector((store) => store.orders);
+  const { shopReviews, averageRating, numberOfReviews } = useSelector((store) => store.reviews);
   const { shopItems } = useSelector((store) => store.items);
   const [docesData, setDocesData] = useState(null);
   const [salgadosData, setSalgadosData] = useState(null);
   const [reviewsData, setReviewsData] = useState(null);
 
   useEffect(() => {
-    if (shopOrders.length > 0) {
-      const allReviews = shopOrders.filter((order) => order.reviewId).map((order) => order.reviewId);
-      const ratingTotal = allReviews.reduce((accumulator, review) => accumulator + review.rating, 0);
-      setReviewsData({ average: Math.round(ratingTotal / allReviews.length / 0.5) * 0.5, reviews: allReviews });
+    if (shopReviews.length > 0) {
+      setReviewsData({ averageRating, reviews: shopReviews, numberOfReviews });
     }
-  }, [shopOrders]);
+  }, [shopReviews, averageRating, numberOfReviews]);
 
   useEffect(() => {
     if (shopItems.length > 0) {
