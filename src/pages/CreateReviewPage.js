@@ -63,11 +63,13 @@ const CreateReviewPage = () => {
 
     try {
       const requestBody = {
+        author: user.username,
         title,
         content,
         rating: ratingValue,
         userId: user._id,
         orderId,
+        orderItems: order.items.map((item) => item._id),
       };
 
       let response = await createReview(requestBody);
