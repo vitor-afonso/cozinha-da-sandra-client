@@ -138,8 +138,17 @@ export default function showLoadingMessage(msgRef, index, interval) {
     }, interval);
   }
 }
-
 const parseDateToShow = (dateToParse) => {
+  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  let date = new Date(dateToParse);
+  let dateYear = date.getFullYear();
+  let dateMonth = months[date.getMonth()];
+  let dateDay = date.getDate();
+  let parsedDate = `${dateDay}-${dateMonth}-${dateYear}`;
+  return parsedDate;
+};
+
+const parseDateAndTimeToShow = (dateToParse) => {
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
   let dateMinutes;
 
@@ -246,4 +255,4 @@ const getItemsAmount = (orderItems) => {
   return items;
 };
 
-export { parseDateToShow, parseDateToEdit, getItemsQuantity, getItemsPrice, getItemsAmount };
+export { parseDateToShow, parseDateAndTimeToShow, parseDateToEdit, getItemsQuantity, getItemsPrice, getItemsAmount };
