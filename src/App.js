@@ -13,6 +13,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Layout } from './components/Layout';
 import { Box, CircularProgress } from '@mui/material';
 import useAppRoutes from './hooks/useAppRoutes';
+import { getShopReviews } from './redux/features/reviews/reviewsSlice';
 
 // to update mui default values
 const theme = createTheme({
@@ -49,6 +50,7 @@ function App() {
   useEffect(() => {
     if (effectRan.current === false) {
       dispatch(getShopItems());
+      dispatch(getShopReviews());
       return () => {
         effectRan.current = true;
       };

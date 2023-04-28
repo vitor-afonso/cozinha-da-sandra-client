@@ -4,16 +4,18 @@ import { useState } from 'react';
 import { createReview } from '../api';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { addReviewPageClasses, componentProps } from '../utils/app.styleClasses';
 import ErrorMessage from '../components/ErrorMessage';
 import SuccessMessage from '../components/SuccessMessage';
 import { Box, Button, CircularProgress, Rating, TextField, Typography } from '@mui/material';
 import { ShopOrder } from '../components/ShopOrder';
+import { addNewShopReview } from '../redux/features/reviews/reviewsSlice';
 
 const CreateReviewPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
+  const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -63,15 +65,18 @@ const CreateReviewPage = () => {
 
     try {
       const requestBody = {
+        author: user.username,
         title,
         content,
         rating: ratingValue,
         userId: user._id,
         orderId,
+        orderItems: order.items.map((item) => item._id),
       };
 
-      let response = await createReview(requestBody);
-      console.log(response.data);
+      let { data } = await createReview(requestBody);
+
+      dispatch(addNewShopReview(data.createdReview));
 
       setSuccessMessage('Review criado com sucesso. Obrigado =)');
     } catch (error) {

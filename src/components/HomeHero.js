@@ -5,7 +5,7 @@ import heroImage from '../images/hero.svg';
 
 import { Box, Grid, Typography } from '@mui/material';
 
-const HomePageHero = () => {
+const HomePageHero = ({ children }) => {
   const { user } = useContext(AuthContext);
   return (
     <Grid container spacing={0} sx={homeClasses.hero}>
@@ -24,6 +24,7 @@ const HomePageHero = () => {
           </Typography>
         </Box>
       </Grid>
+      {children}
     </Grid>
   );
 };

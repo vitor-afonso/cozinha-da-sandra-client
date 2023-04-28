@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { getItemsPrice, getItemsQuantity, parseDateToShow, capitalizeAppName, APP } from '../utils/app.utils';
+import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP } from '../utils/app.utils';
 import ConfirmOrderModal from './ConfirmOrderModal';
 
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
@@ -46,8 +46,8 @@ export function ShopOrder({ order }) {
 
       setItemsQuantity(itemsQuantityArray);
       setItemsPrice(itemsPriceArray);
-      setCreatedAt(parseDateToShow(order.createdAt));
-      setDeliveredAt(parseDateToShow(order.deliveryDate));
+      setCreatedAt(parseDateAndTimeToShow(order.createdAt));
+      setDeliveredAt(parseDateAndTimeToShow(order.deliveryDate));
     }
   }, [order]);
 

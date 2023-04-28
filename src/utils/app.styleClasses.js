@@ -200,6 +200,7 @@ export const aboutClasses = {
     alignItems: 'center',
     justifyContent: 'space-between',
     minHeight: '90vh',
+    height: '100%',
   },
   hero: {
     width: '100%',
@@ -230,23 +231,15 @@ export const aboutClasses = {
     fontWeight: 'bold',
     color: '#031D44',
     pb: 2,
-    //whiteSpace: 'nowrap',
   },
   heroDescription: {
     fontSize: '16px',
     color: '#031D44',
     maxWidth: '600px',
-  },
-  bottom: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: { md: 'flex-start', xs: 'center' },
-    padding: 3,
+    minWidth: '250px',
   },
   bottomContainer: {
-    pt: 3,
     px: 3,
-    maxWidth: '600px',
   },
   bottomTitle: {
     fontWeight: 'bold',
@@ -259,15 +252,16 @@ export const aboutClasses = {
     color: '#031D44',
     mb: 3,
     mx: 'auto',
-    textAlign: 'left',
+    textAlign: { md: 'left' },
+    maxWidth: '600px',
   },
   mapImg: {
     width: '100%',
-    height: '400px',
-
+    height: '450px',
     backgroundImage: `url(${mapImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    maxWidth: '600px',
   },
   social: {
     display: 'flex',
@@ -737,7 +731,7 @@ export const homeClasses = {
     maxWidth: '600px',
   },
   itemsContainer: {
-    mt: 3,
+    pt: 3,
     width: '100%',
   },
   docesContainer: {
@@ -759,6 +753,23 @@ export const homeClasses = {
     my: 2,
     alignSelf: 'end',
     fontWeight: 'bold',
+  },
+};
+export const reviewsClasses = {
+  container: {
+    display: 'flex',
+    justifyContent: 'end',
+    alignItems: 'center',
+    /* px: 3, */
+    width: '100%',
+  },
+
+  reviewsBtn: {
+    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'end',
+    fontWeight: 'bold',
+    height: 32,
   },
 };
 
@@ -783,6 +794,24 @@ export const termsModalStyle = {
   transform: 'translate(-50%, -50%)',
   width: '90%',
   maxWidth: 500,
+  maxHeight: '90%',
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  overflow: 'scroll',
+  overflowX: 'hidden',
+};
+export const reviewsModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '90%',
+  maxWidth: 600,
   maxHeight: '90%',
   bgcolor: 'background.paper',
   border: '2px solid #816E94',
@@ -863,6 +892,7 @@ export const componentProps = {
     info: 'info',
     warning: 'warning',
     string: 'string',
+    textSecondary: 'text.secondary',
   },
   fontSize: {
     inherit: 'inherit',
