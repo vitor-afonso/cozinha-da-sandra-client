@@ -9,7 +9,7 @@ const RatingAverage = ({ setIsModalOpen }) => {
     <Box sx={reviewsClasses.container}>
       <Button sx={reviewsClasses.reviewsBtn} onClick={() => setIsModalOpen(true)}>
         <Typography variant={componentProps.variant.h5}>{averageRating}</Typography>
-        <Rating name='half-rating-read' defaultValue={averageRating} max={1} />
+        <Rating name='rating-average' defaultValue={averageRating} max={1} readOnly />
         <Typography variant={componentProps.variant.body2}>({` ${numberOfReviews} reviews`})</Typography>
       </Button>
     </Box>
