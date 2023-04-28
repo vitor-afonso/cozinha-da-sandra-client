@@ -36,6 +36,10 @@ const ordersSlice = createSlice({
       //we have to use current if want to see the current state or it returns [PROXY]
       //console.log('current shop orders  =>', current(state).shopOrders);
     },
+    confirmDelivered: (state, { payload }) => {
+      const oneOrder = state.shopOrders.find((order) => order._id === payload.id);
+      oneOrder.delivered = true;
+    },
     confirmPayment: (state, { payload }) => {
       const oneOrder = state.shopOrders.find((order) => order._id === payload.id);
       oneOrder.paid = true;
@@ -75,5 +79,5 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { confirmOrder, rejectOrder, deleteShopOrder, confirmPayment, addNewShopOrder, updateShopOrder } = ordersSlice.actions;
+export const { confirmDelivered, confirmOrder, rejectOrder, deleteShopOrder, confirmPayment, addNewShopOrder, updateShopOrder } = ordersSlice.actions;
 export default ordersSlice.reducer;
