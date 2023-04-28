@@ -17,7 +17,7 @@ const ReviewsModal = ({ isModalOpen, setIsModalOpen, reviewsData }) => {
                       <Typography variant={componentProps.variant.h6} sx={{ fontSize: 18 }}>
                         {review.rating}
                       </Typography>
-                      <Rating name='read-only' defaultValue={review.rating} size='small' />
+                      <Rating name='review-rating' defaultValue={review.rating} size='small' readOnly />
                     </Box>
 
                     <Typography variant={componentProps.variant.h6} sx={{ fontSize: 14 }} color={componentProps.color.textSecondary}>
