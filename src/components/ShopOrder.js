@@ -7,10 +7,7 @@ import { sendEmail, updateOrder } from '../api';
 import { AuthContext } from '../context/auth.context';
 import { confirmDelivered, confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
 import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP } from '../utils/app.utils';
-import ConfirmOrderModal from './ConfirmOrderModal';
-
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
-import PaidOrderModal from './PaidOrderModal';
 import { componentProps, shopOrderClasses } from '../utils/app.styleClasses';
 import ConfirmAndEmailModal from './ConfirmAndEmailModal';
 
@@ -22,24 +19,25 @@ export function ShopOrder({ order }) {
   const [deliveredAt, setDeliveredAt] = useState('');
   const [itemsQuantity, setItemsQuantity] = useState([]);
   const [itemsPrice, setItemsPrice] = useState([]);
-  const [isConfirmLoading, setIsConfirmLoading] = useState(false);
+  const [isConfirmedLoading, setIsConfirmedLoading] = useState(false);
   const [isDeliveredLoading, setIsDeliveredLoading] = useState(false);
   const [isPaidLoading, setIsPaidLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [isConfirmedModalOpen, setIsConfirmedModalOpen] = useState(false);
+  const [isDeliveredModalOpen, setIsDeliveredModalOpen] = useState(false);
+  const [isPaidModalOpen, setIsPaidModalOpen] = useState(false);
+  const theme = useTheme();
+
   const isCurrentUserAdmin = user.userType === 'admin';
   const shouldShowCardActions = isCurrentUserAdmin || isPending();
   const shouldShowEditButton = (isPending() && user.userType === 'user') || isCurrentUserAdmin;
-  const shouldShowConfirmButton = order.orderStatus === 'pending' && shouldDisplayConfirmButton() && isCurrentUserAdmin;
-  const isOrderForDelivery = order.deliveryMethod === 'delivery';
   const isOrderPending = order.orderStatus === 'pending' ? true : false;
-
-  const theme = useTheme();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeliveredModalOpen, setIsDeliveredModalOpen] = useState(false);
-  const [openPaid, setOpenPaid] = useState(false);
+  const shouldShowConfirmButton = isOrderPending && shouldDisplayConfirmButton() && isCurrentUserAdmin;
+  const isOrderForDelivery = order.deliveryMethod === 'delivery';
+  const isOrderConfirmed = order.orderStatus === 'confirmed' ? true : false;
 
   useEffect(() => {
     if (order) {
@@ -72,7 +70,7 @@ export function ShopOrder({ order }) {
   };
 
   const handleConfirmOrder = async () => {
-    setIsConfirmLoading(true);
+    setIsConfirmedLoading(true);
     try {
       let requestBody = { orderStatus: 'confirmed' };
 
@@ -87,11 +85,12 @@ export function ShopOrder({ order }) {
 
       await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
       dispatch(confirmOrder({ id: order._id }));
-      setIsModalOpen(false);
+      return { message: 'Operação concluida com sucesso.' };
     } catch (error) {
       console.log(error.message);
+      return { message: `Impossivel realizar operação. ${error.message}` };
     } finally {
-      setIsConfirmLoading(false);
+      setIsConfirmedLoading(false);
     }
   };
 
@@ -130,11 +129,11 @@ export function ShopOrder({ order }) {
       let requestBody = { paid: true };
 
       await updateOrder(requestBody, order._id);
-
       dispatch(confirmPayment({ id: order._id }));
-      setOpenPaid(false);
+      return { message: 'Operação concluida com sucesso.' };
     } catch (error) {
       console.log(error.message);
+      return { message: `Impossivel realizar operação. ${error.message}` };
     } finally {
       setIsPaidLoading(false);
     }
@@ -296,16 +295,23 @@ export function ShopOrder({ order }) {
             {translateStatus(order.orderStatus)}
 
             {shouldShowConfirmButton && (
-              <Button size={componentProps.size.small} onClick={() => setIsModalOpen(true)}>
+              <Button size={componentProps.size.small} onClick={() => setIsConfirmedModalOpen(true)}>
                 Confirmar
               </Button>
             )}
           </Typography>
 
-          <ConfirmOrderModal isModalOpen={isModalOpen} handleConfirmOrder={handleConfirmOrder} setIsModalOpen={setIsModalOpen} isConfirmLoading={isConfirmLoading} />
+          <ConfirmAndEmailModal
+            isLoading={isConfirmedLoading}
+            isModalOpen={isConfirmedModalOpen}
+            setIsModalOpen={setIsConfirmedModalOpen}
+            mainFunction={handleConfirmOrder}
+            question='Enviar email de confirmação?'
+            buttonText='Confirmar'
+          />
         </Box>
 
-        {order.orderStatus === 'confirmed' && (
+        {isOrderConfirmed && (
           <Box sx={shopOrderClasses.infoField}>
             <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
               <b>Pago: </b>
@@ -313,13 +319,20 @@ export function ShopOrder({ order }) {
             <Typography>
               {order.paid ? 'Sim' : 'Não'}
               {!order.paid && isCurrentUserAdmin && (
-                <Button size={componentProps.size.small} onClick={() => setOpenPaid(true)}>
+                <Button size={componentProps.size.small} onClick={() => setIsPaidModalOpen(true)}>
                   Confirmar
                 </Button>
               )}
             </Typography>
 
-            <PaidOrderModal openPaid={openPaid} handleConfirmPayment={handleConfirmPayment} setOpenPaid={setOpenPaid} isPaidLoading={isPaidLoading} isOrderPending={isOrderPending} />
+            <ConfirmAndEmailModal
+              isLoading={isPaidLoading}
+              isModalOpen={isPaidModalOpen}
+              setIsModalOpen={setIsPaidModalOpen}
+              mainFunction={handleConfirmPayment}
+              question='Confirmar pago?'
+              buttonText='Confirmar'
+            />
           </Box>
         )}
 
