@@ -4,7 +4,7 @@ import { AuthContext } from '../context/auth.context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createOrder } from '../api';
+import { createOrder, sendEmail } from '../api';
 import { ShopItem } from '../components/ShopItemCard';
 import { CartOrderForm } from '../components/CartOrderForm';
 import { CustomModal } from '../components/CustomModal';
@@ -160,6 +160,13 @@ const CartPage = () => {
         fullAddress = [addressStreet, addressCode, addressCity];
       }
 
+      let orderReceivedEmail = {
+        from: APP.email,
+        to: APP.email,
+        subject: 'Novo pedido recebido',
+        message: `<p> $Cha-ching$! Novo pedido recebido.</p>`,
+      };
+
       let requestBody = {
         orderNumber: getOrderNumber(),
         deliveryDate: new Date(deliveryDate),
@@ -176,9 +183,9 @@ const CartPage = () => {
         total: cartTotal.toFixed(2),
       };
 
-      let { data } = await createOrder(requestBody);
+      let userResponse = await Promise.race([createOrder(requestBody), sendEmail(orderReceivedEmail)]);
 
-      dispatch(updateShopUser(data.updatedUser));
+      dispatch(updateShopUser(userResponse.data.updatedUser));
 
       setSuccessMessage('Pedido criado com sucesso. Será contactado/a em breve para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
 
