@@ -357,7 +357,7 @@ export function ShopOrder({ order }) {
               mainFunction={handleDeliveredOrder}
               question='Confirmar entrega e enviar email de review?'
               buttonText='Com email'
-              buttonText2='Sem email'
+              buttonSecondaryText='Sem email'
             />
           </Box>
         )}

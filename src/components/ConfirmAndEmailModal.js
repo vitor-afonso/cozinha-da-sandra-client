@@ -4,7 +4,7 @@ import { componentProps, modalStyle } from '../utils/app.styleClasses';
 
 const NO_EMAIL = 'no-email';
 
-const ConfirmAndEmailModal = ({ isLoading, mainFunction, setIsModalOpen, isModalOpen, question, buttonText, buttonText2 }) => {
+const ConfirmAndEmailModal = ({ isLoading, mainFunction, setIsModalOpen, isModalOpen, question, buttonText, buttonSecondaryText }) => {
   const [resMessage, setSesMessage] = useState(null);
   const runMainFunction = async (sendEmailChoice) => {
     const { message } = sendEmailChoice === NO_EMAIL ? await mainFunction(sendEmailChoice) : await mainFunction();
@@ -22,14 +22,14 @@ const ConfirmAndEmailModal = ({ isLoading, mainFunction, setIsModalOpen, isModal
             <Box sx={{ mt: 2 }}>
               {!isLoading && (
                 <>
-                  {!buttonText2 && (
+                  {!buttonSecondaryText && (
                     <Button variant={componentProps.variant.outlined} sx={{ mr: 1 }} onClick={() => setIsModalOpen(false)}>
                       Cancelar
                     </Button>
                   )}
-                  {buttonText2 && (
+                  {buttonSecondaryText && (
                     <Button type={componentProps.type.button} variant={componentProps.variant.contained} sx={{ mr: 1 }} onClick={() => runMainFunction(NO_EMAIL)}>
-                      {buttonText2}
+                      {buttonSecondaryText}
                     </Button>
                   )}
                   <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={runMainFunction}>
