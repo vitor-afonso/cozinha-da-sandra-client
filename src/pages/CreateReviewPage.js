@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { useState } from 'react';
-import { createReview } from '../api';
+import { createReview, sendEmail } from '../api';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import SuccessMessage from '../components/SuccessMessage';
 import { Box, Button, CircularProgress, Rating, TextField, Typography } from '@mui/material';
 import { ShopOrder } from '../components/ShopOrder';
 import { addNewShopReview } from '../redux/features/reviews/reviewsSlice';
+import { APP } from '../utils/app.utils';
 
 const CreateReviewPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -74,11 +75,18 @@ const CreateReviewPage = () => {
         orderItems: order.items.map((item) => item._id),
       };
 
-      let { data } = await createReview(requestBody);
+      let receivedReviewEmail = {
+        from: APP.email,
+        to: APP.email,
+        subject: 'Novo avaliação recebida',
+        message: `<p>🔔Pling!🔔 Nova avaliação recebida.</p>`,
+      };
 
-      dispatch(addNewShopReview(data.createdReview));
+      let response = await Promise.race([createReview(requestBody), sendEmail(receivedReviewEmail)]);
 
-      setSuccessMessage('Review criado com sucesso. Obrigado =)');
+      dispatch(addNewShopReview(response.data.createdReview));
+
+      setSuccessMessage('Avaliação criada com sucesso. Obrigado =)');
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
