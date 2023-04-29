@@ -164,7 +164,7 @@ const CartPage = () => {
         from: APP.email,
         to: APP.email,
         subject: 'Novo pedido recebido',
-        message: `<p> $Cha-ching$! Novo pedido recebido.</p>`,
+        message: `<p> 💰Ca-ching!💰 Novo pedido recebido.</p>`,
       };
 
       let requestBody = {
