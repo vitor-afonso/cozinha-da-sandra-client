@@ -243,7 +243,7 @@ export const CartOrderForm = ({
 
         {isDelivery && (
           <Box sx={{ mb: 2 }}>
-            {isElegibleForFreeDelivery() && (
+            {getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) > 0 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant={componentProps.variant.body2} color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta:{getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) + APP.currency}.
