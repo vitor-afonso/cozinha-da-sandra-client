@@ -19,6 +19,7 @@ export const APP = {
     salgados: 'salgados',
   },
   dataInicioActividade: '2 Maio de 2023',
+  url: 'https://acozinhadasandra.netlify.app',
 };
 
 export const capitalizeAppName = () => {
