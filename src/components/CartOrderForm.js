@@ -47,6 +47,10 @@ export const CartOrderForm = ({
     return (globalDeliveryDiscount || (cartTotal > amountForFreeDelivery && isDelivery)) && !haveExtraFee;
   };
 
+  const shouldShowDeliveryMessage = () => {
+    return !isElegibleForFreeDelivery() && getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal, deliveryMethod) > 0;
+  };
+
   return (
     <Box sx={isFormVisible ? null : cartFormClasses.notVisible} ref={formRef}>
       <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 2 }}>
@@ -243,7 +247,7 @@ export const CartOrderForm = ({
 
         {isDelivery && (
           <Box sx={{ mb: 2 }}>
-            {getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) > 0 && (
+            {shouldShowDeliveryMessage() && (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant={componentProps.variant.body2} color={theme.palette.neutral.main} sx={{ mr: 1, maxWidth: '350px' }}>
                   Entrega grátis a partir de {amountForFreeDelivery + APP.currency}. Valor em falta:{getMissingAmountForFreeDelivery(amountForFreeDelivery, cartTotal) + APP.currency}.
