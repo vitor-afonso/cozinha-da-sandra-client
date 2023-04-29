@@ -102,7 +102,7 @@ export function ShopOrder({ order }) {
       let reviewEmail = {
         from: APP.email,
         to: order.userId.email,
-        subject: 'Deixe a sua apinião',
+        subject: 'Deixe a sua avaliação',
         message: `<p>Caro cliente, esperamos que esteja tudo bem consigo. Gostaríamos de lhe pedir um rápido favor: poderia nos fornecer uma avaliação sobre a sua experiência relativamente ao seu ultimo pedido? Para tal basta clicar <a href="${APP.url}/reviews/create/${order._id}"><b>aqui</b></a>.</br> Agradecemos a sua ajuda e feedback.</p> <br/><br/><p>Com os melhores cumprimentos,</p><p>${APP_NAME} 👩🏾‍🍳</p>`,
       };
 

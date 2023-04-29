@@ -122,7 +122,7 @@ const CreateReviewPage = () => {
             <Controller
               name={componentProps.name.content}
               control={control}
-              rules={{ required: 'Descrição em falta', minLength: { value: 30, message: 'Avaliação deve conter pelo menos 25 caracteres.' } }}
+              rules={{ required: 'Descrição em falta', minLength: { value: 15, message: 'A avaliação deve conter pelo menos 15 caracteres.' } }}
               render={({ field }) => (
                 <TextField label='Descrição' maxRows={4} multiline sx={addReviewPageClasses.formTextArea} placeholder='Escreva aqui a descrição...' error={!!errors.content} {...field} />
               )}
