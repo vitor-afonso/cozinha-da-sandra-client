@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { APP, getHomePageCategoryItems } from '../utils/app.utils';
+import { APP, getHomePageCategoryItems } from 'utils/app.utils';
 
 export default function useHomePageItems() {
   const { shopReviews, averageRating, numberOfReviews } = useSelector((store) => store.reviews);

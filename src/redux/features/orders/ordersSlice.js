@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
-import { getAllOrders } from '../../../api';
+import { getAllOrders } from 'api';
 
 const initialState = {
   shopOrders: [],

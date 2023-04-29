@@ -1,7 +1,7 @@
 import { grey } from '@mui/material/colors';
-import { maxDays, minDays, APP } from './app.utils';
-import mapImage from '../images/aboutMap.png';
-import ownerImage from '../images/aboutChef.jpeg';
+import { maxDays, minDays, APP } from 'utils/app.utils';
+import mapImage from 'images/aboutMap.png';
+import ownerImage from 'images/aboutChef.jpeg';
 
 export const shopOrderClasses = {
   container: {

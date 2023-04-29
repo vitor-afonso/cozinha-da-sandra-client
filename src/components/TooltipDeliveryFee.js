@@ -1,6 +1,6 @@
 import InfoIcon from '@mui/icons-material/Info';
 import { Tooltip, Zoom } from '@mui/material';
-import { componentProps } from '../utils/app.styleClasses';
+import { componentProps } from 'utils/app.styleClasses';
 
 const TooltipDeliveryFee = () => {
   return (

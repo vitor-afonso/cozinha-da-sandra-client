@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useContext } from 'react';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import { useState } from 'react';
-import { createReview, sendEmail } from '../api';
+import { createReview, sendEmail } from 'api';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
-import { addReviewPageClasses, componentProps } from '../utils/app.styleClasses';
-import ErrorMessage from '../components/ErrorMessage';
-import SuccessMessage from '../components/SuccessMessage';
+import { addReviewPageClasses, componentProps } from 'utils/app.styleClasses';
+import ErrorMessage from 'components/ErrorMessage';
+import SuccessMessage from 'components/SuccessMessage';
 import { Box, Button, CircularProgress, Rating, TextField, Typography } from '@mui/material';
-import { ShopOrder } from '../components/ShopOrder';
-import { addNewShopReview } from '../redux/features/reviews/reviewsSlice';
-import { APP } from '../utils/app.utils';
+import { ShopOrder } from 'components/ShopOrder';
+import { addNewShopReview } from 'redux/features/reviews/reviewsSlice';
+import { APP } from 'utils/app.utils';
+
 
 const CreateReviewPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);

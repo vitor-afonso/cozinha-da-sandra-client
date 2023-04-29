@@ -3,13 +3,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { sendEmail, updateOrder } from '../api';
-import { AuthContext } from '../context/auth.context';
-import { confirmDelivered, confirmOrder, confirmPayment } from '../redux/features/orders/ordersSlice';
-import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP } from '../utils/app.utils';
+import { sendEmail, updateOrder } from 'api';
+import { AuthContext } from 'context/auth.context';
+import { confirmDelivered, confirmOrder, confirmPayment } from 'redux/features/orders/ordersSlice';
+import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP } from 'utils/app.utils';
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
-import { componentProps, shopOrderClasses } from '../utils/app.styleClasses';
-import ConfirmAndEmailModal from './ConfirmAndEmailModal';
+import { componentProps, shopOrderClasses } from 'utils/app.styleClasses';
+import ConfirmAndEmailModal from 'components/ConfirmAndEmailModal';
 
 const APP_NAME = capitalizeAppName();
 

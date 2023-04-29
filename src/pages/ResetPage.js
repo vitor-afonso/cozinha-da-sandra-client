@@ -3,11 +3,11 @@
 import { Box, TextField, Typography, Button, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { resetPassword } from '../api';
-import resetImage from '../images/reset.svg';
-import { componentProps, resetClasses } from '../utils/app.styleClasses';
-import ErrorMessage from '../components/ErrorMessage';
-import SuccessMessage from '../components/SuccessMessage';
+import { resetPassword } from 'api';
+import resetImage from 'images/reset.svg';
+import { componentProps, resetClasses } from 'utils/app.styleClasses';
+import ErrorMessage from 'components/ErrorMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);

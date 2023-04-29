@@ -2,13 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ShopOrder } from './../components/ShopOrder';
-
+import { ShopOrder } from 'components/ShopOrder';
 import Masonry from 'react-masonry-css';
-
 import { Box, FormControl, Typography, Select, MenuItem, FormHelperText, CircularProgress } from '@mui/material';
-import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { componentProps, ordersClasses } from '../utils/app.styleClasses';
+import { getShopOrders } from 'redux/features/orders/ordersSlice';
+import { componentProps, ordersClasses } from 'utils/app.styleClasses';
 
 const OrdersPage = () => {
   const dispatch = useDispatch();

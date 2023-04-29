@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { componentProps, homeClasses } from '../utils/app.styleClasses';
-import useHomePageItems from '../hooks/useHomePageItems';
-import HomePageHero from '../components/HomeHero';
-import ShopItemsCategory from '../components/ShopItemsCategory';
-import showLoadingMessage from '../utils/app.utils';
+import { componentProps, homeClasses } from 'utils/app.styleClasses';
+import useHomePageItems from 'hooks/useHomePageItems';
+import HomePageHero from 'components/HomeHero';
+import ShopItemsCategory from 'components/ShopItemsCategory';
+import showLoadingMessage from 'utils/app.utils';
 
 import { Box, CircularProgress, Typography } from '@mui/material';
-import RatingAverage from '../components/RatingAverage';
-import ReviewsModal from '../components/ReviewsModal';
+import RatingAverage from 'components/RatingAverage';
+import ReviewsModal from 'components/ReviewsModal';
 
 const HomePage = () => {
   const { docesData, salgadosData, reviewsData } = useHomePageItems();

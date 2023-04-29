@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import { Box, CircularProgress } from '@mui/material';
-import SuccessMessage from './SuccessMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 export const IsOrderOwner = ({ children }) => {
   const { isLoggedIn, isLoading, user } = useContext(AuthContext);

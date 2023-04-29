@@ -1,8 +1,8 @@
 // jshint esversion:9
 import { useEffect } from 'react';
-import { ShopItem } from '../components/ShopItemCard';
-import { componentProps } from '../utils/app.styleClasses';
-import useItemDetailsPage from '../hooks/useItemDetailsPage';
+import { ShopItem } from 'components/ShopItemCard';
+import { componentProps } from 'utils/app.styleClasses';
+import useItemDetailsPage from 'hooks/useItemDetailsPage';
 
 import { Box, CircularProgress, Typography } from '@mui/material';
 

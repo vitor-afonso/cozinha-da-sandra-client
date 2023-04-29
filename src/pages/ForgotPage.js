@@ -2,11 +2,11 @@
 
 import { Box, TextField, Typography, Button, CircularProgress, useTheme } from '@mui/material';
 import { useState } from 'react';
-import { forgotPassword } from '../api';
-import forgotImage from '../images/forgot.svg';
-import { componentProps, forgotClasses } from '../utils/app.styleClasses';
-import ErrorMessage from '../components/ErrorMessage';
-import SuccessMessage from '../components/SuccessMessage';
+import { forgotPassword } from 'api';
+import forgotImage from 'images/forgot.svg';
+import { componentProps, forgotClasses } from 'utils/app.styleClasses';
+import ErrorMessage from 'components/ErrorMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 const ForgotPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);

@@ -1,7 +1,7 @@
 import { Box, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { componentProps, homeClasses } from '../utils/app.styleClasses';
-import { ShopItem } from './ShopItemCard';
+import { componentProps, homeClasses } from 'utils/app.styleClasses';
+import { ShopItem } from 'components/ShopItemCard';
 
 const ShopItemsCategory = ({ categoryItems, categoryName, categoryStyles }) => {
   const navigate = useNavigate();

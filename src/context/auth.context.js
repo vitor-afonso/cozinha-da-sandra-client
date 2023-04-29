@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { clearCart } from '../redux/features/items/itemsSlice';
-import { verify } from './../api';
+import { clearCart } from 'redux/features/items/itemsSlice';
+import { verify } from 'api';
 
 const AuthContext = React.createContext();
 

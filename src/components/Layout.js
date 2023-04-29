@@ -2,10 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import { capitalizeAppName, APP } from '../utils/app.utils.js';
+import { capitalizeAppName, APP } from 'utils/app.utils.js';
 import { NavItems } from './NavItems';
-
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -20,7 +18,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Avatar, Badge, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { componentProps } from '../utils/app.styleClasses.js';
+import { componentProps } from 'utils/app.styleClasses.js';
 
 const drawerWidth = 220;
 

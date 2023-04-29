@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ShopItem } from '../components/ShopItemCard';
-
+import { ShopItem } from 'components/ShopItemCard';
 import { Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { componentProps, salgadosClasses } from '../utils/app.styleClasses';
+import { componentProps, salgadosClasses } from 'utils/app.styleClasses';
 
 const SalgadosPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);

@@ -3,11 +3,10 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context';
-
+import { AuthContext } from 'context/auth.context';
 import { Box, CircularProgress, TextField, Typography, Avatar, Stack, Paper, InputAdornment } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { componentProps, usersClasses } from '../utils/app.styleClasses';
+import { componentProps, usersClasses } from 'utils/app.styleClasses';
 
 const IS_MOBILE = window.innerWidth < 600 ? true : false;
 const HEADING_VARIANT = IS_MOBILE ? 'h3' : 'h2';

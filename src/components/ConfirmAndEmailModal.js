@@ -1,6 +1,6 @@
 import { Box, Button, CircularProgress, Modal, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { componentProps, modalStyle } from '../utils/app.styleClasses';
+import { componentProps, modalStyle } from 'utils/app.styleClasses';
 
 const NO_EMAIL = 'no-email';
 

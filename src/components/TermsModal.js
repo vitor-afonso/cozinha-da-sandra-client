@@ -1,7 +1,6 @@
-import React from 'react';
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Modal, Typography } from '@mui/material';
-import { componentProps, termsModalStyle } from '../utils/app.styleClasses';
-import { APP, capitalizeAppName } from '../utils/app.utils';
+import { componentProps, termsModalStyle } from 'utils/app.styleClasses';
+import { APP, capitalizeAppName } from 'utils/app.utils';
 import { useLocation } from 'react-router-dom';
 
 const TermsModal = ({ isModalOpen, setIsModalOpen, conditionsAccepted, setConditionsAccepted }) => {

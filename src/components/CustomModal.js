@@ -1,4 +1,4 @@
-import { componentProps, modalStyle } from '../utils/app.styleClasses';
+import { componentProps, modalStyle } from 'utils/app.styleClasses';
 import { Box, Button, Modal, Typography } from '@mui/material';
 
 export function CustomModal({ isModalOpen, setIsModalOpen, mainFunction, question, buttonText }) {

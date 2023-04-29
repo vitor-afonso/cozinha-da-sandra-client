@@ -1,5 +1,5 @@
 import React from 'react';
-import { componentProps } from '../utils/app.styleClasses';
+import { componentProps } from 'utils/app.styleClasses';
 import { Typography } from '@mui/material';
 
 const ErrorMessage = ({ message }) => {

@@ -3,16 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createItem, uploadImage } from '../api';
-import { addNewShopItem } from '../redux/features/items/itemsSlice';
-import defaultProductImage from '../images/item.svg';
-
+import { createItem, uploadImage } from 'api';
+import { addNewShopItem } from 'redux/features/items/itemsSlice';
+import defaultProductImage from 'images/item.svg';
 import { Box, Typography, Button, CircularProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { componentProps, newItemClasses } from '../utils/app.styleClasses';
-import ItemForm from '../components/ItemForm';
+import { componentProps, newItemClasses } from 'utils/app.styleClasses';
+import ItemForm from 'components/ItemForm';
 import { useForm } from 'react-hook-form';
-import SuccessMessage from '../components/SuccessMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 const NewItemPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);

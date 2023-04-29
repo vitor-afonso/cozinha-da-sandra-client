@@ -1,28 +1,28 @@
 import React, { lazy } from 'react';
 
-import { IsUser } from '../components/IsUser';
-import { IsAdmin } from '../components/IsAdmin';
-import { IsOrderOwner } from '../components/IsOrderOwner';
+import { IsUser } from 'components/IsUser';
+import { IsAdmin } from 'components/IsAdmin';
+import { IsOrderOwner } from 'components/IsOrderOwner';
 
-const SignupPage = lazy(() => import('../pages/SignupPage'));
-const LoginPage = lazy(() => import('../pages/LoginPage'));
-const ForgotPage = lazy(() => import('../pages/ForgotPage'));
-const ResetPage = lazy(() => import('../pages/ResetPage'));
-const SendEmailPage = lazy(() => import('../pages/SendEmailPage'));
-const HomePage = lazy(() => import('../pages/HomePage'));
-const DocesPage = lazy(() => import('../pages/DocesPage'));
-const SalgadosPage = lazy(() => import('../pages/SalgadosPage'));
-const ItemDetailsPage = lazy(() => import('../pages/ItemDetailsPage'));
-const NewItemPage = lazy(() => import('../pages/NewItemPage'));
-const EditItemPage = lazy(() => import('../pages/EditItemPage'));
-const UsersPage = lazy(() => import('../pages/UsersPage'));
-const OrdersPage = lazy(() => import('../pages/OrdersPage'));
-const EditOrderPage = lazy(() => import('../pages/EditOrderPage'));
-const ProfilePage = lazy(() => import('../pages/ProfilePage'));
-const EditProfilePage = lazy(() => import('../pages/EditProfilePage'));
-const CartPage = lazy(() => import('../pages/CartPage'));
-const AboutPage = lazy(() => import('../pages/AboutPage'));
-const CreateReviewPage = lazy(() => import('../pages/CreateReviewPage'));
+const SignupPage = lazy(() => import('pages/SignupPage'));
+const LoginPage = lazy(() => import('pages/LoginPage'));
+const ForgotPage = lazy(() => import('pages/ForgotPage'));
+const ResetPage = lazy(() => import('pages/ResetPage'));
+const SendEmailPage = lazy(() => import('pages/SendEmailPage'));
+const HomePage = lazy(() => import('pages/HomePage'));
+const DocesPage = lazy(() => import('pages/DocesPage'));
+const SalgadosPage = lazy(() => import('pages/SalgadosPage'));
+const ItemDetailsPage = lazy(() => import('pages/ItemDetailsPage'));
+const NewItemPage = lazy(() => import('pages/NewItemPage'));
+const EditItemPage = lazy(() => import('pages/EditItemPage'));
+const UsersPage = lazy(() => import('pages/UsersPage'));
+const OrdersPage = lazy(() => import('pages/OrdersPage'));
+const EditOrderPage = lazy(() => import('pages/EditOrderPage'));
+const ProfilePage = lazy(() => import('pages/ProfilePage'));
+const EditProfilePage = lazy(() => import('pages/EditProfilePage'));
+const CartPage = lazy(() => import('pages/CartPage'));
+const AboutPage = lazy(() => import('pages/AboutPage'));
+const CreateReviewPage = lazy(() => import('pages/CreateReviewPage'));
 
 const useAppRoutes = () => {
   const routes = [

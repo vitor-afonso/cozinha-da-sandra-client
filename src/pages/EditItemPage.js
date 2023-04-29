@@ -4,16 +4,15 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deleteItem, updateItem, uploadImage } from '../api';
-import { removeShopItem, updateShopItem } from '../redux/features/items/itemsSlice';
-import { componentProps, editItemClasses } from '../utils/app.styleClasses';
-import { CustomModal } from '../components/CustomModal';
-
+import { deleteItem, updateItem, uploadImage } from 'api';
+import { removeShopItem, updateShopItem } from 'redux/features/items/itemsSlice';
+import { componentProps, editItemClasses } from 'utils/app.styleClasses';
+import { CustomModal } from 'components/CustomModal';
 import { Box, Button, CircularProgress, Typography, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import ItemForm from '../components/ItemForm';
+import ItemForm from 'components/ItemForm';
 import { useForm } from 'react-hook-form';
-import SuccessMessage from '../components/SuccessMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 const EditItemPage = () => {
   const { shopItems } = useSelector((store) => store.items);

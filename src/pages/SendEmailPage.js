@@ -3,12 +3,12 @@
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { sendEmail } from '../api';
-import { ShopOrder } from '../components/ShopOrder';
-import { componentProps, sendEmailClasses } from '../utils/app.styleClasses';
-import { parseDateAndTimeToShow, capitalizeAppName, APP } from '../utils/app.utils';
-import ErrorMessage from '../components/ErrorMessage';
-import SuccessMessage from '../components/SuccessMessage';
+import { sendEmail } from 'api';
+import { ShopOrder } from 'components/ShopOrder';
+import { componentProps, sendEmailClasses } from 'utils/app.styleClasses';
+import { parseDateAndTimeToShow, capitalizeAppName, APP } from 'utils/app.utils';
+import ErrorMessage from 'components/ErrorMessage';
+import SuccessMessage from 'components/SuccessMessage';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
