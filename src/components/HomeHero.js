@@ -1,7 +1,7 @@
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import { useContext } from 'react';
-import { componentProps, homeClasses } from '../utils/app.styleClasses';
-import heroImage from '../images/hero.svg';
+import { componentProps, homeClasses } from 'utils/app.styleClasses';
+import heroImage from 'images/hero.svg';
 
 import { Box, Grid, Typography } from '@mui/material';
 

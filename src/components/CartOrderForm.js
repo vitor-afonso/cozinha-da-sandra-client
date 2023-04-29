@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { APP, getMissingAmountForFreeDelivery, isValidDeliveryDate } from '../utils/app.utils';
+import { APP, getMissingAmountForFreeDelivery, isValidDeliveryDate } from 'utils/app.utils';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
-import TooltipDeliveryFee from './TooltipDeliveryFee';
-import { cartFormClasses, componentProps } from '../utils/app.styleClasses';
-import ErrorMessage from './ErrorMessage';
+import TooltipDeliveryFee from 'components/TooltipDeliveryFee';
+import { cartFormClasses, componentProps } from 'utils/app.styleClasses';
+import ErrorMessage from 'components/ErrorMessage';
 import { Controller } from 'react-hook-form';
 
 // When on mobile inputType is not being toggled

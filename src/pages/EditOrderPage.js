@@ -3,25 +3,23 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deleteOrder, updateOrder } from '../api';
-import { AuthContext } from '../context/auth.context';
-import { deleteShopOrder } from '../redux/features/orders/ordersSlice';
-import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from '../redux/features/items/itemsSlice';
-import { ShopItem } from '../components/ShopItemCard';
-import { EditOrderForm } from './../components/EditOrderForm';
-import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, parseDateToEdit } from '../utils/app.utils';
-import TooltipDeliveryFee from '../components/TooltipDeliveryFee';
-import { componentProps, editOrderPageClasses } from '../utils/app.styleClasses';
-import { CustomModal } from '../components/CustomModal';
+import { deleteOrder, updateOrder } from 'api';
+import { AuthContext } from 'context/auth.context';
+import { deleteShopOrder } from 'redux/features/orders/ordersSlice';
+import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from 'redux/features/items/itemsSlice';
+import { ShopItem } from 'components/ShopItemCard';
+import { EditOrderForm } from 'components/EditOrderForm';
+import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, parseDateToEdit } from 'utils/app.utils';
+import TooltipDeliveryFee from 'components/TooltipDeliveryFee';
+import { componentProps, editOrderPageClasses } from 'utils/app.styleClasses';
+import { CustomModal } from 'components/CustomModal';
 import { useForm } from 'react-hook-form';
-import SuccessMessage from '../components/SuccessMessage';
+import SuccessMessage from 'components/SuccessMessage';
 import { Typography, Box, Button, Grid, CircularProgress, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-
-
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);

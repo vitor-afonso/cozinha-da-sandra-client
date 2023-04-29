@@ -1,19 +1,19 @@
 // jshint esversion:11
 
 import React, { Suspense } from 'react';
-import './App.css';
+import 'App.css';
 import { Routes, Route } from 'react-router-dom';
 import { useContext, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { getShopItems } from './redux/features/items/itemsSlice';
-import { getShopOrders } from './redux/features/orders/ordersSlice';
-import { AuthContext } from './context/auth.context';
-import { getShopUsers } from './redux/features/users/usersSlice';
+import { getShopItems } from 'redux/features/items/itemsSlice';
+import { getShopOrders } from 'redux/features/orders/ordersSlice';
+import { AuthContext } from 'context/auth.context';
+import { getShopUsers } from 'redux/features/users/usersSlice';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Layout } from './components/Layout';
+import { Layout } from 'components/Layout';
 import { Box, CircularProgress } from '@mui/material';
-import useAppRoutes from './hooks/useAppRoutes';
-import { getShopReviews } from './redux/features/reviews/reviewsSlice';
+import useAppRoutes from 'hooks/useAppRoutes';
+import { getShopReviews } from 'redux/features/reviews/reviewsSlice';
 
 // to update mui default values
 const theme = createTheme({

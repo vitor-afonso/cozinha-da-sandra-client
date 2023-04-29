@@ -3,18 +3,17 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deleteUser, resetPassword, updateUser, uploadImage } from '../api';
-import { AuthContext } from '../context/auth.context';
-import { deleteShopUser, updateShopUser } from '../redux/features/users/usersSlice';
-import { componentProps, editProfileClasses } from '../utils/app.styleClasses';
-import { handleFileUpload } from '../utils/app.utils';
-import { CustomModal } from '../components/CustomModal';
-
+import { deleteUser, resetPassword, updateUser, uploadImage } from 'api';
+import { AuthContext } from 'context/auth.context';
+import { deleteShopUser, updateShopUser } from 'redux/features/users/usersSlice';
+import { componentProps, editProfileClasses } from 'utils/app.styleClasses';
+import { handleFileUpload } from 'utils/app.utils';
+import { CustomModal } from 'components/CustomModal';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Controller, useForm } from 'react-hook-form';
-import ErrorMessage from '../components/ErrorMessage';
-import SuccessMessage from '../components/SuccessMessage';
+import ErrorMessage from 'components/ErrorMessage';
+import SuccessMessage from 'components/SuccessMessage';
 
 const EditProfilePage = () => {
   const { user, logOutUser } = useContext(AuthContext);

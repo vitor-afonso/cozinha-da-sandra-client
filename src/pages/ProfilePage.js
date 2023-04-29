@@ -5,10 +5,10 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ShopOrder } from '../components/ShopOrder';
-import { AuthContext } from '../context/auth.context';
-import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { componentProps, profileClasses } from '../utils/app.styleClasses';
+import { ShopOrder } from 'components/ShopOrder';
+import { AuthContext } from 'context/auth.context';
+import { getShopOrders } from 'redux/features/orders/ordersSlice';
+import { componentProps, profileClasses } from 'utils/app.styleClasses';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);

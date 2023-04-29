@@ -3,9 +3,9 @@
 import { Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ShopItem } from '../components/ShopItemCard';
+import { ShopItem } from 'components/ShopItemCard';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import { componentProps, docesClasses } from '../utils/app.styleClasses';
+import { componentProps, docesClasses } from 'utils/app.styleClasses';
 
 const DocesPage = () => {
   const { shopItems, isLoading } = useSelector((store) => store.items);

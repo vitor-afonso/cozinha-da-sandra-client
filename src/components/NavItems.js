@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -19,8 +19,8 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { CustomModal } from './CustomModal';
-import { componentProps } from '../utils/app.styleClasses';
+import { CustomModal } from 'components/CustomModal';
+import { componentProps } from 'utils/app.styleClasses';
 
 export const NavItems = () => {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);

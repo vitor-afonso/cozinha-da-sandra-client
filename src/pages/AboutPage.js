@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import Tilt from 'react-parallax-tilt';
-import { capitalizeAppName, APP } from '../utils/app.utils.js';
-import instagramImage from '../images/instagram.svg';
+import { capitalizeAppName, APP } from 'utils/app.utils.js';
+import instagramImage from 'images/instagram.svg';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import { aboutClasses, componentProps } from '../utils/app.styleClasses.js';
-import TermsModal from '../components/TermsModal.js';
-import useAboutUsData from '../hooks/useAboutUsData.js';
-import ReviewsModal from '../components/ReviewsModal.js';
-import RatingAverage from '../components/RatingAverage.js';
+import { aboutClasses, componentProps } from 'utils/app.styleClasses.js';
+import TermsModal from 'components/TermsModal.js';
+import useAboutUsData from 'hooks/useAboutUsData.js';
+import ReviewsModal from 'components/ReviewsModal.js';
+import RatingAverage from 'components/RatingAverage.js';
 import { Box, Typography, Link, Button } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 

@@ -1,7 +1,7 @@
 // jshint esversion:11
 
 import { useContext } from 'react';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';

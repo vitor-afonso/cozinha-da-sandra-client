@@ -1,22 +1,22 @@
 // jshint esversion:9
 import * as React from 'react';
-import { AuthContext } from '../context/auth.context';
+import { AuthContext } from 'context/auth.context';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createOrder, sendEmail } from '../api';
-import { ShopItem } from '../components/ShopItemCard';
-import { CartOrderForm } from '../components/CartOrderForm';
-import { CustomModal } from '../components/CustomModal';
-import { clearCart, handleFreeDelivery } from '../redux/features/items/itemsSlice';
-import { updateShopUser } from '../redux/features/users/usersSlice';
-import emptyCartImage from '../images/emptyCart.svg';
-import { APP, isElegibleForGlobalDiscount } from '../utils/app.utils';
+import { createOrder, sendEmail } from 'api';
+import { ShopItem } from 'components/ShopItemCard';
+import { CartOrderForm } from 'components/CartOrderForm';
+import { CustomModal } from 'components/CustomModal';
+import { clearCart, handleFreeDelivery } from 'redux/features/items/itemsSlice';
+import { updateShopUser } from 'redux/features/users/usersSlice';
+import emptyCartImage from 'images/emptyCart.svg';
+import { APP, isElegibleForGlobalDiscount } from 'utils/app.utils';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getShopOrders } from '../redux/features/orders/ordersSlice';
-import { cartClasses, componentProps } from '../utils/app.styleClasses';
-import SuccessMessage from '../components/SuccessMessage';
+import { getShopOrders } from 'redux/features/orders/ordersSlice';
+import { cartClasses, componentProps } from 'utils/app.styleClasses';
+import SuccessMessage from 'components/SuccessMessage';
 import { useForm } from 'react-hook-form';
 
 const CartPage = () => {
@@ -26,7 +26,6 @@ const CartPage = () => {
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [isAddressVisible, setIsAddressVisible] = useState(false);
   const [requiredInput, setRequiredInput] = useState(false);

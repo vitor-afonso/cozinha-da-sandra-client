@@ -1,13 +1,10 @@
 // jshint esversion:9
-import { useContext, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context';
-import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from '../redux/features/items/itemsSlice';
+import { AuthContext } from 'context/auth.context';
+import { addToCart, decreaseItemAmount, increaseItemAmount, removeFromCart } from 'redux/features/items/itemsSlice';
 import { RWebShare } from 'react-web-share';
-
-/********************** MUI *************************/
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -24,9 +21,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { useEffect } from 'react';
-import { APP } from '../utils/app.utils';
-import { cardClasses, componentProps } from '../utils/app.styleClasses';
+import { APP } from 'utils/app.utils';
+import { cardClasses, componentProps } from 'utils/app.styleClasses';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;

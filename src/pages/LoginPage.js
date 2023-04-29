@@ -3,11 +3,11 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
-import { login } from '../api';
-import { AuthContext } from '../context/auth.context';
-import loginImage from '../images/login.svg';
-import { componentProps, loginClasses } from '../utils/app.styleClasses';
-import ErrorMessage from '../components/ErrorMessage';
+import { login } from 'api';
+import { AuthContext } from 'context/auth.context';
+import loginImage from 'images/login.svg';
+import { componentProps, loginClasses } from 'utils/app.styleClasses';
+import ErrorMessage from 'components/ErrorMessage';
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
 import { useParams } from 'react-router-dom';
 

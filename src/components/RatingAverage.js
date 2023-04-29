@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, Rating, Typography } from '@mui/material';
-import { componentProps, reviewsClasses } from '../utils/app.styleClasses';
+import { componentProps, reviewsClasses } from 'utils/app.styleClasses';
 import { useSelector } from 'react-redux';
 
 const RatingAverage = ({ setIsModalOpen }) => {

@@ -1,7 +1,6 @@
 import { Box, Modal, Rating, Typography } from '@mui/material';
-import React from 'react';
-import { componentProps, reviewsModalStyle } from '../utils/app.styleClasses';
-import { parseDateToShow } from '../utils/app.utils';
+import { componentProps, reviewsModalStyle } from 'utils/app.styleClasses';
+import { parseDateToShow } from 'utils/app.utils';
 
 const ReviewsModal = ({ isModalOpen, setIsModalOpen, reviewsData }) => {
   return (

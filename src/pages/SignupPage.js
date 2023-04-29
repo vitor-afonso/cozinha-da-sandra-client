@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signup } from '../api';
-import signupImage from '../images/signup.svg';
-import { componentProps, signupClasses } from '../utils/app.styleClasses';
-import TermsModal from '../components/TermsModal';
+import { signup } from 'api';
+import signupImage from 'images/signup.svg';
+import { componentProps, signupClasses } from 'utils/app.styleClasses';
+import TermsModal from 'components/TermsModal';
 import { useForm, Controller } from 'react-hook-form';
 import { Box, Button, CircularProgress, TextField, Typography, useTheme } from '@mui/material';
-import ErrorMessage from '../components/ErrorMessage';
+import ErrorMessage from 'components/ErrorMessage';
 
 const SignupPage = () => {
   const [errorMessage, setErrorMessage] = useState(null);
