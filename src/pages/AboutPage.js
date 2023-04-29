@@ -1,7 +1,7 @@
 // jshint esversion:9
 
 import { useState } from 'react';
-import Tilt from 'react-parallax-tilt';
+
 import { capitalizeAppName, APP } from 'utils/app.utils.js';
 import instagramImage from 'images/instagram.svg';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
@@ -24,11 +24,8 @@ const AboutPage = () => {
   return (
     <Box sx={aboutClasses.container}>
       <Box sx={aboutClasses.hero}>
-        <Box>
-          <Tilt>
-            <Box sx={aboutClasses.imgContainer}></Box>
-          </Tilt>
-        </Box>
+        <Box sx={aboutClasses.imgContainer}></Box>
+
         <Box>
           <Box sx={aboutClasses.heroText}>
             <Typography variant={componentProps.variant.h2} sx={aboutClasses.heroTitle}>

@@ -17,7 +17,6 @@ specifiers:
   react-hook-form: ^7.43.9
   react-image-file-resizer: ^0.4.8
   react-masonry-css: ^1.0.16
-  react-parallax-tilt: ^1.7.112
   react-redux: ^8.0.2
   react-router-dom: ^6.3.0
   react-scripts: 5.0.1
@@ -40,7 +39,6 @@ dependencies:
   react-hook-form: 7.43.9_react@18.2.0
   react-image-file-resizer: 0.4.8
   react-masonry-css: 1.0.16_react@18.2.0
-  react-parallax-tilt: 1.7.114_biqbaboplfbrettd7655fr4n2y
   react-redux: 8.0.5_biqbaboplfbrettd7655fr4n2y
   react-router-dom: 6.8.2_biqbaboplfbrettd7655fr4n2y
   react-scripts: 5.0.1_react@18.2.0
@@ -8801,16 +8799,6 @@ packages:
       react: '>=16.0.0'
     dependencies:
       react: 18.2.0
-    dev: false
-
-  /react-parallax-tilt/1.7.114_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-i4xDEMdbH9Kw16Z9Aq1TxOIiOdOE/zz4U5fD87Pu2ji7syVY/9f2I1J3DyoCowKfUIsN8EDDk4xIN3JfDPuURg==}
-    peerDependencies:
-      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-redux/8.0.5_biqbaboplfbrettd7655fr4n2y:
