@@ -5,10 +5,10 @@ import { componentProps, modalStyle } from '../utils/app.styleClasses';
 const NO_EMAIL = 'no-email';
 
 const ConfirmAndEmailModal = ({ isLoading, mainFunction, setIsModalOpen, isModalOpen, question, buttonText, buttonSecondaryText }) => {
-  const [resMessage, setSesMessage] = useState(null);
+  const [resMessage, setResMessage] = useState(null);
   const runMainFunction = async (sendEmailChoice) => {
     const { message } = sendEmailChoice === NO_EMAIL ? await mainFunction(sendEmailChoice) : await mainFunction();
-    setSesMessage(message);
+    setResMessage(message);
   };
   return (
     <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
