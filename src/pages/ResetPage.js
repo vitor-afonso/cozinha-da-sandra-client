@@ -8,51 +8,51 @@ import resetImage from 'images/reset.svg';
 import { componentProps, resetClasses } from 'utils/app.styleClasses';
 import ErrorMessage from 'components/ErrorMessage';
 import SuccessMessage from 'components/SuccessMessage';
+import { Controller, useForm } from 'react-hook-form';
 
 const ResetPage = () => {
   const [successMessage, setSuccessMessage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
-  const [newPassword, setNewPassword] = useState('');
-  const [newPassword2, setNewPassword2] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      password: '',
+      password2: '',
+    },
+  });
+  const password = watch('password');
 
-  const handleResetSubmit = async (e) => {
-    e.preventDefault();
-
-    newPassword === '' ? setPasswordError(true) : setPasswordError(false);
-    newPassword2 === '' ? setPasswordError(true) : setPasswordError(false);
-
-    if (newPassword !== newPassword2) {
-      setErrorMessage('Por favor insira a mesma password nos 2 campos.');
-      setPasswordError(true);
-      return;
-    }
-
+  const handleResetSubmit = async ({ password }) => {
+    setIsLoading(true);
     try {
-      const requestBody = { password: newPassword };
-
+      const requestBody = { password };
       await resetPassword(requestBody, userId);
-
-      setSuccessMessage('A sua password foi actualizada com sucesso.');
-      setTimeout(() => navigate('/login'), 5000);
+      setSuccessMessage('Password actualizada com sucesso.');
     } catch (error) {
       const errorDescription = error.response.data.message;
       setErrorMessage(errorDescription);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <Box sx={resetClasses.container}>
+      <Box sx={resetClasses.image}>
+        <img src={resetImage} alt='Reset password' className='auth-images' />
+      </Box>
       {!successMessage && (
-        <>
-          <Box sx={resetClasses.top}>
-            <Box sx={resetClasses.image}>
-              <img src={resetImage} alt='Reset password' className='auth-images' />
-            </Box>
-
-            <Typography variant={componentProps.variant.h4} sx={{ my: 4 }} color={theme.palette.neutral.main}>
+        <Box>
+          <Box sx={resetClasses.topText}>
+            <Typography variant={componentProps.variant.h4} sx={{ my: 2 }} color={theme.palette.neutral.main}>
               Repor password
             </Typography>
 
@@ -61,45 +61,67 @@ const ResetPage = () => {
             </Typography>
           </Box>
           <Box sx={resetClasses.form}>
-            <form noValidate autoComplete='off' onSubmit={handleResetSubmit}>
-              <TextField
-                label='Nova Password'
-                type='password'
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={resetClasses.field}
-                onChange={(e) => setNewPassword(e.target.value)}
-                error={passwordError}
-                autoFocus
+            <form noValidate onSubmit={handleSubmit(handleResetSubmit)}>
+              <Controller
+                name={componentProps.name.password}
+                control={control}
+                rules={{
+                  required: 'Password em falta',
+                  pattern: {
+                    value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/,
+                    message: 'A password deve ter pelo menos 6 caracteres e conter pelo menos um número, uma letra minúscula e uma letra maiúscula.',
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    label='Nova password'
+                    type={componentProps.type.password}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={resetClasses.field}
+                    error={errors.password ? true : false}
+                    disabled={isLoading}
+                    autoComplete='true'
+                    {...field}
+                  />
+                )}
               />
-
-              <TextField
-                label='Repetir Password'
-                type='password'
-                variant={componentProps.variant.outlined}
-                fullWidth
-                required
-                sx={resetClasses.field}
-                onChange={(e) => setNewPassword2(e.target.value)}
-                error={passwordError}
+              <Controller
+                name={componentProps.name.password2}
+                control={control}
+                rules={{ required: 'Password em falta', validate: (value) => value === password || 'Insira a mesma password nos 2 campos' }}
+                render={({ field }) => (
+                  <TextField
+                    label='Repetir Password'
+                    type={componentProps.type.password}
+                    variant={componentProps.variant.outlined}
+                    fullWidth
+                    sx={resetClasses.field}
+                    error={errors.password2 ? true : false}
+                    disabled={isLoading}
+                    autoComplete='true'
+                    {...field}
+                  />
+                )}
               />
 
               {errorMessage && <ErrorMessage message={errorMessage} />}
+              {errors.password && <ErrorMessage message={errors.password.message} />}
+              {errors.password2 && <ErrorMessage message={errors.password2.message} />}
 
-              <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
-                Repor
-              </Button>
+              {!isLoading && (
+                <Button variant={componentProps.variant.contained} type={componentProps.type.submit}>
+                  Repor
+                </Button>
+              )}
             </form>
           </Box>
-        </>
+        </Box>
       )}
       {successMessage && (
         <Box sx={resetClasses.top}>
-          <Box sx={resetClasses.image}>
-            <img src={resetImage} alt='Forgot password' className='auth-images' />
-          </Box>
           <SuccessMessage message={successMessage} />
+          <Button onClick={() => navigate('/login')}>Entrar</Button>
         </Box>
       )}
     </Box>

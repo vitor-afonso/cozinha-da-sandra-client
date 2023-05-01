@@ -22,6 +22,7 @@ const SignupPage = () => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -31,6 +32,8 @@ const SignupPage = () => {
       password2: '',
     },
   });
+
+  const password = watch('password');
 
   const handleSignupSubmit = async ({ username, email, password }) => {
     if (!conditionsAccepted) {
@@ -143,6 +146,7 @@ const SignupPage = () => {
                     sx={signupClasses.field}
                     error={errors.password ? true : false}
                     disabled={isLoading}
+                    autoComplete='true'
                     {...field}
                   />
                 )}
@@ -150,7 +154,7 @@ const SignupPage = () => {
               <Controller
                 name={componentProps.name.password2}
                 control={control}
-                rules={{ required: 'Password em falta', validate: (value) => value === control._fields.password._f.value || 'Insira a mesma password nos 2 campos' }}
+                rules={{ required: 'Password em falta', validate: (value) => value === password || 'Insira a mesma password nos 2 campos' }}
                 render={({ field }) => (
                   <TextField
                     label='Repetir Password'
@@ -160,6 +164,7 @@ const SignupPage = () => {
                     sx={signupClasses.field}
                     error={errors.password2 ? true : false}
                     disabled={isLoading}
+                    autoComplete='true'
                     {...field}
                   />
                 )}
