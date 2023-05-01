@@ -455,9 +455,8 @@ export const forgotClasses = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    py: 5,
-    height: `calc(100vh - ${APP.navbarHeight})`,
-    justifyContent: 'center',
+    px: 3,
+    mt: '10vh',
   },
   top: {
     display: 'flex',
