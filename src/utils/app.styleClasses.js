@@ -595,24 +595,27 @@ export const profileClasses = {
 export const resetClasses = {
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    py: 5,
+    flexDirection: { xs: 'column', md: 'row' },
+    justifyContent: { md: 'center' },
+    alignItems: { xs: 'center', md: 'start' },
+    mt: { md: '10vh' },
+    p: 3,
   },
-  top: {
+  topText: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   image: {
-    maxWidth: { xs: '250px', md: '450px' },
+    maxWidth: { xs: '150px', md: '350px' },
+    mr: { md: 12 },
   },
   form: {
     width: { xs: '300px', md: '500px' },
   },
   field: {
     marginTop: 0,
-    marginBottom: 5,
+    marginBottom: 2,
     display: 'block',
   },
 };
