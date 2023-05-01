@@ -24,8 +24,6 @@ const ResetPage = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      username: '',
-      email: '',
       password: '',
       password2: '',
     },
