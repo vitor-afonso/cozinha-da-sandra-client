@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { componentProps, homeClasses } from 'utils/app.styleClasses';
+import { homeClasses } from 'utils/app.styleClasses';
 import useHomePageItems from 'hooks/useHomePageItems';
 import HomePageHero from 'components/HomeHero';
 import ShopItemsCategory from 'components/ShopItemsCategory';
 import showLoadingMessage from 'utils/app.utils';
 
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import RatingAverage from 'components/RatingAverage';
 import ReviewsModal from 'components/ReviewsModal';
 
@@ -36,17 +36,14 @@ const HomePage = () => {
 
   return (
     <Box className='HomePage' sx={homeClasses.container}>
-      <HomePageHero>{reviewsData && <RatingAverage setIsModalOpen={setIsModalOpen} />}</HomePageHero>
-      <Box className='shop-items-container' sx={homeClasses.itemsContainer}>
+      <HomePageHero isLoading={isLoading} msgRef={msgRef}>
+        {reviewsData && <RatingAverage setIsModalOpen={setIsModalOpen} />}
+      </HomePageHero>
+      <Box sx={homeClasses.itemsContainer}>
         {docesData?.categoryItems?.length > 0 && <ShopItemsCategory {...docesData} categoryStyles={homeClasses.docesContainer} />}
         {salgadosData?.categoryItems?.length > 0 && <ShopItemsCategory {...salgadosData} categoryStyles={homeClasses.salgadosContainer} />}
       </Box>
-      {isLoading && (
-        <>
-          <CircularProgress sx={{ mt: 4 }} size='80px' />
-          <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ my: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
-        </>
-      )}
+      {isLoading && <CircularProgress sx={{ mt: 4 }} size='80px' />}
       <ReviewsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} reviewsData={reviewsData} />
     </Box>
   );

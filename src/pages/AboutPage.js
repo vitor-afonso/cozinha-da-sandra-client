@@ -3,22 +3,16 @@
 import { useState } from 'react';
 
 import { capitalizeAppName, APP } from 'utils/app.utils.js';
-import instagramImage from 'images/instagram.svg';
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import { aboutClasses, componentProps } from 'utils/app.styleClasses.js';
-import TermsModal from 'components/TermsModal.js';
 import useAboutUsData from 'hooks/useAboutUsData.js';
 import ReviewsModal from 'components/ReviewsModal.js';
 import RatingAverage from 'components/RatingAverage.js';
-import { Box, Typography, Link, Button } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
+import { Box, Typography } from '@mui/material';
 
 const APP_NAME = capitalizeAppName();
-const MAIL_TO = `mailto:${APP.email}`;
 
 const AboutPage = () => {
   const { reviewsData } = useAboutUsData();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   return (
@@ -55,31 +49,7 @@ const AboutPage = () => {
         </Typography>
       </Box>
 
-      <Box sx={aboutClasses.social}>
-        <Box>
-          <Typography variant={componentProps.variant.h6} sx={aboutClasses.socialTitle}>
-            Contactos
-          </Typography>
-          <Box sx={aboutClasses.socialContainer}>
-            <Link href='https://www.facebook.com/A-Cozinha-da-Sandra-104480682299126/'>
-              <FacebookOutlinedIcon fontSize={componentProps.fontSize.large} sx={{ mr: 2 }} color={componentProps.color.secondary} />
-            </Link>
-            <Link href=''>
-              <img src={instagramImage} alt='Instagram' width='28px' height='auto' />
-            </Link>
-            <Link href={MAIL_TO}>
-              <EmailIcon fontSize={componentProps.fontSize.large} sx={{ mt: '2px', ml: 2 }} />
-            </Link>
-          </Box>
-        </Box>
-        <Button type={componentProps.type.text} sx={aboutClasses.terms} onClick={() => setIsModalOpen(true)}>
-          Termos e condições
-        </Button>
-      </Box>
-
       <ReviewsModal isModalOpen={isReviewModalOpen} setIsModalOpen={setIsReviewModalOpen} reviewsData={reviewsData} />
-
-      <TermsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Box>
   );
 };
