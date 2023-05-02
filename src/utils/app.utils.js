@@ -30,6 +30,10 @@ export const capitalizeAppName = () => {
   return capitalizedName;
 };
 
+export const appRegex = {
+  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+};
+
 export const getHomePageCategoryItems = (itemsArr, category) => {
   let counter = 0;
   let amountOfItemsToDisplay = 3;
