@@ -25,8 +25,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import { Link } from 'react-router-dom';
 import TermsModal from 'components/TermsModal';
 
-const drawerWidth = 220;
-
+const DRAWER_WIDTH = 220;
 const APP_NAME = APP.name.toUpperCase();
 const MAIL_TO = `mailto:${APP.email}`;
 
@@ -108,7 +107,7 @@ export const Layout = (props) => {
             }}
             sx={{
               display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
             }}
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
