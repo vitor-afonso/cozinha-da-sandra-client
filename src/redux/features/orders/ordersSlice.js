@@ -2,23 +2,23 @@
 
 // eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
-import { getAllOrders } from 'api';
+import { getAllOrders, getUserOrders } from 'api';
 
 const initialState = {
   shopOrders: [],
   isLoading: true,
 };
 
-export const getShopOrders = createAsyncThunk('items/getShopOrders', async (dataFromComponent, thunkAPI) => {
+export const getShopOrders = createAsyncThunk('items/getShopOrders', async (userId, thunkAPI) => {
   try {
-    //console.log('optional data from component =>', dataFromComponent);
+    //console.log('optional data from component =>', userId);
     //console.log('thunkAPI =>', thunkAPI); // contains valious methods
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
 
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
-    const { data } = await getAllOrders();
-    //console.log('getShopOrders data in ordersSlice', data);
+    const { data } = userId ? await getUserOrders(userId) : await getAllOrders();
+    // console.log('getShopOrders data in ordersSlice', data);
     return data; // we return a promise that is being handled by extraReducers in ordersSlice
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopOrders.rejected in ordersSlice
