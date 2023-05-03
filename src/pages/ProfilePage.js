@@ -1,6 +1,6 @@
 // jshint esversion:9
 
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,36 +13,35 @@ import { componentProps, profileClasses } from 'utils/app.styleClasses';
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
-  const { shopOrders } = useSelector((store) => store.orders);
+  const { shopOrders, isLoading } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const [profileOwner, setProfileOwner] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasBeenCalled, setHasBeenCalled] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
-  const userEffectRan = useRef(false);
   const ordersRef = useRef(null);
-
-  useEffect(() => {
-    if (userEffectRan.current === false) {
-      dispatch(getShopOrders());
-
-      return () => {
-        userEffectRan.current = true;
-      };
-    }
-  }, [dispatch]);
 
   useEffect(() => {
     if (userId) {
       let allUserOrders = shopOrders.filter((order) => order.userId._id === userId);
-      let owner = shopUsers.find((user) => user._id === userId);
       setUserOrders(allUserOrders);
+    }
+  }, [userId, shopOrders]);
+
+  useEffect(() => {
+    if (userId) {
+      let owner = shopUsers.find((user) => user._id === userId);
       setProfileOwner(owner);
     }
   }, [userId, shopUsers, shopOrders]);
 
   const showOrders = () => {
+    if (!isVisible && !hasBeenCalled) {
+      dispatch(getShopOrders(user._id));
+      setHasBeenCalled(true);
+    }
     setIsVisible(!isVisible);
     setTimeout(() => scrollToOrders(ordersRef), 300);
   };
@@ -57,7 +56,7 @@ const ProfilePage = () => {
   return (
     <Box sx={profileClasses.container}>
       {profileOwner && shopOrders && (
-        <>
+        <Box>
           <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
             PERFIL
           </Typography>
@@ -144,25 +143,28 @@ const ProfilePage = () => {
             Histórico de pedidos
           </Button>
 
-          <Box sx={!isVisible ? profileClasses.ordersNotVisible : {}} ref={ordersRef}>
-            <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
-              {userOrders.length > 0 &&
-                userOrders.map((order) => {
-                  return (
-                    <Box sx={{ mt: 4 }} key={order._id}>
-                      <ShopOrder order={order} />
-                    </Box>
-                  );
-                })}
-            </Masonry>
-            {userOrders.length === 0 && (
-              <Typography paragraph sx={{ mt: 4 }}>
-                Nenhum pedido encontrado.
-              </Typography>
-            )}
-          </Box>
-        </>
+          {!isLoading && (
+            <Box sx={!isVisible ? profileClasses.ordersNotVisible : {}} ref={ordersRef}>
+              <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
+                {userOrders.length > 0 &&
+                  userOrders.map((order) => {
+                    return (
+                      <Box sx={{ mt: 4 }} key={order._id}>
+                        <ShopOrder order={order} />
+                      </Box>
+                    );
+                  })}
+              </Masonry>
+              {userOrders.length === 0 && (
+                <Typography paragraph sx={{ mt: 4 }}>
+                  Nenhum pedido encontrado.
+                </Typography>
+              )}
+            </Box>
+          )}
+        </Box>
       )}
+      {isLoading && <CircularProgress sx={{ mt: 4 }} size='80px' />}
     </Box>
   );
 };
