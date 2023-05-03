@@ -34,7 +34,6 @@ const CartPage = () => {
   const formRef = useRef();
   const submitBtnRef = useRef();
   const orderAddressRef = useRef(null);
-  const effectRan = useRef(false);
   const theme = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -69,16 +68,6 @@ const CartPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    if (effectRan.current === false) {
-      dispatch(getShopOrders());
-
-      return () => {
-        effectRan.current = true;
-      };
-    }
-  }, [dispatch]);
 
   const toggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -135,8 +124,7 @@ const CartPage = () => {
 
   const getOrderNumber = () => {
     dispatch(getShopOrders());
-    let orderNumber = String(shopOrders.length + 1).padStart(5, '0');
-    return orderNumber;
+    return String(shopOrders.length + 1);
   };
 
   function handleClearCart() {
