@@ -83,7 +83,11 @@ export const createOrder = (order) => {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
   });
 };
-
+export const getUserOrders = (userId) => {
+  return axios.get(`${API_URL}/orders/${userId}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
 export const getAllOrders = () => {
   return axios.get(`${API_URL}/orders`, {
     headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
