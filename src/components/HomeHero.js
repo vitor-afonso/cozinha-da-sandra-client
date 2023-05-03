@@ -3,16 +3,26 @@ import { useContext } from 'react';
 import { componentProps, homeClasses } from 'utils/app.styleClasses';
 import heroImage from 'images/hero.svg';
 
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 
-const HomePageHero = ({ children }) => {
+const HomePageHero = ({ children, isLoading, msgRef }) => {
   const { user } = useContext(AuthContext);
   return (
-    <Grid container spacing={0} sx={homeClasses.hero}>
+    <Box sx={homeClasses.hero}>
       <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'end' } }}>
-        <Box sx={{ maxWidth: { md: '600px' } }}>
-          <img src={heroImage} alt='Cake' width='100%' height='auto' />
-        </Box>
+        <>
+          {!isLoading && (
+            <Box sx={{ maxWidth: { md: '600px' }, mb: 4 }}>
+              <img src={heroImage} alt='Cake' width='100%' height='auto' />
+            </Box>
+          )}
+          {isLoading && (
+            <>
+              <CircularProgress sx={{ mt: 2 }} size='50px' />
+              <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ mt: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
+            </>
+          )}
+        </>
       </Grid>
       <Grid item xs={12} md={6} sx={{ display: { lg: 'flex' }, justifyContent: { lg: 'start' } }}>
         <Box sx={homeClasses.heroText}>
@@ -25,7 +35,7 @@ const HomePageHero = ({ children }) => {
         </Box>
       </Grid>
       {children}
-    </Grid>
+    </Box>
   );
 };
 

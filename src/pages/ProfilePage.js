@@ -140,27 +140,25 @@ const ProfilePage = () => {
             </Box>
           </Box>
 
-          <Button sx={{ mt: 3, mb: 4 }} variant={componentProps.variant.outlined} onClick={showOrders}>
+          <Button variant={componentProps.variant.outlined} onClick={showOrders}>
             Histórico de pedidos
           </Button>
 
-          <Box sx={!isVisible ? profileClasses.ordersNotVisible : profileClasses.ordersVisible} ref={ordersRef}>
+          <Box sx={!isVisible ? profileClasses.ordersNotVisible : {}} ref={ordersRef}>
             <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
               {userOrders.length > 0 &&
                 userOrders.map((order) => {
                   return (
-                    <div key={order._id}>
+                    <Box sx={{ mt: 4 }} key={order._id}>
                       <ShopOrder order={order} />
-                    </div>
+                    </Box>
                   );
                 })}
             </Masonry>
             {userOrders.length === 0 && (
-              <div>
-                <Typography paragraph sx={{ mt: 4 }}>
-                  Nenhum pedido encontrado.
-                </Typography>
-              </div>
+              <Typography paragraph sx={{ mt: 4 }}>
+                Nenhum pedido encontrado.
+              </Typography>
             )}
           </Box>
         </>

@@ -7,8 +7,7 @@ export const shopOrderClasses = {
   container: {
     width: 300,
     backgroundColor: '#E3DDE3',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    mx: 'auto',
   },
   infoField: {
     display: 'flex',
@@ -199,8 +198,6 @@ export const aboutClasses = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: '90vh',
-    height: '100%',
   },
   hero: {
     width: '100%',
@@ -239,6 +236,11 @@ export const aboutClasses = {
     minWidth: '250px',
   },
   bottomContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pt: 3,
     px: 3,
   },
   bottomTitle: {
@@ -250,7 +252,6 @@ export const aboutClasses = {
   bottomDescription: {
     fontSize: '16px',
     color: '#031D44',
-    mb: 3,
     mx: 'auto',
     textAlign: { md: 'left' },
     maxWidth: '600px',
@@ -331,7 +332,7 @@ export const cartClasses = {
 export const docesClasses = {
   container: {
     px: 3,
-    mb: 12,
+    mb: 9,
   },
   field: {
     minWidth: '300px',
@@ -346,7 +347,7 @@ export const docesClasses = {
 export const salgadosClasses = {
   container: {
     px: 3,
-    mb: 12,
+    mb: 9,
   },
   field: {
     minWidth: '300px',
@@ -391,41 +392,38 @@ export const editItemClasses = {
 export const editProfileClasses = {
   container: {
     px: 3,
-    pb: 8,
   },
   formContainer: {
-    marginTop: 0,
+    margin: 0,
   },
   form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    mx: 'auto',
     minWidth: 300,
     maxWidth: 600,
   },
   formField: {
     marginTop: 0,
-    marginBottom: 5,
+    mb: 2,
     display: 'block',
   },
   nameField: {
     marginTop: 0,
-    marginBottom: 2,
+    mb: 2,
     display: 'block',
   },
   formTextArea: {
     minWidth: '100%',
-    marginBottom: 5,
+    mb: 2,
   },
 };
 
 export const signupClasses = {
   container: {
-    height: `calc(100vh - ${APP.navbarHeight})`,
     display: 'flex',
     flexDirection: { xs: 'column', md: 'row' },
     justifyContent: 'center',
     alignItems: 'center',
-    py: 5,
+    mt: { md: '10vh' },
   },
   top: {
     display: 'flex',
@@ -441,7 +439,6 @@ export const signupClasses = {
   },
   form: {
     width: { xs: '300px', md: '500px' },
-    marginBottom: 4,
   },
   field: {
     marginTop: 0,
@@ -464,7 +461,7 @@ export const forgotClasses = {
     alignItems: 'center',
   },
   image: {
-    maxWidth: { xs: '200px', md: '300px' },
+    maxWidth: { xs: '150px', md: '300px' },
   },
   form: {
     width: { xs: '300px', md: '500px' },
@@ -478,12 +475,11 @@ export const forgotClasses = {
 
 export const loginClasses = {
   container: {
-    height: `calc(100vh - ${APP.navbarHeight})`,
     display: 'flex',
     flexDirection: { xs: 'column', md: 'row' },
     justifyContent: 'center',
     alignItems: 'center',
-    py: 5,
+    mt: { md: '10vh' },
   },
   top: {
     display: 'flex',
@@ -511,7 +507,6 @@ export const loginClasses = {
 export const newItemClasses = {
   container: {
     px: 3,
-    pb: 8,
   },
   formContainer: {
     marginTop: 0,
@@ -550,7 +545,6 @@ export const ordersClasses = {
 export const profileClasses = {
   container: {
     px: 3,
-    pb: 3,
   },
   formContainer: {
     marginTop: 0,
@@ -580,9 +574,7 @@ export const profileClasses = {
   ordersNotVisible: {
     display: 'none',
   },
-  ordersVisible: {
-    //outline: '1px solid red',
-  },
+
   breakpoints: {
     default: 4,
     1600: 3,
@@ -598,7 +590,8 @@ export const resetClasses = {
     justifyContent: { md: 'center' },
     alignItems: { xs: 'center', md: 'start' },
     mt: { md: '10vh' },
-    p: 3,
+    px: 3,
+    pt: 3,
   },
   topText: {
     display: 'flex',
@@ -622,25 +615,21 @@ export const resetClasses = {
 export const sendEmailClasses = {
   container: {
     px: 3,
-    pb: 3,
-  },
-  formContainer: {
-    marginTop: 4,
-    marginBottom: 4,
   },
   form: {
-    marginTop: 4,
+    mt: 4,
     mx: 'auto',
     minWidth: 300,
     maxWidth: 600,
   },
   formField: {
     marginTop: 0,
-    marginBottom: 4,
+    mb: 2,
     display: 'block',
   },
   formTextArea: {
     minWidth: '100%',
+    mb: 2,
   },
 };
 
@@ -651,7 +640,6 @@ export const usersClasses = {
     flexDirection: 'column',
     alignItems: 'center',
     px: 3,
-    pb: 6,
   },
 
   top: {
@@ -700,17 +688,61 @@ export const usersClasses = {
   },
 };
 
+export const layoutStyle = {
+  page: {
+    width: '100vw',
+    height: `calc(100vh - ${APP.navbarHeight})`,
+  },
+
+  cartTotalButton: {
+    width: '240px',
+    height: '60px',
+    position: 'fixed',
+    marginLeft: '-120px',
+    borderRadius: '20px',
+    bottom: 76,
+    fontSize: '18px',
+  },
+
+  footer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    py: 1,
+    px: 3,
+    backgroundImage: 'linear-gradient(to bottom right, #b2dfdb, #fff)',
+  },
+  footerSocial: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '200px',
+  },
+  footerTerms: {
+    flexShrink: 0,
+    padding: 0,
+    alignSelf: 'center',
+
+    fontSize: 10,
+  },
+};
+
 export const homeClasses = {
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    minHeight: '100vh',
   },
   hero: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-    padding: 3,
+    pt: 3,
+    px: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
+    minHeight: { xs: `calc(100vh - ${APP.navbarHeight})`, md: '50vh' },
   },
   heroText: {
     display: 'flex',
@@ -718,7 +750,7 @@ export const homeClasses = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    py: 3,
+    pb: 3,
   },
   heroTitle: {
     fontSize: 50,

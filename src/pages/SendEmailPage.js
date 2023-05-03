@@ -74,15 +74,15 @@ const SendEmailPage = () => {
 
   return (
     <Box sx={sendEmailClasses.container}>
-      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ mt: 4, mb: 2 }}>
         Enviar Email
       </Typography>
-      <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ my: 4 }}>
+      <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mb: 4 }}>
         Detalhes de pedido
       </Typography>
 
       {order && !successMessage && (
-        <Box sx={sendEmailClasses.formContainer}>
+        <Box>
           <ShopOrder order={order} />
 
           <Box sx={sendEmailClasses.form}>
@@ -169,7 +169,7 @@ const SendEmailPage = () => {
 
       {successMessage && <SuccessMessage message={successMessage} />}
 
-      <div>
+      <Box>
         {!isLoading && (
           <Button sx={{ mr: 1 }} onClick={() => navigate(-1)}>
             Voltar
@@ -182,7 +182,7 @@ const SendEmailPage = () => {
           </Button>
         )}
         {isLoading && !successMessage && <CircularProgress size='80px' />}
-      </div>
+      </Box>
     </Box>
   );
 };

@@ -18,11 +18,16 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { Avatar, Badge, Button } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { componentProps } from 'utils/app.styleClasses.js';
+import { componentProps, layoutStyle } from 'utils/app.styleClasses.js';
+import instagramImage from 'images/instagram.svg';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import EmailIcon from '@mui/icons-material/Email';
+import { Link } from 'react-router-dom';
+import TermsModal from 'components/TermsModal';
 
-const drawerWidth = 220;
-
+const DRAWER_WIDTH = 220;
 const APP_NAME = APP.name.toUpperCase();
+const MAIL_TO = `mailto:${APP.email}`;
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -38,28 +43,13 @@ function ElevationScroll(props) {
 }
 
 export const Layout = (props) => {
+  const { isLoading, cartAmount, cartTotal } = useSelector((store) => store.items);
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { isLoading, cartAmount, cartTotal } = useSelector((store) => store.items);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const cartButtonLocations = ['/', '/doces', '/salgados'];
-
-  const layoutStyle = {
-    page: {
-      width: '100%',
-    },
-
-    cartTotalButton: {
-      width: '240px',
-      height: '60px',
-      position: 'fixed',
-      marginLeft: '-120px',
-      borderRadius: '20px',
-      bottom: 16,
-      fontSize: '18px',
-    },
-  };
 
   const container = window !== undefined ? () => window().document.body : undefined;
   const handleDrawerToggle = () => {
@@ -117,7 +107,7 @@ export const Layout = (props) => {
             }}
             sx={{
               display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
             }}
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -132,8 +122,29 @@ export const Layout = (props) => {
 
         <Box component='main' sx={layoutStyle.page}>
           <Toolbar />
-          {children}
-          {cartButtonLocations.includes(location.pathname) && !isLoading && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+            <Box sx={{ mb: 3 }}>{children}</Box>
+            <Box sx={layoutStyle.footer}>
+              <Box>
+                <Box sx={layoutStyle.footerSocial}>
+                  <Link href='#'>
+                    <FacebookOutlinedIcon fontSize={componentProps.fontSize.large} sx={{ mr: 2 }} color={componentProps.color.secondary} />
+                  </Link>
+                  <Link href='#'>
+                    <img src={instagramImage} alt='Instagram' width='28px' height='auto' />
+                  </Link>
+                  <Link href={MAIL_TO}>
+                    <EmailIcon fontSize={componentProps.fontSize.large} sx={{ mt: '2px', ml: 2 }} />
+                  </Link>
+                </Box>
+              </Box>
+              <Button type={componentProps.type.text} sx={layoutStyle.footerTerms} onClick={() => setIsModalOpen(true)}>
+                Termos e condições
+              </Button>
+            </Box>
+          </Box>
+
+          {cartButtonLocations.includes(location.pathname) && !isLoading && cartAmount > 0 && (
             <Button
               variant={componentProps.variant.contained}
               startIcon={<ShoppingCartOutlinedIcon fontSize={componentProps.fontSize.large} />}
@@ -144,6 +155,7 @@ export const Layout = (props) => {
               Carrinho: {getTotal()}
             </Button>
           )}
+          <TermsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         </Box>
       </Box>
     </React.Fragment>

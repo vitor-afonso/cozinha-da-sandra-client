@@ -100,27 +100,25 @@ const OrdersPage = () => {
         </FormControl>
       </Box>
 
-      {isLoading && <CircularProgress sx={{ mt: 20 }} />}
+      {isLoading && <CircularProgress sx={{ mt: 4 }} size='80px' />}
 
-      <Box sx={{ padding: 3 }}>
+      <Box sx={{ pt: 3, px: 3 }}>
         <Masonry breakpointCols={ordersClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
           {filteredOrders.length > 0 &&
             filteredOrders.map((order) => {
               return (
-                <div key={order._id}>
+                <Box key={order._id}>
                   <ShopOrder order={order} />
-                </div>
+                </Box>
               );
             })}
         </Masonry>
         {filteredOrders.length === 0 && (
-          <div>
-            {!isLoading && (
-              <Typography paragraph sx={{ mt: 4 }}>
-                Nenhum pedido com o filtro seleccionado.
-              </Typography>
-            )}
-          </div>
+          <Box>
+            <Typography paragraph sx={{ mt: 4 }}>
+              Nenhum pedido com o filtro seleccionado.
+            </Typography>
+          </Box>
         )}
       </Box>
     </Box>
