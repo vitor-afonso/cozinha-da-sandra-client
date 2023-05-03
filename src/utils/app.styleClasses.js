@@ -691,7 +691,7 @@ export const usersClasses = {
 export const layoutStyle = {
   page: {
     width: '100vw',
-    height: `calc(101vh - ${APP.navbarHeight})`,
+    height: `calc(100vh - ${APP.navbarHeight})`,
   },
 
   cartTotalButton: {
@@ -742,7 +742,7 @@ export const homeClasses = {
     pt: 3,
     px: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
-    minHeight: { xs: `calc(101vh - ${APP.navbarHeight})`, md: '50vh' },
+    minHeight: { xs: `calc(100vh - ${APP.navbarHeight})`, md: '50vh' },
   },
   heroText: {
     display: 'flex',
