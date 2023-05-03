@@ -59,8 +59,13 @@ function App() {
 
   useEffect(() => {
     if (userEffectRan.current === false && user) {
-      dispatch(getShopOrders());
+      if (user.userType === 'user') {
+        dispatch(getShopOrders(user._id));
+        dispatch(getShopUsers(user._id));
+        return;
+      }
       dispatch(getShopUsers());
+      dispatch(getShopOrders());
       return () => {
         userEffectRan.current = true;
       };
