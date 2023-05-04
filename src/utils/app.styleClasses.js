@@ -429,6 +429,7 @@ export const signupClasses = {
     justifyContent: 'center',
     alignItems: 'center',
     mt: { md: '10vh' },
+    minHeight: { xs: `calc(100vh - ${APP.navbarHeight}) - ${APP.footerHeight})` },
   },
   top: {
     display: 'flex',
@@ -695,8 +696,12 @@ export const usersClasses = {
 
 export const layoutStyle = {
   page: {
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
     width: '100vw',
-    height: `calc(100vh - ${APP.navbarHeight})`,
+    minHeight: `100vh`,
   },
 
   cartTotalButton: {
@@ -712,7 +717,7 @@ export const layoutStyle = {
   footer: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%',
+    width: '100vw',
     py: 1,
     px: 3,
     backgroundImage: 'linear-gradient(to bottom right, #b2dfdb, #fff)',
