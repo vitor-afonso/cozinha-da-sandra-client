@@ -10,7 +10,7 @@ import { componentProps, ordersClasses } from 'utils/app.styleClasses';
 
 const OrdersPage = () => {
   const dispatch = useDispatch();
-  const { shopOrders, isLoading } = useSelector((store) => store.orders);
+  const { shopOrders, isLoadingOrders } = useSelector((store) => store.orders);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [filterOption, setFilterOption] = useState('');
   const userEffectRan = useRef(false);
@@ -100,7 +100,7 @@ const OrdersPage = () => {
         </FormControl>
       </Box>
 
-      {isLoading && <CircularProgress sx={{ mt: 4 }} size='80px' />}
+      {isLoadingOrders && <CircularProgress sx={{ mt: 4 }} size='80px' />}
 
       <Box sx={{ pt: 3, px: 3 }}>
         <Masonry breakpointCols={ordersClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>

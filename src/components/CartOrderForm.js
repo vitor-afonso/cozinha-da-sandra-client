@@ -36,6 +36,7 @@ export const CartOrderForm = ({
   user,
   calculateCartTotalToShow,
   customDeliveryFee,
+  isLoadingOrders,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, globalDeliveryDiscount } = useSelector((store) => store.items);
   const theme = useTheme();
@@ -289,9 +290,12 @@ export const CartOrderForm = ({
             Voltar
           </Button>
 
-          <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitBtnRef.current.click()}>
-            Encomendar
-          </Button>
+          {!isLoadingOrders && (
+            <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitBtnRef.current.click()}>
+              Encomendar
+            </Button>
+          )}
+          {isLoadingOrders && <CircularProgress size='50px' sx={{ mb: 2 }} />}
         </Box>
       )}
       {isLoading && <CircularProgress size='80px' sx={{ mb: 2 }} />}
