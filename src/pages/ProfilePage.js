@@ -3,32 +3,27 @@
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from 'components/ShopOrder';
 import { AuthContext } from 'context/auth.context';
-import { getShopOrders } from 'redux/features/orders/ordersSlice';
 import { componentProps, profileClasses } from 'utils/app.styleClasses';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
   const { shopUsers } = useSelector((store) => store.users);
-  const { shopOrders, isLoading } = useSelector((store) => store.orders);
-  const dispatch = useDispatch();
+  const { shopOrders, isLoadingOrders } = useSelector((store) => store.orders);
   const [profileOwner, setProfileOwner] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasBeenCalled, setHasBeenCalled] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
   const ordersRef = useRef(null);
 
   useEffect(() => {
-    if (userId) {
-      let allUserOrders = shopOrders.filter((order) => order.userId._id === userId);
-      setUserOrders(allUserOrders);
-    }
-  }, [userId, shopOrders]);
+    let allUserOrders = shopOrders.filter((order) => order.userId._id === userId && !order.deleted);
+    setUserOrders(allUserOrders);
+  }, [user, userId, shopOrders]);
 
   useEffect(() => {
     if (userId) {
@@ -38,10 +33,6 @@ const ProfilePage = () => {
   }, [userId, shopUsers, shopOrders]);
 
   const showOrders = () => {
-    if (!isVisible && !hasBeenCalled) {
-      dispatch(getShopOrders(user._id));
-      setHasBeenCalled(true);
-    }
     setIsVisible(!isVisible);
     setTimeout(() => scrollToOrders(ordersRef), 300);
   };
@@ -143,7 +134,7 @@ const ProfilePage = () => {
             Histórico de pedidos
           </Button>
 
-          {!isLoading && (
+          {!isLoadingOrders && (
             <Box sx={!isVisible ? profileClasses.ordersNotVisible : {}} ref={ordersRef}>
               <Masonry breakpointCols={profileClasses.breakpoints} className='my-masonry-grid' columnClassName='my-masonry-grid_column'>
                 {userOrders.length > 0 &&
@@ -164,7 +155,7 @@ const ProfilePage = () => {
           )}
         </Box>
       )}
-      {isLoading && <CircularProgress sx={{ mt: 4 }} size='80px' />}
+      {isLoadingOrders && <CircularProgress sx={{ mt: 4 }} size='80px' />}
     </Box>
   );
 };

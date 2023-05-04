@@ -18,9 +18,8 @@ const AboutPage = () => {
   return (
     <Box sx={aboutClasses.container}>
       <Box sx={aboutClasses.hero}>
-        <Box sx={aboutClasses.imgContainer}></Box>
-
         <Box>
+          <Box sx={aboutClasses.imgContainer}></Box>
           <Box sx={aboutClasses.heroText}>
             <Typography variant={componentProps.variant.h2} sx={aboutClasses.heroTitle}>
               A dona da cozinha!
@@ -29,8 +28,8 @@ const AboutPage = () => {
               <i>{APP.ownerName}</i>, é o rosto por trás dos nossos produtos. Apaixonada pela confecção e criação de snacks tradicionais da cozinha portuguesa com sabor a África.
             </Typography>
           </Box>
-          {reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} />}
         </Box>
+        {reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} />}
       </Box>
 
       <Box sx={aboutClasses.bottomContainer}>

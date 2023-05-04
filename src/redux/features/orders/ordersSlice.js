@@ -6,7 +6,7 @@ import { getAllOrders, getUserOrders } from 'api';
 
 const initialState = {
   shopOrders: [],
-  isLoading: true,
+  isLoadingOrders: true,
 };
 
 export const getShopOrders = createAsyncThunk('items/getShopOrders', async (userId, thunkAPI) => {
@@ -67,14 +67,14 @@ const ordersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getShopOrders.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingOrders = true;
       })
       .addCase(getShopOrders.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingOrders = false;
         state.shopOrders = action.payload;
       })
       .addCase(getShopOrders.rejected, (state) => {
-        state.isLoading = false;
+        state.isLoadingOrders = false;
       });
   },
 });

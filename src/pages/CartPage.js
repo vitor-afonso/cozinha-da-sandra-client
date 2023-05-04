@@ -14,14 +14,14 @@ import emptyCartImage from 'images/emptyCart.svg';
 import { APP, isElegibleForGlobalDiscount } from 'utils/app.utils';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getShopOrders } from 'redux/features/orders/ordersSlice';
+import { getShopOrders, updateShopOrder } from 'redux/features/orders/ordersSlice';
 import { cartClasses, componentProps } from 'utils/app.styleClasses';
 import SuccessMessage from 'components/SuccessMessage';
 import { useForm } from 'react-hook-form';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
-  const { shopOrders } = useSelector((store) => store.orders);
+  const { shopOrders, isLoadingOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -69,6 +69,11 @@ const CartPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    if (isLoadingOrders) {
+    }
+  }, [isLoadingOrders]);
+
   const toggleForm = () => {
     setIsFormVisible(!isFormVisible);
     setTimeout(() => scrollToOrderInfo(formRef), 300);
@@ -102,6 +107,7 @@ const CartPage = () => {
       dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
       setValue('haveExtraFee', false);
     }
+    dispatch(getShopOrders());
   };
 
   const getDeliveryFee = () => {
@@ -123,7 +129,6 @@ const CartPage = () => {
   };
 
   const getOrderNumber = () => {
-    dispatch(getShopOrders());
     return String(shopOrders.length + 1);
   };
 
@@ -170,9 +175,10 @@ const CartPage = () => {
         total: cartTotal.toFixed(2),
       };
 
-      let userResponse = await Promise.race([createOrder(requestBody), sendEmail(orderReceivedEmail)]);
+      let { data } = await Promise.race([createOrder(requestBody), sendEmail(orderReceivedEmail)]);
 
-      dispatch(updateShopUser(userResponse.data.updatedUser));
+      dispatch(updateShopOrder(data.createdOrder));
+      dispatch(updateShopUser(data.updatedUser));
 
       setSuccessMessage('Pedido criado com sucesso. Será contactado/a em breve para confirmar o seu pedido. Consulte os detalhes do seu pedido no seu perfil.');
 
@@ -247,6 +253,7 @@ const CartPage = () => {
                 calculateCartTotalToShow={calculateCartTotalToShow}
                 haveExtraFee={haveExtraFee}
                 customDeliveryFee={customDeliveryFee}
+                isLoadingOrders={isLoadingOrders}
               />
             </>
           ) : (
