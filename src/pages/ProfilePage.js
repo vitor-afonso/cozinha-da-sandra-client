@@ -21,8 +21,10 @@ const ProfilePage = () => {
   const ordersRef = useRef(null);
 
   useEffect(() => {
-    let allUserOrders = shopOrders.filter((order) => order.userId._id === userId && !order.deleted);
-    setUserOrders(allUserOrders);
+    if (userId) {
+      let allUserOrders = shopOrders.filter((order) => order.userId._id === userId && !order.deleted);
+      setUserOrders(allUserOrders);
+    }
   }, [user, userId, shopOrders]);
 
   useEffect(() => {
