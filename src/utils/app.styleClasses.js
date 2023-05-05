@@ -197,14 +197,14 @@ export const aboutClasses = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   hero: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    minHeight: { xs: `calc(101vh - ${APP.navbarHeight})`, md: '50vh' },
+    minHeight: { xs: `calc(101vh - ${APP.navbarHeight} - ${APP.footerHeight})`, md: '50vh' },
     padding: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
     justifyContent: 'space-between',
@@ -259,14 +259,6 @@ export const aboutClasses = {
     color: '#031D44',
     mx: 'auto',
     textAlign: { md: 'left' },
-    maxWidth: '600px',
-  },
-  mapImg: {
-    width: '100%',
-    height: '450px',
-    backgroundImage: `url(${mapImage})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
     maxWidth: '600px',
   },
   social: {
@@ -700,8 +692,8 @@ export const layoutStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100vw',
     minHeight: `100vh`,
+    overflowX: 'hidden',
   },
 
   cartTotalButton: {
