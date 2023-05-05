@@ -746,8 +746,7 @@ export const homeClasses = {
   hero: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'end',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     p: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
@@ -758,7 +757,7 @@ export const homeClasses = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    height: { md: '100%' },
     pb: 3,
   },
   heroTitle: {
