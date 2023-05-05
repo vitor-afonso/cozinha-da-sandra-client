@@ -697,8 +697,8 @@ export const usersClasses = {
 export const layoutStyle = {
   page: {
     display: 'flex',
-    alignItems: 'center',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
     width: '100vw',
     minHeight: `100vh`,
@@ -708,7 +708,7 @@ export const layoutStyle = {
     width: '240px',
     height: '60px',
     position: 'fixed',
-    marginLeft: '-120px',
+    mx: 'auto',
     borderRadius: '20px',
     bottom: 76,
     fontSize: '18px',
