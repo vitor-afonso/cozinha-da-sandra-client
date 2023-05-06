@@ -9,21 +9,21 @@ const HomePageHero = ({ children, isLoading, msgRef }) => {
   const { user } = useContext(AuthContext);
   return (
     <Box sx={homeClasses.hero}>
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-        <Box>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row', maxWidth: { md: '80vw' } }, flexGrow: 1, mt: '10vh' }}>
+        <Box sx={{ mr: { md: 3 } }}>
           {!isLoading && (
             <Box sx={{ maxWidth: { md: '600px' }, mb: 4 }}>
               <img src={heroImage} alt='Cake' width='100%' height='auto' />
             </Box>
           )}
-          {isLoading && (
-            <>
-              <CircularProgress sx={{ mt: 2 }} size='50px' />
-              <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ mt: 4, mx: 'auto', maxWidth: '300px' }}></Typography>
-            </>
-          )}
         </Box>
         <Box>
+          {isLoading && (
+            <Box>
+              <CircularProgress size='50px' />
+              <Typography paragraph variant={componentProps.variant.body1} ref={msgRef} sx={{ mt: 2, mx: 'auto', maxWidth: '300px' }}></Typography>
+            </Box>
+          )}
           <Box sx={homeClasses.heroText}>
             <Typography variant={componentProps.variant.h2} sx={homeClasses.heroTitle}>
               {user ? `Bem-vindo ${user.username}!` : 'Bem-vindo!'}
@@ -35,7 +35,7 @@ const HomePageHero = ({ children, isLoading, msgRef }) => {
         </Box>
       </Box>
 
-      <Box>{children}</Box>
+      <Box sx={{ alignSelf: 'end' }}>{children}</Box>
     </Box>
   );
 };

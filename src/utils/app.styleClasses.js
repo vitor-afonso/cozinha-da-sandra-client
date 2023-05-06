@@ -197,14 +197,14 @@ export const aboutClasses = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   hero: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    minHeight: { xs: `calc(101vh - ${APP.navbarHeight})`, md: '50vh' },
+    minHeight: { xs: `calc(101vh - ${APP.navbarHeight} - ${APP.footerHeight})`, md: '50vh' },
     padding: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
     justifyContent: 'space-between',
@@ -259,14 +259,6 @@ export const aboutClasses = {
     color: '#031D44',
     mx: 'auto',
     textAlign: { md: 'left' },
-    maxWidth: '600px',
-  },
-  mapImg: {
-    width: '100%',
-    height: '450px',
-    backgroundImage: `url(${mapImage})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
     maxWidth: '600px',
   },
   social: {
@@ -697,18 +689,18 @@ export const usersClasses = {
 export const layoutStyle = {
   page: {
     display: 'flex',
-    alignItems: 'center',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
-    width: '100vw',
     minHeight: `100vh`,
+    overflowX: 'hidden',
   },
 
   cartTotalButton: {
     width: '240px',
     height: '60px',
     position: 'fixed',
-    marginLeft: '-120px',
+    mx: 'auto',
     borderRadius: '20px',
     bottom: 76,
     fontSize: '18px',
@@ -746,8 +738,7 @@ export const homeClasses = {
   hero: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'end',
-    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     p: 3,
     backgroundImage: 'linear-gradient(to bottom right, #ffe0b2, #b2dfdb)',
@@ -758,7 +749,7 @@ export const homeClasses = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    height: { md: '100%' },
     pb: 3,
   },
   heroTitle: {

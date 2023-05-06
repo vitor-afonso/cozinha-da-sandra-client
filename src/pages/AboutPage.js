@@ -18,7 +18,7 @@ const AboutPage = () => {
   return (
     <Box sx={aboutClasses.container}>
       <Box sx={aboutClasses.hero}>
-        <Box>
+        <Box sx={{ mt: '5vh' }}>
           <Box sx={aboutClasses.imgContainer}></Box>
           <Box sx={aboutClasses.heroText}>
             <Typography variant={componentProps.variant.h2} sx={aboutClasses.heroTitle}>
@@ -29,7 +29,7 @@ const AboutPage = () => {
             </Typography>
           </Box>
         </Box>
-        {reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} />}
+        <Box sx={{ alignSelf: 'end' }}>{reviewsData && <RatingAverage setIsModalOpen={setIsReviewModalOpen} />}</Box>
       </Box>
 
       <Box sx={aboutClasses.bottomContainer}>
