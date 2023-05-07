@@ -25,7 +25,7 @@ const HomePageHero = ({ children, isLoading, msgRef }) => {
             </Box>
           )}
           <Box sx={homeClasses.heroText}>
-            <Typography variant={componentProps.variant.h2} sx={homeClasses.heroTitle}>
+            <Typography variant={componentProps.variant.h2} sx={homeClasses.heroTitle} component={componentProps.variant.h1}>
               {user ? `Bem-vindo ${user.username}!` : 'Bem-vindo!'}
             </Typography>
             <Typography variant={componentProps.variant.body1} sx={homeClasses.heroDescription}>
