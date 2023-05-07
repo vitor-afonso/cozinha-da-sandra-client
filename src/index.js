@@ -7,6 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProviderWrapper } from 'context/auth.context';
 import { store } from 'redux/store';
 import { Provider } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <Router>
       <Provider store={store}>
         <AuthProviderWrapper>
-          <App />
+          <HelmetProvider>
+            <App />
+          </HelmetProvider>
         </AuthProviderWrapper>
       </Provider>
     </Router>
