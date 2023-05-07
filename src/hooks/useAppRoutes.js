@@ -3,13 +3,13 @@ import React, { lazy } from 'react';
 import { IsUser } from 'components/IsUser';
 import { IsAdmin } from 'components/IsAdmin';
 import { IsOrderOwner } from 'components/IsOrderOwner';
+import HomePage from 'pages/HomePage';
 
 const SignupPage = lazy(() => import('pages/SignupPage'));
 const LoginPage = lazy(() => import('pages/LoginPage'));
 const ForgotPage = lazy(() => import('pages/ForgotPage'));
 const ResetPage = lazy(() => import('pages/ResetPage'));
 const SendEmailPage = lazy(() => import('pages/SendEmailPage'));
-const HomePage = lazy(() => import('pages/HomePage'));
 const DocesPage = lazy(() => import('pages/DocesPage'));
 const SalgadosPage = lazy(() => import('pages/SalgadosPage'));
 const ItemDetailsPage = lazy(() => import('pages/ItemDetailsPage'));

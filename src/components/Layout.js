@@ -111,7 +111,7 @@ export const Layout = (props) => {
             }}
           >
             <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-              <Typography variant={componentProps.variant.h6} sx={{ my: 2 }} color={componentProps.color.primary}>
+              <Typography variant={componentProps.variant.h6} sx={{ my: 2 }} color={componentProps.color.primary} component={componentProps.variant.h2}>
                 {APP_NAME}
               </Typography>
               <Divider />
