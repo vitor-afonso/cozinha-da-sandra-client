@@ -18,6 +18,8 @@ import { getShopOrders, updateShopOrder } from 'redux/features/orders/ordersSlic
 import { cartClasses, componentProps } from 'utils/app.styleClasses';
 import SuccessMessage from 'components/SuccessMessage';
 import { useForm } from 'react-hook-form';
+import { pagesRoutes } from 'utils/app.pagesRoutes';
+import { Helmet } from 'react-helmet-async';
 
 const CartPage = () => {
   const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
@@ -191,96 +193,103 @@ const CartPage = () => {
   };
 
   return (
-    <Box sx={cartClasses.container}>
-      <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }}>
-        CARRINHO
-      </Typography>
-      {!successMessage && (
-        <>
-          {cartItems.length > 0 ? (
-            <>
-              <Box sx={cartClasses.itemsContainer}>
-                {shopItems.map((item) => {
-                  if (cartItems.includes(item._id)) {
-                    return (
-                      <Box key={item._id} sx={{ mb: 1, mr: 1, minWidth: 300 }}>
-                        <ShopItem {...item} />
-                      </Box>
-                    );
-                  }
-                  return null;
-                })}
-              </Box>
-
-              {deliveryMethod !== 'delivery' && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                  <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
-                    Total:
-                  </Typography>
-                  <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main}>
-                    {calculateCartTotalToShow()}
-                  </Typography>
+    <>
+      <Helmet>
+        <title>Carrinho</title>
+        <meta name='description' content='Snacks para todos os gostos e ocasiões com opção de entrega e take-away.' />
+        <link rel='canonical' href={pagesRoutes.cart} />
+      </Helmet>
+      <Box sx={cartClasses.container}>
+        <Typography variant={componentProps.variant.h2} color={componentProps.color.primary} sx={{ my: 4 }} component={componentProps.variant.h1}>
+          CARRINHO
+        </Typography>
+        {!successMessage && (
+          <>
+            {cartItems.length > 0 ? (
+              <>
+                <Box sx={cartClasses.itemsContainer}>
+                  {shopItems.map((item) => {
+                    if (cartItems.includes(item._id)) {
+                      return (
+                        <Box key={item._id} sx={{ mb: 1, mr: 1, minWidth: 300 }}>
+                          <ShopItem {...item} />
+                        </Box>
+                      );
+                    }
+                    return null;
+                  })}
                 </Box>
-              )}
-              <Button sx={{ mt: 2 }} variant={componentProps.variant.outlined} endIcon={<DeleteIcon />} onClick={() => setIsModalOpen(true)}>
-                Limpar
-              </Button>
 
-              {!isFormVisible && (
-                <Button variant={componentProps.variant.contained} sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
-                  Continuar
+                {deliveryMethod !== 'delivery' && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                    <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                      Total:
+                    </Typography>
+                    <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main}>
+                      {calculateCartTotalToShow()}
+                    </Typography>
+                  </Box>
+                )}
+                <Button sx={{ mt: 2 }} variant={componentProps.variant.outlined} endIcon={<DeleteIcon />} onClick={() => setIsModalOpen(true)}>
+                  Limpar
                 </Button>
-              )}
 
-              <CartOrderForm
-                formRef={formRef}
-                orderAddressRef={orderAddressRef}
-                isFormVisible={isFormVisible}
-                handleSubmit={handleSubmit}
-                handleOrderSubmit={handleOrderSubmit}
-                control={control}
-                errors={errors}
-                deliveryMethod={deliveryMethod}
-                handleDeliveryRadio={handleDeliveryRadio}
-                isAddressVisible={isAddressVisible}
-                requiredInput={requiredInput}
-                errorMessage={errorMessage}
-                navigate={navigate}
-                submitBtnRef={submitBtnRef}
-                successMessage={successMessage}
-                isLoading={isLoading}
-                user={user}
-                calculateCartTotalToShow={calculateCartTotalToShow}
-                haveExtraFee={haveExtraFee}
-                customDeliveryFee={customDeliveryFee}
-                isLoadingOrders={isLoadingOrders}
-              />
-            </>
-          ) : (
-            <Box>
-              <Box sx={cartClasses.image}>
-                <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto' }} />
+                {!isFormVisible && (
+                  <Button variant={componentProps.variant.contained} sx={{ mt: 2, ml: 2 }} onClick={() => toggleForm()}>
+                    Continuar
+                  </Button>
+                )}
+
+                <CartOrderForm
+                  formRef={formRef}
+                  orderAddressRef={orderAddressRef}
+                  isFormVisible={isFormVisible}
+                  handleSubmit={handleSubmit}
+                  handleOrderSubmit={handleOrderSubmit}
+                  control={control}
+                  errors={errors}
+                  deliveryMethod={deliveryMethod}
+                  handleDeliveryRadio={handleDeliveryRadio}
+                  isAddressVisible={isAddressVisible}
+                  requiredInput={requiredInput}
+                  errorMessage={errorMessage}
+                  navigate={navigate}
+                  submitBtnRef={submitBtnRef}
+                  successMessage={successMessage}
+                  isLoading={isLoading}
+                  user={user}
+                  calculateCartTotalToShow={calculateCartTotalToShow}
+                  haveExtraFee={haveExtraFee}
+                  customDeliveryFee={customDeliveryFee}
+                  isLoadingOrders={isLoadingOrders}
+                />
+              </>
+            ) : (
+              <Box>
+                <Box sx={cartClasses.image}>
+                  <img src={emptyCartImage} alt='Empty cart' style={{ maxWidth: '100%', height: 'auto' }} />
+                </Box>
+
+                <Typography paragraph sx={{ fontSize: 16 }}>
+                  Carrinho vazio.
+                </Typography>
               </Box>
+            )}
+          </>
+        )}
 
-              <Typography paragraph sx={{ fontSize: 16 }}>
-                Carrinho vazio.
-              </Typography>
-            </Box>
-          )}
-        </>
-      )}
+        {successMessage && (
+          <>
+            <SuccessMessage message={successMessage} />
 
-      {successMessage && (
-        <>
-          <SuccessMessage message={successMessage} />
-
-          <Button variant={componentProps.variant.outlined} onClick={() => navigate(`/profile/${user._id}`)}>
-            Perfil
-          </Button>
-        </>
-      )}
-      <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleClearCart} question='Limpar carrinho?' buttonText='Limpar' />
-    </Box>
+            <Button variant={componentProps.variant.outlined} onClick={() => navigate(`/profile/${user._id}`)}>
+              Perfil
+            </Button>
+          </>
+        )}
+        <CustomModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} mainFunction={handleClearCart} question='Limpar carrinho?' buttonText='Limpar' />
+      </Box>
+    </>
   );
 };
 

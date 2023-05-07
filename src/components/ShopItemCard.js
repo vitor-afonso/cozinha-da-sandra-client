@@ -111,7 +111,7 @@ export const ShopItem = ({ name, _id, imageUrl, price, amount, description, cate
         }
         subheader={category[0].toUpperCase() + category.slice(1)}
       />
-      <CardMedia component='img' height='194' image={imageUrl} alt={name} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/items/${_id}`)} />
+      <CardMedia component='img' height='194' width='281' image={imageUrl} alt={name} sx={{ cursor: 'pointer' }} onClick={() => navigate(`/items/${_id}`)} />
       <CardContent>
         <Box sx={cardClasses.cardContent}>
           <Typography sx={{ mr: 1, fontSize: '20px' }} color={componentProps.color.neutral} onClick={() => navigate(`/items/${_id}`)}>

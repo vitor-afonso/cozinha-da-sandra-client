@@ -1,3 +1,22 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /profile/
+Disallow: /profile/edit/
+Disallow: /orders
+Disallow: /orders/edit/
+Disallow: /users
+Disallow: /items/add
+Disallow: /items/edit/
+Disallow: /send-email/orders/
+Disallow: /send-email/orders/edit/
+Disallow: /reviews/create/
+Allow: /
+Allow: /doces
+Allow: /salgados
+Allow: /login
+Allow: /signup
+Allow: /about
+Allow: /items/
+Allow: /cart
+Allow: /forgot
+
