@@ -57,7 +57,7 @@ const LoginPage = () => {
   return (
     <>
       <Helmet>
-        <title>Login</title>
+        <title>Entrar</title>
         <meta name='description' content='Faça login, escolha os seus produtos e faça o seu pedido.' />
         <link rel='canonical' href={pagesRoutes.login} />
       </Helmet>
