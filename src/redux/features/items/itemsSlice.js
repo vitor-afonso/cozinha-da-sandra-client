@@ -9,11 +9,12 @@ const initialState = {
   cartItems: [],
   cartAmount: 0,
   cartTotal: 0,
-  orderDeliveryFee: 3.99,
   canHaveFreeDelivery: false,
+  orderDeliveryFee: 3.99,
   globalDeliveryDiscount: false, //<= change this to give discount or not to all new orders
   amountForFreeDelivery: 20,
   isLoading: true,
+  generalId: '',
 };
 
 export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFromComponent, thunkAPI) => {
@@ -119,9 +120,13 @@ const itemsSlice = createSlice({
       .addCase(getShopItems.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getShopItems.fulfilled, (state, action) => {
+      .addCase(getShopItems.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopItems = action.payload;
+        state.shopItems = payload.items;
+        state.orderDeliveryFee = payload.generalData.deliveryFee;
+        state.globalDeliveryDiscount = payload.generalData.discount;
+        state.amountForFreeDelivery = payload.generalData.minForFreeDelivery;
+        state.generalId = payload.generalData._id;
       })
       .addCase(getShopItems.rejected, (state) => {
         state.isLoading = false;
