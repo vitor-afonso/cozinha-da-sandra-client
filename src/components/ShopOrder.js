@@ -33,7 +33,7 @@ export function ShopOrder({ order }) {
 
   const isCurrentUserAdmin = user.userType === 'admin';
   const shouldShowCardActions = isCurrentUserAdmin || isPending();
-  const shouldShowEditButton = (isPending() && user.userType === 'user') || isCurrentUserAdmin;
+  const shouldShowEditButton = (isPending() && user.userType === 'user') || (isCurrentUserAdmin && !order.paid);
   const isOrderPending = order.orderStatus === 'pending' ? true : false;
   const shouldShowConfirmButton = isOrderPending && shouldDisplayConfirmButton() && isCurrentUserAdmin;
   const isOrderForDelivery = order.deliveryMethod === 'delivery';
