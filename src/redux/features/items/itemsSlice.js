@@ -109,6 +109,12 @@ const itemsSlice = createSlice({
       state.shopItems.push(payload);
       //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
     },
+    updateInitialDeliveryFee: (state, { payload }) => {
+      state.orderDeliveryFee = payload.deliveryFee;
+      state.globalDeliveryDiscount = payload.discount;
+      state.amountForFreeDelivery = payload.minForFreeDelivery;
+      state.generalId = payload._id;
+    },
     removeShopItem: (state, { payload }) => {
       state.shopItems = state.shopItems.filter((item) => item._id !== payload.id);
 
@@ -122,11 +128,7 @@ const itemsSlice = createSlice({
       })
       .addCase(getShopItems.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopItems = payload.items;
-        state.orderDeliveryFee = payload.generalData.deliveryFee;
-        state.globalDeliveryDiscount = payload.generalData.discount;
-        state.amountForFreeDelivery = payload.generalData.minForFreeDelivery;
-        state.generalId = payload.generalData._id;
+        state.shopItems = payload;
       })
       .addCase(getShopItems.rejected, (state) => {
         state.isLoading = false;
@@ -134,5 +136,17 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handleFreeDelivery, updateShopItem, removeShopItem } = itemsSlice.actions;
+export const {
+  updateInitialDeliveryFee,
+  clearCart,
+  addToCart,
+  removeFromCart,
+  increaseItemAmount,
+  decreaseItemAmount,
+  setItemAmount,
+  addNewShopItem,
+  handleFreeDelivery,
+  updateShopItem,
+  removeShopItem,
+} = itemsSlice.actions;
 export default itemsSlice.reducer;
