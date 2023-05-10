@@ -3,6 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllUsers, getOneUser } from 'api';
+import { updateInitialDeliveryFee } from '../items/itemsSlice';
 
 const initialState = {
   shopUsers: [],
@@ -14,11 +15,13 @@ export const getShopUsers = createAsyncThunk('users/getShopUsers', async (userId
     //console.log('optional data from component =>', userId);
     //console.log('thunkAPI =>', thunkAPI); // contains valious methods
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
-    //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = userId ? await getOneUser(userId) : await getAllUsers();
-    //console.log('getShopUsers data in usersSlice', data);
-    return userId ? [data] : data; // we return a promise that is being handled by extraReducers in usersSlice
+
+    //thunkAPI.dispatch allow us to call an action from another feature
+    thunkAPI.dispatch(updateInitialDeliveryFee(data.generalData));
+
+    return data.users;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopUsers.rejected in usersSlice
   }
@@ -43,9 +46,9 @@ const usersSlice = createSlice({
       .addCase(getShopUsers.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getShopUsers.fulfilled, (state, action) => {
+      .addCase(getShopUsers.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopUsers = action.payload;
+        state.shopUsers = payload;
       })
       .addCase(getShopUsers.rejected, (state) => {
         state.isLoading = false;
