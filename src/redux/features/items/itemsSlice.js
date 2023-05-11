@@ -11,10 +11,11 @@ const initialState = {
   cartTotal: 0,
   canHaveFreeDelivery: false,
   orderDeliveryFee: 3.99,
-  globalDeliveryDiscount: false, //<= change this to give discount or not to all new orders
+  globalDeliveryDiscount: false, //<= to give free delivery to all new orders
   amountForFreeDelivery: 20,
+  percentageDiscount: 0,
+  settingsId: '',
   isLoading: true,
-  generalId: '',
 };
 
 export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFromComponent, thunkAPI) => {
@@ -25,7 +26,7 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = await getAllActiveItems();
-    //console.log('getShopItems data in itemsSlice', data);
+    // console.log('getShopItems data in itemsSlice', data);
     return data; // we return a promise that is being handled by extraReducers in itemsSlice
   } catch (error) {
     //return thunkAPI.rejectWithValue(error.response); // this would be handled by extraReducers getShopItems.rejected in itemsSlice
@@ -111,9 +112,9 @@ const itemsSlice = createSlice({
     },
     updateInitialDeliveryFee: (state, { payload }) => {
       state.orderDeliveryFee = payload.deliveryFee;
-      state.globalDeliveryDiscount = payload.discount;
       state.amountForFreeDelivery = payload.minForFreeDelivery;
-      state.generalId = payload._id;
+      state.globalDeliveryDiscount = payload.globalDeliveryDiscount;
+      state.percentageDiscount = payload.discount;
     },
     removeShopItem: (state, { payload }) => {
       state.shopItems = state.shopItems.filter((item) => item._id !== payload.id);
@@ -128,7 +129,14 @@ const itemsSlice = createSlice({
       })
       .addCase(getShopItems.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopItems = payload;
+        state.shopItems = payload.items;
+
+        //update shop settings values
+        state.orderDeliveryFee = payload.generalData.deliveryFee;
+        state.amountForFreeDelivery = payload.generalData.minForFreeDelivery;
+        state.globalDeliveryDiscount = payload.generalData.globalDeliveryDiscount;
+        state.percentageDiscount = payload.generalData.discount;
+        state.settingsId = payload.generalData._id;
       })
       .addCase(getShopItems.rejected, (state) => {
         state.isLoading = false;
