@@ -529,6 +529,20 @@ export const newItemClasses = {
     marginBottom: 5,
   },
 };
+export const settingsClasses = {
+  form: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    minWidth: 250,
+    maxWidth: 600,
+    mb: 2,
+  },
+  formField: {
+    marginTop: 0,
+    marginBottom: 2,
+    display: 'block',
+  },
+};
 
 export const ordersClasses = {
   breakpoints: {
@@ -856,6 +870,24 @@ export const reviewsModalStyle = {
   overflow: 'scroll',
   overflowX: 'hidden',
 };
+export const settingsModalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '90%',
+  maxWidth: 600,
+  maxHeight: '90%',
+  bgcolor: 'background.paper',
+  border: '2px solid #816E94',
+  boxShadow: 24,
+  p: 4,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  overflow: 'scroll',
+  overflowX: 'hidden',
+};
 
 export const componentProps = {
   type: {
@@ -892,6 +924,10 @@ export const componentProps = {
     subject: 'subject',
     content: 'content',
     rating: 'rating',
+    deliveryFee: 'deliveryFee',
+    minAmountForFreeDelivery: 'minAmountForFreeDelivery',
+    haveGlobalDeliveryDiscount: 'haveGlobalDeliveryDiscount',
+    discount: 'discount',
   },
   variant: {
     contained: 'contained',
