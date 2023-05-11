@@ -3,7 +3,6 @@
 // eslint-disable-next-line no-unused-vars
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import { getAllUsers, getOneUser } from 'api';
-import { updateInitialDeliveryFee } from '../items/itemsSlice';
 
 const initialState = {
   shopUsers: [],
@@ -15,13 +14,11 @@ export const getShopUsers = createAsyncThunk('users/getShopUsers', async (userId
     //console.log('optional data from component =>', userId);
     //console.log('thunkAPI =>', thunkAPI); // contains valious methods
     //console.log('all states in the app through thunkAPI =>', thunkAPI.getState());
+    //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = userId ? await getOneUser(userId) : await getAllUsers();
 
-    //thunkAPI.dispatch allow us to call an action from another feature
-    thunkAPI.dispatch(updateInitialDeliveryFee(data.generalData));
-
-    return data.users;
+    return userId ? [data] : data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopUsers.rejected in usersSlice
   }
