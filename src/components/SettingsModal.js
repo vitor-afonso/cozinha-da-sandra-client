@@ -132,7 +132,7 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
             <Controller
               control={control}
               name={componentProps.name.haveGlobalDeliveryDiscount}
-              render={({ field }) => <FormControlLabel control={<Switch checked={haveGlobalDeliveryDiscount} {...field} />} label='Entrega gratuita geral' />}
+              render={({ field }) => <FormControlLabel control={<Switch checked={haveGlobalDeliveryDiscount} {...field} />} label='Entrega gratuita' />}
             />
 
             <button type={componentProps.type.submit} ref={submitFormRef} hidden>
