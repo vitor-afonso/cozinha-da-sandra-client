@@ -68,17 +68,17 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
     <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
       <Box sx={settingsModalStyle}>
         <Typography variant={componentProps.variant.h4} color={componentProps.color.primary} sx={{ mb: 4 }} component={componentProps.variant.h1}>
-          Definiçoes gerais
+          Definições gerais
         </Typography>
         <Box sx={settingsClasses.form}>
           <form noValidate onSubmit={handleSubmit(handleSubmitSettings)}>
             <Controller
               name={componentProps.name.minAmountForFreeDelivery}
               control={control}
-              rules={{ required: 'Valor minimo em falta' }}
+              rules={{ required: 'Valor mínimo em falta' }}
               render={({ field }) => (
                 <TextField
-                  label='Valor minimo para entrega grátis'
+                  label='Valor mínimo para entrega grátis'
                   type={componentProps.type.text}
                   variant={componentProps.variant.outlined}
                   fullWidth
@@ -129,7 +129,7 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
             <Controller
               control={control}
               name={componentProps.name.haveGlobalDeliveryDiscount}
-              render={({ field }) => <FormControlLabel control={<Switch checked={haveGlobalDeliveryDiscount} {...field} />} label='Entrega gratuita' />}
+              render={({ field }) => <FormControlLabel control={<Switch checked={haveGlobalDeliveryDiscount} {...field} />} label='Entrega grátis em todos os pedidos' />}
             />
 
             <Box sx={{ mt: 1, mb: 2, textAlign: 'center' }}>
