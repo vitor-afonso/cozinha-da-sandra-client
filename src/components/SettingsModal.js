@@ -1,5 +1,5 @@
 import { Box, Button, CircularProgress, FormControlLabel, Modal, Switch, TextField, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { componentProps, settingsClasses, settingsModalStyle } from 'utils/app.styleClasses';
@@ -11,7 +11,6 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
   const { orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, percentageDiscount, settingsId } = useSelector((store) => store.items);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const submitFormRef = useRef(null);
   const dispatch = useDispatch();
 
   const {
@@ -23,27 +22,25 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
   } = useForm();
 
   let haveGlobalDeliveryDiscount = watch('haveGlobalDeliveryDiscount');
-  let deliveryFee = watch('deliveryFee');
-  let minAmountForFreeDelivery = watch('minAmountForFreeDelivery');
-  let discount = watch('discount');
-
-  let areValuesUnchanged =
-    deliveryFee === orderDeliveryFee && haveGlobalDeliveryDiscount === globalDeliveryDiscount && minAmountForFreeDelivery === amountForFreeDelivery && discount === percentageDiscount;
 
   useEffect(() => {
-    if (!isLoading) {
+    if (orderDeliveryFee) {
       let initialFormValues = { deliveryFee: orderDeliveryFee, haveGlobalDeliveryDiscount: globalDeliveryDiscount, minAmountForFreeDelivery: amountForFreeDelivery, discount: percentageDiscount };
 
       // Sets the initial values to the form fields
       reset(initialFormValues);
     }
-  }, [isLoading]);
+  }, [orderDeliveryFee, globalDeliveryDiscount, percentageDiscount, amountForFreeDelivery, reset]);
+
+  const areValuesUnchanged = (deliveryFee, haveGlobalDeliveryDiscount, minAmountForFreeDelivery, discount) => {
+    return deliveryFee === orderDeliveryFee && haveGlobalDeliveryDiscount === globalDeliveryDiscount && minAmountForFreeDelivery === amountForFreeDelivery && discount === percentageDiscount;
+  };
 
   const handleSubmitSettings = async ({ deliveryFee, haveGlobalDeliveryDiscount, minAmountForFreeDelivery, discount }) => {
     setErrorMessage(undefined);
 
-    if (areValuesUnchanged) {
-      // Prevents from making API call if theres no change
+    // Prevents from making API call if theres no change
+    if (areValuesUnchanged(deliveryFee, haveGlobalDeliveryDiscount, minAmountForFreeDelivery, discount)) {
       setIsModalOpen(false);
       return;
     }
@@ -135,22 +132,22 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
               render={({ field }) => <FormControlLabel control={<Switch checked={haveGlobalDeliveryDiscount} {...field} />} label='Entrega gratuita' />}
             />
 
-            <button type={componentProps.type.submit} ref={submitFormRef} hidden>
-              Criar
-            </button>
+            <Box sx={{ mt: 1, mb: 2, textAlign: 'center' }}>
+              {errorMessage && <ErrorMessage message={errorMessage} />}
+              {errors.minAmountForFreeDelivery && <ErrorMessage message={errors.minAmountForFreeDelivery.message} />}
+              {errors.haveGlobalDeliveryDiscount && <ErrorMessage message={errors.haveGlobalDeliveryDiscount.message} />}
+              {errors.deliveryFee && <ErrorMessage message={errors.deliveryFee.message} />}
+              {errors.discount && <ErrorMessage message={errors.discount.message} />}
+            </Box>
+
+            {!isLoading && (
+              <Button type={componentProps.type.submit} variant={componentProps.variant.contained} sx={{ display: 'block', mx: 'auto' }}>
+                Actualizar
+              </Button>
+            )}
+            {isLoading && <CircularProgress size='50px' />}
           </form>
         </Box>
-        {errorMessage && <ErrorMessage message={errorMessage} />}
-        {errors.minAmountForFreeDelivery && <ErrorMessage message={errors.minAmountForFreeDelivery.message} />}
-        {errors.haveGlobalDeliveryDiscount && <ErrorMessage message={errors.haveGlobalDeliveryDiscount.message} />}
-        {errors.deliveryFee && <ErrorMessage message={errors.deliveryFee.message} />}
-        {errors.discount && <ErrorMessage message={errors.discount.message} />}
-        {!isLoading && (
-          <Button type={componentProps.type.button} variant={componentProps.variant.contained} onClick={() => submitFormRef.current.click()}>
-            Actualizar
-          </Button>
-        )}
-        {isLoading && <CircularProgress size='50px' />}
       </Box>
     </Modal>
   );
