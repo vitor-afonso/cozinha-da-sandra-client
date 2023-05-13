@@ -23,7 +23,7 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery } = useSelector((store) => store.items);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
   const [successMessage, setSuccessMessage] = useState(undefined);
@@ -149,7 +149,7 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && isDelivery) || (order.haveDeliveryDiscount && order.deliveryMethod === 'delivery')) && !haveExtraFee;
+    return (isFreeDeliveryForAll || (cartTotal > order.amountForFreeDelivery && isDelivery) || (order.haveDeliveryDiscount && order.deliveryMethod === 'delivery')) && !haveExtraFee;
   };
 
   const getDeliveryFee = () => {
@@ -188,7 +188,7 @@ const EditOrderPage = () => {
         address: isDelivery ? fullAddress : '',
         deliveryFee: Number(getDeliveryFee()),
         haveExtraDeliveryFee: haveExtraFee,
-        haveDeliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.haveDeliveryDiscount),
+        haveDeliveryDiscount: isElegibleForGlobalDiscount(isFreeDeliveryForAll, deliveryMethod, haveExtraFee, order.deliveryMethod, order.haveDeliveryDiscount),
         message,
         deliveryMethod,
         amountForFreeDelivery: order.deliveryMethod === 'delivery' ? order.amountForFreeDelivery : amountForFreeDelivery,

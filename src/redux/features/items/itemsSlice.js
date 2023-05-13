@@ -11,7 +11,7 @@ const initialState = {
   cartTotal: 0,
   canHaveFreeDelivery: false,
   orderDeliveryFee: 3.99,
-  globalDeliveryDiscount: false, //<= to give free delivery to all new orders
+  isFreeDeliveryForAll: false, //<= to give free delivery to all new orders
   amountForFreeDelivery: 20,
   percentageDiscount: 0,
   settingsId: '',
@@ -113,7 +113,7 @@ const itemsSlice = createSlice({
     updateInitialDeliveryFee: (state, { payload }) => {
       state.orderDeliveryFee = payload.deliveryFee;
       state.amountForFreeDelivery = payload.minForFreeDelivery;
-      state.globalDeliveryDiscount = payload.globalDeliveryDiscount;
+      state.isFreeDeliveryForAll = payload.isFreeDeliveryForAll;
       state.percentageDiscount = payload.discount;
     },
     removeShopItem: (state, { payload }) => {
@@ -134,7 +134,7 @@ const itemsSlice = createSlice({
         //update shop settings values
         state.orderDeliveryFee = payload.generalData.deliveryFee;
         state.amountForFreeDelivery = payload.generalData.minForFreeDelivery;
-        state.globalDeliveryDiscount = payload.generalData.globalDeliveryDiscount;
+        state.isFreeDeliveryForAll = payload.generalData.isFreeDeliveryForAll;
         state.percentageDiscount = payload.generalData.discount;
         state.settingsId = payload.generalData._id;
       })

@@ -22,7 +22,7 @@ import { pagesRoutes } from 'utils/app.pagesRoutes';
 import { Helmet } from 'react-helmet-async';
 
 const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
   const { shopOrders, isLoadingOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
@@ -63,7 +63,7 @@ const CartPage = () => {
   let haveExtraFee = watch('haveExtraFee');
   let customDeliveryFee = watch('customDeliveryFee');
 
-  const shouldPayForDeliveryFee = canHaveFreeDelivery && cartTotal < amountForFreeDelivery && !globalDeliveryDiscount && !haveExtraFee;
+  const shouldPayForDeliveryFee = canHaveFreeDelivery && cartTotal < amountForFreeDelivery && !isFreeDeliveryForAll && !haveExtraFee;
   const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
   const orderPrice = cartTotal.toFixed(2) + APP.currency;
 
@@ -171,7 +171,7 @@ const CartPage = () => {
         deliveryFee: getDeliveryFee(),
         haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
-        haveDeliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee),
+        haveDeliveryDiscount: isElegibleForGlobalDiscount(isFreeDeliveryForAll, deliveryMethod, haveExtraFee),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),

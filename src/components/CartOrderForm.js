@@ -38,14 +38,14 @@ export const CartOrderForm = ({
   customDeliveryFee,
   isLoadingOrders,
 }) => {
-  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, globalDeliveryDiscount } = useSelector((store) => store.items);
+  const { cartTotal, orderDeliveryFee, amountForFreeDelivery, isFreeDeliveryForAll } = useSelector((store) => store.items);
   const theme = useTheme();
   const [inputType, setInputType] = useState('text');
   const isDelivery = deliveryMethod === 'delivery';
   const isTakeAway = deliveryMethod === 'takeAway';
 
   const isElegibleForFreeDelivery = () => {
-    return (globalDeliveryDiscount || (cartTotal > amountForFreeDelivery && isDelivery)) && !haveExtraFee;
+    return (isFreeDeliveryForAll || (cartTotal > amountForFreeDelivery && isDelivery)) && !haveExtraFee;
   };
 
   const shouldShowDeliveryMessage = () => {
