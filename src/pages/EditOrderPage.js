@@ -140,7 +140,7 @@ const EditOrderPage = () => {
     }
     if (isDelivery) {
       if (order.deliveryMethod === 'delivery') {
-        return cartTotal < order.amountForFreeDelivery && !order.deliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
+        return cartTotal < order.amountForFreeDelivery && !order.haveDeliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
       }
 
       return cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2);
@@ -149,7 +149,7 @@ const EditOrderPage = () => {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && isDelivery) || (order.deliveryDiscount && order.deliveryMethod === 'delivery')) && !haveExtraFee;
+    return (globalDeliveryDiscount || (cartTotal > order.amountForFreeDelivery && isDelivery) || (order.haveDeliveryDiscount && order.deliveryMethod === 'delivery')) && !haveExtraFee;
   };
 
   const getDeliveryFee = () => {
@@ -188,7 +188,7 @@ const EditOrderPage = () => {
         address: isDelivery ? fullAddress : '',
         deliveryFee: Number(getDeliveryFee()),
         haveExtraDeliveryFee: haveExtraFee,
-        deliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.deliveryDiscount),
+        haveDeliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee, order.deliveryMethod, order.haveDeliveryDiscount),
         message,
         deliveryMethod,
         amountForFreeDelivery: order.deliveryMethod === 'delivery' ? order.amountForFreeDelivery : amountForFreeDelivery,

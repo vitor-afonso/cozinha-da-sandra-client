@@ -71,12 +71,12 @@ export const validateAddressCode = (value) => {
   return re.test(value) || value === '';
 };
 
-export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderDeliveryDiscount) => {
+export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderHaveDeliveryDiscount) => {
   //CartPage
   if (globalDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) return true;
 
   //EditOrderPage
-  if (orderDeliveryMethod === 'delivery' && orderDeliveryDiscount && !haveExtraFee) return true;
+  if (orderDeliveryMethod === 'delivery' && orderHaveDeliveryDiscount && !haveExtraFee) return true;
 
   return false;
 };

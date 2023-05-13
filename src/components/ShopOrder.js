@@ -140,7 +140,7 @@ export function ShopOrder({ order }) {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
+    return (order.haveDeliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
   };
 
   const getTotal = () => {
@@ -283,7 +283,7 @@ export function ShopOrder({ order }) {
               <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
-              {order.deliveryDiscount && `0${APP.currency}`}
+              {order.haveDeliveryDiscount && `0${APP.currency}`}
             </Box>
           </Box>
         )}

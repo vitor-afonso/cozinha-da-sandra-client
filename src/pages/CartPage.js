@@ -171,7 +171,7 @@ const CartPage = () => {
         deliveryFee: getDeliveryFee(),
         haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
-        deliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee),
+        haveDeliveryDiscount: isElegibleForGlobalDiscount(globalDeliveryDiscount, deliveryMethod, haveExtraFee),
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
