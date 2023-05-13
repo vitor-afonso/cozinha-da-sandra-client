@@ -9,10 +9,12 @@ const initialState = {
   cartItems: [],
   cartAmount: 0,
   cartTotal: 0,
-  orderDeliveryFee: 3.99,
   canHaveFreeDelivery: false,
-  globalDeliveryDiscount: false, //<= change this to give discount or not to all new orders
+  orderDeliveryFee: 3.99,
+  globalDeliveryDiscount: false, //<= to give free delivery to all new orders
   amountForFreeDelivery: 20,
+  percentageDiscount: 0,
+  settingsId: '',
   isLoading: true,
 };
 
@@ -24,7 +26,7 @@ export const getShopItems = createAsyncThunk('items/getShopItems', async (dataFr
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = await getAllActiveItems();
-    //console.log('getShopItems data in itemsSlice', data);
+    // console.log('getShopItems data in itemsSlice', data);
     return data; // we return a promise that is being handled by extraReducers in itemsSlice
   } catch (error) {
     //return thunkAPI.rejectWithValue(error.response); // this would be handled by extraReducers getShopItems.rejected in itemsSlice
@@ -108,6 +110,12 @@ const itemsSlice = createSlice({
       state.shopItems.push(payload);
       //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
     },
+    updateInitialDeliveryFee: (state, { payload }) => {
+      state.orderDeliveryFee = payload.deliveryFee;
+      state.amountForFreeDelivery = payload.minForFreeDelivery;
+      state.globalDeliveryDiscount = payload.globalDeliveryDiscount;
+      state.percentageDiscount = payload.discount;
+    },
     removeShopItem: (state, { payload }) => {
       state.shopItems = state.shopItems.filter((item) => item._id !== payload.id);
 
@@ -119,9 +127,16 @@ const itemsSlice = createSlice({
       .addCase(getShopItems.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getShopItems.fulfilled, (state, action) => {
+      .addCase(getShopItems.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopItems = action.payload;
+        state.shopItems = payload.items;
+
+        //update shop settings values
+        state.orderDeliveryFee = payload.generalData.deliveryFee;
+        state.amountForFreeDelivery = payload.generalData.minForFreeDelivery;
+        state.globalDeliveryDiscount = payload.generalData.globalDeliveryDiscount;
+        state.percentageDiscount = payload.generalData.discount;
+        state.settingsId = payload.generalData._id;
       })
       .addCase(getShopItems.rejected, (state) => {
         state.isLoading = false;
@@ -129,5 +144,17 @@ const itemsSlice = createSlice({
   },
 });
 
-export const { clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, handleFreeDelivery, updateShopItem, removeShopItem } = itemsSlice.actions;
+export const {
+  updateInitialDeliveryFee,
+  clearCart,
+  addToCart,
+  removeFromCart,
+  increaseItemAmount,
+  decreaseItemAmount,
+  setItemAmount,
+  addNewShopItem,
+  handleFreeDelivery,
+  updateShopItem,
+  removeShopItem,
+} = itemsSlice.actions;
 export default itemsSlice.reducer;

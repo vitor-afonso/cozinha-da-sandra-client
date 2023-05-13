@@ -17,8 +17,8 @@ export const getShopUsers = createAsyncThunk('users/getShopUsers', async (userId
     //thunkAPI.dispatch(openModal()); //thunkAPI.dispatch would allow us to call an action from another feature
 
     const { data } = userId ? await getOneUser(userId) : await getAllUsers();
-    //console.log('getShopUsers data in usersSlice', data);
-    return userId ? [data] : data; // we return a promise that is being handled by extraReducers in usersSlice
+
+    return userId ? [data] : data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.message); // this would be handled by extraReducers getShopUsers.rejected in usersSlice
   }
@@ -43,9 +43,9 @@ const usersSlice = createSlice({
       .addCase(getShopUsers.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getShopUsers.fulfilled, (state, action) => {
+      .addCase(getShopUsers.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.shopUsers = action.payload;
+        state.shopUsers = payload;
       })
       .addCase(getShopUsers.rejected, (state) => {
         state.isLoading = false;

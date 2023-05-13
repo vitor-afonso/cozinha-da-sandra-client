@@ -1,6 +1,5 @@
 // jshint esversion:9
 
-import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import { useSelector } from 'react-redux';
@@ -8,6 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ShopOrder } from 'components/ShopOrder';
 import { AuthContext } from 'context/auth.context';
 import { componentProps, profileClasses } from 'utils/app.styleClasses';
+import SettingsModal from 'components/SettingsModal';
+import { Box, Button, CircularProgress, IconButton, TextField, Typography } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const ProfilePage = () => {
   const { user } = useContext(AuthContext);
@@ -16,9 +18,11 @@ const ProfilePage = () => {
   const [profileOwner, setProfileOwner] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
   const ordersRef = useRef(null);
+  const isAdmin = user.userType === 'admin';
 
   useEffect(() => {
     if (userId) {
@@ -109,7 +113,7 @@ const ProfilePage = () => {
                   size={componentProps.size.small}
                 />
 
-                {user.userType === 'admin' && (
+                {isAdmin && (
                   <TextField
                     type={componentProps.type.text}
                     label='Notas'
@@ -126,9 +130,14 @@ const ProfilePage = () => {
                   />
                 )}
               </Box>
-              <Button sx={{ alignSelf: 'end' }} onClick={() => navigate(`/profile/edit/${userId}`)}>
-                Editar
-              </Button>
+              <Box sx={{ alignSelf: 'end' }}>
+                <Button onClick={() => navigate(`/profile/edit/${userId}`)}>Editar</Button>
+                {isAdmin && (
+                  <IconButton color={componentProps.color.inherit} aria-label='open settings modal' onClick={() => setIsSettingsModalOpen(true)}>
+                    <SettingsIcon fontSize={componentProps.fontSize.medium} color={componentProps.color.primary} />
+                  </IconButton>
+                )}
+              </Box>
             </Box>
           </Box>
 
@@ -158,6 +167,7 @@ const ProfilePage = () => {
         </Box>
       )}
       {isLoadingOrders && <CircularProgress sx={{ mt: 4 }} size='80px' />}
+      <SettingsModal isModalOpen={isSettingsModalOpen} setIsModalOpen={setIsSettingsModalOpen} />
     </Box>
   );
 };

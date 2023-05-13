@@ -173,3 +173,11 @@ export const forgotPassword = (reqBody) => {
 export const resetPassword = (reqBody, userId) => {
   return axios.post(`${API_URL}/reset/${userId}`, reqBody);
 };
+
+/************************* SETTINGS *****************************/
+
+export const updateSettings = (updatedSettings, settingsId) => {
+  return axios.put(`${API_URL}/settings/${settingsId}`, updatedSettings, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+  });
+};
