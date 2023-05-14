@@ -34,6 +34,16 @@ export const appRegex = {
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 };
 
+export const getTotalWithDiscount = (cartTotal, percentageDiscount) => {
+  if (!percentageDiscount || percentageDiscount === 0) return cartTotal;
+  const discountAmount = (cartTotal * percentageDiscount) / 100;
+  return cartTotal - discountAmount;
+};
+
+export const getDiscountAmount = (total, percentage) => {
+  return ((total * percentage) / 100).toFixed(2);
+};
+
 export const getHomePageCategoryItems = (itemsArr, category) => {
   let counter = 0;
   let amountOfItemsToDisplay = 3;

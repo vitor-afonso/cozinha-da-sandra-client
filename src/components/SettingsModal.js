@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { componentProps, settingsClasses, settingsModalStyle } from 'utils/app.styleClasses';
 import ErrorMessage from './ErrorMessage';
 import { updateSettings } from 'api';
-import { updateInitialDeliveryFee } from 'redux/features/items/itemsSlice';
+import { updateAppInitialSettings } from 'redux/features/items/itemsSlice';
 
 const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
   const { orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery, percentageDiscount, settingsId } = useSelector((store) => store.items);
@@ -56,7 +56,7 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
 
     try {
       let { data } = await updateSettings(requestBody, settingsId);
-      dispatch(updateInitialDeliveryFee(data));
+      dispatch(updateAppInitialSettings(data));
       setIsModalOpen(false);
     } catch (error) {
       setErrorMessage(error.message);

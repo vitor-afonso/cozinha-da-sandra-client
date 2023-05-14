@@ -8,7 +8,7 @@ import { createOrder, sendEmail } from 'api';
 import { ShopItem } from 'components/ShopItemCard';
 import { CartOrderForm } from 'components/CartOrderForm';
 import { CustomModal } from 'components/CustomModal';
-import { clearCart, handleFreeDelivery } from 'redux/features/items/itemsSlice';
+import { clearCart } from 'redux/features/items/itemsSlice';
 import { updateShopUser } from 'redux/features/users/usersSlice';
 import emptyCartImage from 'images/emptyCart.svg';
 import { APP, isElegibleForGlobalDiscount } from 'utils/app.utils';
@@ -20,9 +20,10 @@ import SuccessMessage from 'components/SuccessMessage';
 import { useForm } from 'react-hook-form';
 import { pagesRoutes } from 'utils/app.pagesRoutes';
 import { Helmet } from 'react-helmet-async';
+import { getTotalWithDiscount, getDiscountAmount } from 'utils/app.utils';
 
 const CartPage = () => {
-  const { shopItems, cartItems, cartTotal, orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery, canHaveFreeDelivery } = useSelector((store) => store.items);
+  const { shopItems, cartItems, cartTotal, orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery, percentageDiscount } = useSelector((store) => store.items);
   const { shopOrders, isLoadingOrders } = useSelector((store) => store.orders);
   const dispatch = useDispatch();
   const { user } = useContext(AuthContext);
@@ -63,9 +64,9 @@ const CartPage = () => {
   let haveExtraFee = watch('haveExtraFee');
   let customDeliveryFee = watch('customDeliveryFee');
 
-  const shouldPayForDeliveryFee = canHaveFreeDelivery && cartTotal < amountForFreeDelivery && !isFreeDeliveryForAll && !haveExtraFee;
-  const orderPriceWithFee = (cartTotal + orderDeliveryFee).toFixed(2) + APP.currency;
-  const orderPrice = cartTotal.toFixed(2) + APP.currency;
+  const shouldPayForDeliveryFee = deliveryMethod === 'delivery' && cartTotal < amountForFreeDelivery && !isFreeDeliveryForAll && !haveExtraFee;
+  const orderPriceWithFee = (getTotalWithDiscount(cartTotal, percentageDiscount) + orderDeliveryFee).toFixed(2) + APP.currency;
+  const orderPrice = getTotalWithDiscount(cartTotal, percentageDiscount).toFixed(2) + APP.currency;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -100,13 +101,11 @@ const CartPage = () => {
     if (value === 'delivery') {
       setIsAddressVisible(true);
       setRequiredInput(true);
-      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
       setTimeout(() => scrollToOrderAddress(formRef), 300);
     }
     if (value === 'takeAway') {
       setIsAddressVisible(false);
       setRequiredInput(false);
-      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
       setValue('haveExtraFee', false);
     }
     dispatch(getShopOrders());
@@ -116,13 +115,12 @@ const CartPage = () => {
     if (haveExtraFee) {
       return Number(customDeliveryFee);
     }
-
     return deliveryMethod === 'delivery' ? orderDeliveryFee : 0;
   };
 
   const calculateCartTotalToShow = () => {
     if (haveExtraFee) {
-      return (cartTotal + Number(customDeliveryFee)).toFixed(2);
+      return (getTotalWithDiscount(cartTotal, percentageDiscount) + Number(customDeliveryFee)).toFixed(2);
     }
     if (deliveryMethod === 'delivery') {
       return shouldPayForDeliveryFee ? orderPriceWithFee : orderPrice;
@@ -172,6 +170,7 @@ const CartPage = () => {
         haveExtraDeliveryFee: haveExtraFee,
         amountForFreeDelivery: amountForFreeDelivery,
         haveDeliveryDiscount: isElegibleForGlobalDiscount(isFreeDeliveryForAll, deliveryMethod, haveExtraFee),
+        percentageDiscount: percentageDiscount,
         items: cartItems,
         userId: user._id,
         total: cartTotal.toFixed(2),
@@ -220,8 +219,18 @@ const CartPage = () => {
                   })}
                 </Box>
 
+                {percentageDiscount > 0 && deliveryMethod !== 'delivery' && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                      Desconto:
+                    </Typography>
+                    <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
+                      {getDiscountAmount(cartTotal, percentageDiscount) + APP.currency}
+                    </Typography>
+                  </Box>
+                )}
                 {deliveryMethod !== 'delivery' && (
-                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                       Total:
                     </Typography>
@@ -262,6 +271,7 @@ const CartPage = () => {
                   haveExtraFee={haveExtraFee}
                   customDeliveryFee={customDeliveryFee}
                   isLoadingOrders={isLoadingOrders}
+                  percentageDiscount={percentageDiscount}
                 />
               </>
             ) : (

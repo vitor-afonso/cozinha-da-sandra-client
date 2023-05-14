@@ -9,12 +9,12 @@ const initialState = {
   cartItems: [],
   cartAmount: 0,
   cartTotal: 0,
-  canHaveFreeDelivery: false,
-  orderDeliveryFee: 3.99,
+  isOrderForDelivery: false,
+  orderDeliveryFee: null,
   isFreeDeliveryForAll: false, //<= to give free delivery to all new orders
-  amountForFreeDelivery: 20,
-  percentageDiscount: 0,
-  settingsId: '',
+  amountForFreeDelivery: null,
+  percentageDiscount: null,
+  settingsId: null,
   isLoading: true,
 };
 
@@ -96,21 +96,12 @@ const itemsSlice = createSlice({
       state.shopItems.push(payload);
       //console.log('current shop orders  =>', current(state).shopOrders);
     },
-    handleFreeDelivery: (state, { payload }) => {
-      if (payload.deliveryMethod === 'delivery') {
-        state.canHaveFreeDelivery = true;
-      }
-
-      if (payload.deliveryMethod === 'takeAway') {
-        state.canHaveFreeDelivery = false;
-      }
-    },
     updateShopItem: (state, { payload }) => {
       state.shopItems = state.shopItems.filter((item) => item._id !== payload._id);
       state.shopItems.push(payload);
-      //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
+      //console.log('current shop items in updateShopItem  =>', current(state).shopItems);
     },
-    updateInitialDeliveryFee: (state, { payload }) => {
+    updateAppInitialSettings: (state, { payload }) => {
       state.orderDeliveryFee = payload.deliveryFee;
       state.amountForFreeDelivery = payload.minForFreeDelivery;
       state.isFreeDeliveryForAll = payload.isFreeDeliveryForAll;
@@ -119,7 +110,7 @@ const itemsSlice = createSlice({
     removeShopItem: (state, { payload }) => {
       state.shopItems = state.shopItems.filter((item) => item._id !== payload.id);
 
-      //console.log('current shop items in updateShopItem   =>', current(state).shopItems);
+      //console.log('current shop items in updateShopItem  =>', current(state).shopItems);
     },
   },
   extraReducers: (builder) => {
@@ -144,17 +135,6 @@ const itemsSlice = createSlice({
   },
 });
 
-export const {
-  updateInitialDeliveryFee,
-  clearCart,
-  addToCart,
-  removeFromCart,
-  increaseItemAmount,
-  decreaseItemAmount,
-  setItemAmount,
-  addNewShopItem,
-  handleFreeDelivery,
-  updateShopItem,
-  removeShopItem,
-} = itemsSlice.actions;
+export const { updateAppInitialSettings, clearCart, addToCart, removeFromCart, increaseItemAmount, decreaseItemAmount, setItemAmount, addNewShopItem, updateShopItem, removeShopItem } =
+  itemsSlice.actions;
 export default itemsSlice.reducer;

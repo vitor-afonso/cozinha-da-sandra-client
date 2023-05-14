@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { APP, getMissingAmountForFreeDelivery, isValidDeliveryDate } from 'utils/app.utils';
+import { APP, getMissingAmountForFreeDelivery, isValidDeliveryDate, getDiscountAmount } from 'utils/app.utils';
 
 import { Box, Button, CircularProgress, FormControl, FormControlLabel, FormLabel, RadioGroup, Switch, TextField, Typography, useTheme } from '@mui/material';
 import Radio from '@mui/material/Radio';
@@ -37,6 +37,7 @@ export const CartOrderForm = ({
   calculateCartTotalToShow,
   customDeliveryFee,
   isLoadingOrders,
+  percentageDiscount,
 }) => {
   const { cartTotal, orderDeliveryFee, amountForFreeDelivery, isFreeDeliveryForAll } = useSelector((store) => store.items);
   const theme = useTheme();
@@ -256,6 +257,15 @@ export const CartOrderForm = ({
               </Box>
             )}
 
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: shouldShowDeliveryMessage() ? 0 : 4 }}>
+              <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                Items no carrinho:
+              </Typography>
+              <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
+                {cartTotal.toFixed(2) + APP.currency}
+              </Typography>
+            </Box>
+
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1, textAlign: 'left' }}>
                 Entrega desde:
@@ -272,6 +282,17 @@ export const CartOrderForm = ({
 
               {user.userType === 'user' && <TooltipDeliveryFee />}
             </Box>
+            {percentageDiscount > 0 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                  Desconto:
+                </Typography>
+                <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
+                  {getDiscountAmount(cartTotal, percentageDiscount) + APP.currency}
+                </Typography>
+              </Box>
+            )}
+
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>
                 Total:

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { deleteOrder, updateOrder } from 'api';
 import { AuthContext } from 'context/auth.context';
 import { deleteShopOrder } from 'redux/features/orders/ordersSlice';
-import { addToCart, clearCart, setItemAmount, handleFreeDelivery } from 'redux/features/items/itemsSlice';
+import { addToCart, clearCart, setItemAmount } from 'redux/features/items/itemsSlice';
 import { ShopItem } from 'components/ShopItemCard';
 import { EditOrderForm } from 'components/EditOrderForm';
 import { APP, getItemsAmount, getMissingAmountForFreeDelivery, isElegibleForGlobalDiscount, parseDateToEdit } from 'utils/app.utils';
@@ -20,6 +20,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { getTotalWithDiscount, getDiscountAmount } from 'utils/app.utils';
 
 const EditOrderPage = () => {
   const { shopOrders } = useSelector((store) => store.orders);
@@ -106,11 +107,9 @@ const EditOrderPage = () => {
     field.onChange(value);
     if (value === 'delivery') {
       setIsAddressVisible(true);
-      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
     }
     if (value === 'takeAway') {
       setIsAddressVisible(false);
-      dispatch(handleFreeDelivery({ deliveryMethod: deliveryMethod }));
       setValue('haveExtraFee', false);
     }
   };
@@ -136,16 +135,20 @@ const EditOrderPage = () => {
 
   const calculateCartTotalToShow = () => {
     if (haveExtraFee) {
-      return (cartTotal + Number(customDeliveryFee)).toFixed(2);
+      return (getTotalWithDiscount(cartTotal, order.percentageDiscount) + Number(customDeliveryFee)).toFixed(2);
     }
     if (isDelivery) {
       if (order.deliveryMethod === 'delivery') {
-        return cartTotal < order.amountForFreeDelivery && !order.haveDeliveryDiscount ? (cartTotal + order.deliveryFee).toFixed(2) : cartTotal.toFixed(2);
+        return cartTotal < order.amountForFreeDelivery && !order.haveDeliveryDiscount
+          ? (getTotalWithDiscount(cartTotal, order.percentageDiscount) + order.deliveryFee).toFixed(2)
+          : getTotalWithDiscount(cartTotal, order.percentageDiscount).toFixed(2);
       }
 
-      return cartTotal < amountForFreeDelivery ? (cartTotal + orderDeliveryFee).toFixed(2) : cartTotal.toFixed(2);
+      return cartTotal < amountForFreeDelivery
+        ? (getTotalWithDiscount(cartTotal, order.percentageDiscount) + orderDeliveryFee).toFixed(2)
+        : getTotalWithDiscount(cartTotal, order.percentageDiscount).toFixed(2);
     }
-    return cartTotal.toFixed(2);
+    return getTotalWithDiscount(cartTotal, order.percentageDiscount).toFixed(2);
   };
 
   const isElegibleForFreeDelivery = () => {
@@ -157,11 +160,11 @@ const EditOrderPage = () => {
       return customDeliveryFee;
     }
 
-    if (!order.deliveryMethod === 'delivery' && !isAdmin) {
+    if (order.deliveryMethod === 'takeAway') {
       return isDelivery ? customDeliveryFee : 0;
     }
 
-    if (order.deliveryMethod === 'delivery' && order.total >= order.amountForFreeDelivery) {
+    if (order.deliveryMethod === 'delivery' && cartTotal >= order.amountForFreeDelivery) {
       return order.deliveryFee;
     }
 
@@ -172,7 +175,7 @@ const EditOrderPage = () => {
     return !isElegibleForFreeDelivery() && getMissingAmountForFreeDelivery(order.amountForFreeDelivery, cartTotal, order.deliveryMethod) > 0;
   };
 
-  const handleEditOrderSubmit = async ({ contact, deliveryDate, fullAddress, haveExtraFee, message }) => {
+  const handleEditOrderSubmit = async ({ contact, deliveryDate, fullAddress, deliveryMethod, haveExtraFee, message }) => {
     setErrorMessage(undefined);
 
     if (!user._id) {
@@ -191,6 +194,7 @@ const EditOrderPage = () => {
         haveDeliveryDiscount: isElegibleForGlobalDiscount(isFreeDeliveryForAll, deliveryMethod, haveExtraFee, order.deliveryMethod, order.haveDeliveryDiscount),
         message,
         deliveryMethod,
+        percentageDiscount: order.percentageDiscount ? order.percentageDiscount : 0,
         amountForFreeDelivery: order.deliveryMethod === 'delivery' ? order.amountForFreeDelivery : amountForFreeDelivery,
         items: cartItems,
         total: cartTotal.toFixed(2), // only items price
@@ -267,7 +271,6 @@ const EditOrderPage = () => {
             errorMessage={errorMessage}
             submitBtnRef={submitBtnRef}
             haveExtraFee={haveExtraFee}
-            deliveryMethod={deliveryMethod}
             isDelivery={isDelivery}
             isAdmin={isAdmin}
           />
@@ -320,6 +323,16 @@ const EditOrderPage = () => {
                   {!isAdmin && <TooltipDeliveryFee />}
                 </Box>
               </>
+            )}
+            {order.percentageDiscount > 0 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
+                  Desconto:
+                </Typography>
+                <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
+                  {getDiscountAmount(cartTotal, order.percentageDiscount) + APP.currency}
+                </Typography>
+              </Box>
             )}
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Typography variant={componentProps.variant.h4} color={theme.palette.neutral.main} sx={{ mt: 1, mb: 2, fontWeight: 'bold', mr: 1 }}>

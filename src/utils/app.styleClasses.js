@@ -297,6 +297,7 @@ export const cartClasses = {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
+    mb: 2,
   },
 
   formContainer: {

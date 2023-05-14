@@ -24,6 +24,7 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import EmailIcon from '@mui/icons-material/Email';
 import { Link } from 'react-router-dom';
 import TermsModal from 'components/TermsModal';
+import { getTotalWithDiscount } from 'utils/app.utils';
 
 const DRAWER_WIDTH = 220;
 const APP_NAME = APP.name.toUpperCase();
@@ -43,7 +44,7 @@ function ElevationScroll(props) {
 }
 
 export const Layout = (props) => {
-  const { isLoading, cartAmount, cartTotal } = useSelector((store) => store.items);
+  const { isLoading, cartAmount, cartTotal, percentageDiscount } = useSelector((store) => store.items);
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,7 +63,7 @@ export const Layout = (props) => {
   }, []);
 
   const getTotal = () => {
-    return cartTotal.toFixed(2).replace('-', '').toString() + APP.currency;
+    return getTotalWithDiscount(cartTotal, percentageDiscount).toFixed(2).replace('-', '').toString() + APP.currency;
   };
 
   return (
