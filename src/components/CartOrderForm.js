@@ -283,7 +283,7 @@ export const CartOrderForm = ({
               {user.userType === 'user' && <TooltipDeliveryFee />}
             </Box>
             {percentageDiscount > 0 && (
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Typography variant={componentProps.variant.h6} color={theme.palette.neutral.main} sx={{ fontWeight: 'bold', mr: 1 }}>
                   Desconto:
                 </Typography>
