@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { componentProps, settingsClasses, settingsModalStyle } from 'utils/app.styleClasses';
 import ErrorMessage from './ErrorMessage';
 import { updateSettings } from 'api';
-import { updateInitialDeliveryFee } from 'redux/features/items/itemsSlice';
+import { updateAppInitialSettings } from 'redux/features/items/itemsSlice';
 
 const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
-  const { orderDeliveryFee, globalDeliveryDiscount, amountForFreeDelivery, percentageDiscount, settingsId } = useSelector((store) => store.items);
+  const { orderDeliveryFee, isFreeDeliveryForAll, amountForFreeDelivery, percentageDiscount, settingsId } = useSelector((store) => store.items);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -25,15 +25,15 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
 
   useEffect(() => {
     if (orderDeliveryFee) {
-      let initialFormValues = { deliveryFee: orderDeliveryFee, haveGlobalDeliveryDiscount: globalDeliveryDiscount, minAmountForFreeDelivery: amountForFreeDelivery, discount: percentageDiscount };
+      let initialFormValues = { deliveryFee: orderDeliveryFee, haveGlobalDeliveryDiscount: isFreeDeliveryForAll, minAmountForFreeDelivery: amountForFreeDelivery, discount: percentageDiscount };
 
       // Sets the initial values to the form fields
       reset(initialFormValues);
     }
-  }, [orderDeliveryFee, globalDeliveryDiscount, percentageDiscount, amountForFreeDelivery, reset]);
+  }, [orderDeliveryFee, isFreeDeliveryForAll, percentageDiscount, amountForFreeDelivery, reset]);
 
   const areValuesUnchanged = (deliveryFee, haveGlobalDeliveryDiscount, minAmountForFreeDelivery, discount) => {
-    return deliveryFee === orderDeliveryFee && haveGlobalDeliveryDiscount === globalDeliveryDiscount && minAmountForFreeDelivery === amountForFreeDelivery && discount === percentageDiscount;
+    return deliveryFee === orderDeliveryFee && haveGlobalDeliveryDiscount === isFreeDeliveryForAll && minAmountForFreeDelivery === amountForFreeDelivery && discount === percentageDiscount;
   };
 
   const handleSubmitSettings = async ({ deliveryFee, haveGlobalDeliveryDiscount, minAmountForFreeDelivery, discount }) => {
@@ -51,12 +51,12 @@ const SettingsModal = ({ isModalOpen, setIsModalOpen }) => {
       deliveryFee: Number(deliveryFee),
       minForFreeDelivery: Number(minAmountForFreeDelivery),
       discount: Number(discount),
-      globalDeliveryDiscount: haveGlobalDeliveryDiscount,
+      isFreeDeliveryForAll: haveGlobalDeliveryDiscount,
     };
 
     try {
       let { data } = await updateSettings(requestBody, settingsId);
-      dispatch(updateInitialDeliveryFee(data));
+      dispatch(updateAppInitialSettings(data));
       setIsModalOpen(false);
     } catch (error) {
       setErrorMessage(error.message);

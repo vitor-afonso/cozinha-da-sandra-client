@@ -34,6 +34,16 @@ export const appRegex = {
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 };
 
+export const getTotalWithDiscount = (cartTotal, percentageDiscount) => {
+  if (!percentageDiscount || percentageDiscount === 0) return cartTotal;
+  const discountAmount = (cartTotal * percentageDiscount) / 100;
+  return cartTotal - discountAmount;
+};
+
+export const getDiscountAmount = (total, percentage) => {
+  return ((total * percentage) / 100).toFixed(2);
+};
+
 export const getHomePageCategoryItems = (itemsArr, category) => {
   let counter = 0;
   let amountOfItemsToDisplay = 3;
@@ -71,12 +81,12 @@ export const validateAddressCode = (value) => {
   return re.test(value) || value === '';
 };
 
-export const isElegibleForGlobalDiscount = (globalDeliveryDiscount, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderDeliveryDiscount) => {
+export const isElegibleForGlobalDiscount = (isFreeDeliveryForAll, deliveryMethod, haveExtraFee, orderDeliveryMethod, orderHaveDeliveryDiscount) => {
   //CartPage
-  if (globalDeliveryDiscount && deliveryMethod === 'delivery' && !haveExtraFee) return true;
+  if (isFreeDeliveryForAll && deliveryMethod === 'delivery' && !haveExtraFee) return true;
 
   //EditOrderPage
-  if (orderDeliveryMethod === 'delivery' && orderDeliveryDiscount && !haveExtraFee) return true;
+  if (orderDeliveryMethod === 'delivery' && orderHaveDeliveryDiscount && !haveExtraFee) return true;
 
   return false;
 };

@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { sendEmail, updateOrder } from 'api';
 import { AuthContext } from 'context/auth.context';
 import { confirmDelivered, confirmOrder, confirmPayment } from 'redux/features/orders/ordersSlice';
-import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP } from 'utils/app.utils';
+import { getItemsPrice, getItemsQuantity, parseDateAndTimeToShow, capitalizeAppName, APP, getTotalWithDiscount, getDiscountAmount } from 'utils/app.utils';
 import { Box, Button, Card, CardActions, CardContent, Typography, useTheme } from '@mui/material';
 import { componentProps, shopOrderClasses } from 'utils/app.styleClasses';
 import ConfirmAndEmailModal from 'components/ConfirmAndEmailModal';
@@ -78,9 +78,9 @@ export function ShopOrder({ order }) {
         from: APP.email,
         to: order.userId.email,
         subject: 'Pedido confirmado',
-        message: `<p>O seu pedido com o Nº: ${
-          order.orderNumber
-        } foi confirmado para o dia ${deliveredAt}, com o valor total de ${getTotal()}. Por favor indique o número do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).</p><p>Encontre todos os detalhes do seu pedido na sua pagina de perfil -> Historico de pedidos.</p> <br/><br/><p>Com os melhores cumprimentos,</p><p>${APP_NAME} 👩🏾‍🍳</p>`,
+        message: `<p>O seu pedido com o Nº: ${order.orderNumber} foi confirmado para o dia ${deliveredAt}, com o valor total de ${
+          getTotal() + APP.currency
+        }. Por favor indique o número do seu pedido ao efectuar pagamento via MB WAY (+351 9** *** ***).</p><p>Encontre todos os detalhes do seu pedido na sua pagina de perfil -> Historico de pedidos.</p> <br/><br/><p>Com os melhores cumprimentos,</p><p>${APP_NAME} 👩🏾‍🍳</p>`,
       };
 
       await Promise.all([updateOrder(requestBody, order._id), sendEmail(confirmationEmail)]);
@@ -140,18 +140,20 @@ export function ShopOrder({ order }) {
   };
 
   const isElegibleForFreeDelivery = () => {
-    return (order.deliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
+    return (order.haveDeliveryDiscount || (order.total > order.amountForFreeDelivery && order.deliveryMethod === 'delivery')) && !order.haveExtraDeliveryFee;
   };
 
   const getTotal = () => {
+    let total = getTotalWithDiscount(order.total, order.percentageDiscount);
+
     if (order.haveExtraDeliveryFee) {
-      return (order.total + order.deliveryFee).toFixed(2) + APP.currency;
+      return (total + order.deliveryFee).toFixed(2);
     }
 
     if (isOrderForDelivery) {
-      return order.total < order.amountForFreeDelivery ? (order.total + order.deliveryFee).toFixed(2) + APP.currency : order.total.toFixed(2) + APP.currency;
+      return total < order.amountForFreeDelivery ? (total + order.deliveryFee).toFixed(2) : total.toFixed(2);
     }
-    return order.total.toFixed(2) + APP.currency;
+    return total.toFixed(2);
   };
 
   function isPending() {
@@ -283,7 +285,7 @@ export function ShopOrder({ order }) {
               <Typography sx={{ textDecoration: isElegibleForFreeDelivery() ? 'line-through' : '' }} gutterBottom>
                 {order.deliveryFee + APP.currency}
               </Typography>
-              {order.deliveryDiscount && `0${APP.currency}`}
+              {order.haveDeliveryDiscount && `0${APP.currency}`}
             </Box>
           </Box>
         )}
@@ -362,11 +364,22 @@ export function ShopOrder({ order }) {
           </Box>
         )}
 
+        {order.percentageDiscount > 0 && (
+          <Box sx={shopOrderClasses.infoField}>
+            <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
+              <b>Desconto:</b>
+            </Typography>
+            <Typography variant={componentProps.variant.body1} gutterBottom>
+              {getDiscountAmount(order.total, order.percentageDiscount) + APP.currency}
+            </Typography>
+          </Box>
+        )}
+
         <Box sx={shopOrderClasses.infoField}>
           <Typography variant={componentProps.variant.body1} color={theme.palette.neutral.main}>
             <b>Total:</b>
           </Typography>
-          <Typography variant={componentProps.variant.body1}>{getTotal()}</Typography>
+          <Typography variant={componentProps.variant.body1}>{getTotal() + APP.currency}</Typography>
         </Box>
       </CardContent>
 
